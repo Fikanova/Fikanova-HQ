@@ -108,6 +108,13 @@
             align-items: center;
         }
 
+                /* Center Book a Consultation button in nav */
+                .nav-contact-btn {
+                    margin-left: auto;
+                    margin-right: auto;
+                    display: block;
+                }
+
         .header .logo {
             font-size: 1.8rem;
             font-weight: 900;
@@ -117,9 +124,84 @@
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
+        display: grid;
+    grid-template-columns: 1fr 2fr auto;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    @media (max-width: 1200px) {
+        .nav-container {
+            grid-template-columns: 1fr 3fr 1fr;
+        }
+    }
+    @media (max-width: 968px) {
+        .nav-container {
+            grid-template-columns: 1fr auto auto;
+            gap: 0.2rem;
+        }
+        .nav-logo {
+            justify-self: start;
+        }
+        .nav-contact-btn {
+            justify-self: center;
+            margin: 0;
+        }
+        .mobile-menu-toggle {
+            justify-self: end;
+            position: static;
+        }
+        .nav-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: #fff;
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+            padding: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            z-index: 999;
+            display: none;
+        }
+        .nav-menu.active {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            transform: translateY(0);
+        }
+        .nav-menu a {
+            padding: 1.2rem 2rem;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .nav-contact-btn {
+            margin-top: 1rem;
+        }
+        .nav-logo img {
+            height: 40px;
+        }
+    }
+    @media (max-width: 600px) {
+        .nav-container {
+            grid-template-columns: 1fr auto auto;
+            padding: 0.5rem 1rem;
+        }
+        .nav-logo img {
+            height: 32px;
+        }
+        .nav-menu a {
+            font-size: 1rem;
+            padding: 1rem 1.2rem;
+        }
+        .nav-contact-btn {
+            font-size: 0.95rem;
+            padding: 0.6rem 1.2rem;
+        }
+        .mobile-menu-toggle {
+            font-size: 1.5rem;
+        }
+    }
         }
 
         .nav-logo img {
@@ -147,16 +229,27 @@
         }
 
         .nav-contact-btn {
-            background: var(--orange);
-            color: #FFFFFF !important;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+    background: var(--orange);
+    color: #fff !important;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(249, 158, 11, 0.08);
+    border: none;
+    outline: none;
+    margin-left: 0.5rem;
+    margin-right: 0;
+    display: inline-block;
+    vertical-align: middle;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    white-space: nowrap;
         }
 
         .nav-contact-btn:hover {
-            background: #D97706;
-            transform: scale(1.05);
+        background: #D97706;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 18px rgba(249, 158, 11, 0.18);
         }
 
         .mobile-menu-toggle {
@@ -245,7 +338,7 @@
         box-shadow: 0 8px 32px rgba(66, 133, 244, 0.25);
         transform: scale(1.07);
     }
-        }
+        
 
         .contact-btn {
             display: inline-flex;
@@ -744,6 +837,22 @@
             color: #FFFFFF;
         }
 
+                /* Center Book a Consultation button in platform section */
+                .platform-cta {
+                    text-align: center;
+                    margin-top: 4rem;
+                }
+                .platform-cta .cta-btn {
+                    margin-left: auto;
+                    margin-right: auto;
+                    display: inline-block;
+                }
+                .platform-cta .contact-btn {
+                    margin-left: auto;
+                    margin-right: auto;
+                    display: inline-block;
+                }
+
         .platform-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -1060,25 +1169,89 @@
 
         /* Responsive */
         @media (max-width: 968px) {
+            .nav-container {
+                display: grid;
+                grid-template-columns: 1fr auto auto;
+                align-items: center;
+            }
+            .nav-logo {
+                display: flex;
+                align-items: center;
+                justify-self: start;
+            }
+            .nav-contact-btn {
+                display: inline-block;
+                justify-self: center;
+                margin: 0;
+            }
+            .mobile-menu-toggle {
+                display: block !important;
+                position: static;
+                justify-self: end;
+            }
             .nav-menu {
                 position: fixed;
                 top: 80px;
-                left: -100%;
-                flex-direction: column;
-                background: #FFFFFF;
-                width: 100%;
-                padding: 2rem;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                transition: left 0.3s ease;
-                align-items: flex-start;
-            }
-
-            .nav-menu.active {
                 left: 0;
+                right: 0;
+                background: #fff;
+                flex-direction: column;
+                gap: 0;
+                width: 100%;
+                padding: 2rem 0;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                z-index: 999;
+                display: none;
             }
-
+            .nav-menu.active {
+                display: flex;
+                transform: translateY(0);
+            }
             .mobile-menu-toggle {
-                display: block;
+                display: block !important;
+                position: absolute;
+                right: 2rem;
+                top: 1.2rem;
+                z-index: 1001;
+                background: none;
+                border: none;
+                font-size: 2rem;
+                color: var(--deep-blue);
+                cursor: pointer;
+            }
+            .nav-menu a {
+                padding: 1.2rem 2rem;
+                font-size: 1.2rem;
+                border-bottom: 1px solid #E5E7EB;
+            }
+            .nav-contact-btn {
+                margin-top: 1rem;
+            }
+            .nav-logo img {
+                height: 40px;
+            }
+            .nav-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .nav-logo {
+                display: flex;
+                align-items: center;
+                flex: 1 1 auto;
+            }
+            .nav-contact-btn {
+                display: inline-block;
+                margin: 0 1rem;
+                flex: 0 0 auto;
+            }
+            .mobile-menu-toggle {
+                display: block !important;
+                position: static;
+                flex: 0 0 auto;
             }
         }
 
@@ -1129,12 +1302,18 @@
                 flex-direction: column;
                 align-items: center;
             }
-
             .tab-btn {
                 width: 200px;
             }
 
-            .about-content {
-                grid-template-columns: 1fr;
+            .about-content,
+            .name-origin-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .origin-card {
+                margin-bottom: 1rem;
+                width: 100%;
             }
         }
