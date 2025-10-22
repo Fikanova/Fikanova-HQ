@@ -1,388 +1,631 @@
-<!-- ...existing code... -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fikanova - Where Imagination Becomes Algorithm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Fikanova Limited - Transform Ideas into AI-Enhanced Solutions</title>
+    <meta name="description" content="Bridging human creativity with artificial intelligence to revolutionize business operations across Kenya and beyond. AI integration, tech consultancy, and custom software development.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
     <script async src="https://tally.so/widgets/embed.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Header Navigation -->
-    <header class="header-nav">
-        <nav class="nav-container">
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
             <div class="nav-logo">
                 <a href="#hero">
-                    <img src="assets/logos/fikanova-logo.svg" alt="Fikanova Logo">
+                    <img src="assets/logos/fikanova-logo 1.svg" alt="Fikanova Logo">
                 </a>
             </div>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#impact">Impact</a></li>
-                <li><a href="#platform">Platform</a></li>
-                <li><a href="#newsletter">Newsletter</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" class="nav-contact-btn">Contact Us</a></li>
-            </ul>
-            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
+            <nav class="nav-desktop">
+                    <a href="#portfolio" class="nav-link">Portfolio</a>
+                    <div class="nav-item-with-mega">
+                        <a href="#platform" class="nav-link">Next-Gen Tech</a>
+                        <div class="mega-menu platform-mega">
+                            <div class="mega-menu-content">
+                                <div class="mega-column">
+                                    <h4>Platform Features</h4>
+                                    <a href="#platform" class="mega-item">
+                                        <div>
+                                            <strong>Tech Audits</strong>
+                                            <span>Comprehensive assessments</span>
+                                        </div>
+                                    </a>
+                                    <a href="#platform" class="mega-item">
+                                        <div>
+                                            <strong>AI Integration</strong>
+                                            <span>Seamless AI tools</span>
+                                        </div>
+                                    </a>
+                                    <a href="#platform" class="mega-item">
+                                        <div>
+                                            <strong>Data Analytics</strong>
+                                            <span>Actionable insights</span>
+                                        </div>
+                                    </a>
+                                    <a href="#platform" class="mega-item">
+                                        <div>
+                                            <strong>Workflow Automation</strong>
+                                            <span>Efficient processes</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mega-column">
+                                    <h4>Resources</h4>
+                                    <a href="#resources" class="mega-item">
+                                        <div>
+                                            <strong>Digital Store</strong>
+                                            <span>Premium tools</span>
+                                        </div>
+                                    </a>
+                                    <a href="#resources" class="mega-item">
+                                        <div>
+                                            <strong>AI Readiness Guide</strong>
+                                            <span>Get started with AI</span>
+                                        </div>
+                                    </a>
+                                    <a href="#resources" class="mega-item">
+                                        <div>
+                                            <strong>Tech Audit Checklist</strong>
+                                            <span>Assessment framework</span>
+                                        </div>
+                                    </a>
+                                    <a href="#resources" class="mega-item">
+                                        <div>
+                                            <strong>Case Studies</strong>
+                                            <span>Success stories</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-cta">
+                                <a href="#tally-open=n9bDXE&tally-layout=modal&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="btn btn-secondary">Join Waitlist</a>
+                            </div>
+                        </div>
+                    </div>
+                              <div class="nav-item-with-mega">
+ <a href="#services" class="nav-link">Services</a>
+                        <div class="mega-menu services-mega">
+                            <div class="mega-menu-content">
+                                <div class="mega-column">
+                                    <h4>Development Services</h4>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-laptop-code"></i>
+                                        <div>
+                                            <strong>Web Design &amp; Development</strong>
+                                            <span>Stunning responsive websites</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div>
+                                            <strong>Mobile App Development</strong>
+                                            <span>Cross-platform mobile solutions</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-code"></i>
+                                        <div>
+                                            <strong>Custom Software Solutions</strong>
+                                            <span>Tailored software development</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mega-column">
+                                    <h4>Marketing Services</h4>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-search"></i>
+                                        <div>
+                                            <strong>SEO Optimization</strong>
+                                            <span>Boost your visibility</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-share-alt"></i>
+                                        <div>
+                                            <strong>Social Media Marketing</strong>
+                                            <span>Grow your audience</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-file-alt"></i>
+                                        <div>
+                                            <strong>Content Strategy</strong>
+                                            <span>Engaging content creation</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mega-column">
+                                    <h4>AI &amp; Tech Services</h4>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-comments"></i>
+                                        <div>
+                                            <strong>Chatbot Integration</strong>
+                                            <span>24/7 customer engagement</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-robot"></i>
+                                        <div>
+                                            <strong>AI Automation</strong>
+                                            <span>Streamline workflows</span>
+                                        </div>
+                                    </a>
+                                    <a href="#services" class="mega-item">
+                                        <i class="fas fa-users"></i>
+                                        <div>
+                                            <strong>Tech Consultations</strong>
+                                            <span>Expert guidance</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-cta">
+                                <a href="#services" class="btn btn-primary">View All Services</a>
+                            </div>
+                        </div>
+                    </div> 
+                    <a href="#newsletter" class="nav-link">Newsletter</a>
+                    <div class="nav-item-with-mega">
+                        <a href="#about" class="nav-link">About</a>
+                        <div class="mega-menu about-mega">
+                            <div class="mega-menu-content single-column">
+                                <div class="mega-column">
+                                    <h4>Our Story</h4>
+                                    <p>Fikanova Limited bridges human creativity with artificial intelligence, transforming imaginative ideas into practical tech solutions.</p>
+                                    <div class="philosophy-preview">
+                                        <div class="philosophy-item">
+                                            <span class="philosophy-name" style="color: var(--accent-gold);">Fikra</span>
+                                            <span class="philosophy-desc">Ideas &amp; Imagination</span>
+                                        </div>
+                                        <div class="philosophy-item">
+                                            <span class="philosophy-name" style="color: var(--accent-blue);">Arcane</span>
+                                            <span class="philosophy-desc">Deep Technology</span>
+                                        </div>
+                                        <div class="philosophy-item">
+                                            <span class="philosophy-name" style="color: var(--accent-green);">Nova</span>
+                                            <span class="philosophy-desc">Brilliant Future</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mega-cta">
+                                <a href="#about" class="btn btn-outline">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+            </nav>
+
+            <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" class="contact-btn">
+                <i class="fas fa-phone-alt"></i>
+                <span>Contact Us</span>
+            </a>
+
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
-        </nav>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="hero-content">
-            <h2>Transform Ideas into AI-Enhanced Solutions</h2>
-            <p>Bridging human creativity with artificial intelligence to revolutionize your business operations across Kenya and beyond</p>
-            <a href="#services" class="cta-btn">Explore Services</a>
+
+
+    <!-- Backdrop -->
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+
+    <!-- Off-canvas Mobile Menu -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-close" id="mobileClose" aria-label="Close mobile menu">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <!-- Main navigation links -->
+        <div class="mobile-nav-section main-links">
+            <a href="#about">About</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#newsletter">Newsletter</a>
         </div>
-        <div class="social-icons">
-            <a href="https://instagram.com/fikanovatech" target="_blank" aria-label="Instagram">
+        
+        <!-- Services mega menu content -->
+        <div class="mobile-nav-section">
+            <h3>Services</h3>
+            <a href="#services">Web Design &amp; Development</a>
+            <a href="#services">Mobile App Development</a>
+            <a href="#services">SEO Optimization</a>
+            <a href="#services">Chatbot Integration</a>
+            <a href="#services">AI Automation</a>
+            <a href="#services">Tech Consultations</a>
+        </div>
+        
+        <!-- Platform mega menu content -->
+        <div class="mobile-nav-section">
+            <h3>Platform</h3>
+            <a href="#platform">Tech Audits</a>
+            <a href="#platform">AI Integration</a>
+            <a href="#platform">Data Analytics</a>
+            <a href="#platform">Workflow Automation</a>
+        </div>
+        
+        <!-- Resources -->
+        <div class="mobile-nav-section">
+            <h3>Resources</h3>
+            <a href="#resources">Digital Store</a>
+            <a href="#resources">AI Readiness Guide</a>
+            <a href="#resources">Tech Audit Checklist</a>
+            <a href="#resources">Newsletter Archive</a>
+        </div>
+        
+        <!-- Contact button -->
+        <div class="mobile-nav-section">
+            <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" class="contact-btn">
+                <i class="fas fa-phone-alt"></i>
+                <span>Contact Us</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <!-- Desktop Social Icons - Top Right -->
+        <div class="hero-social-icons">
+            <div class="hero-social-label">FOLLOW US</div>
+            <a href="https://instagram.com/fikanovatech" target="_blank" class="social-icon instagram" aria-label="Instagram">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://linkedin.com/company/fikanova" target="_blank" aria-label="LinkedIn">
+            <a href="https://linkedin.com/company/fikanova" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
                 <i class="fab fa-linkedin"></i>
             </a>
-            <a href="https://x.com/FikanovaTech" target="_blank" aria-label="X">
+            <a href="https://x.com/FikanovaTech" target="_blank" class="social-icon twitter" aria-label="Twitter">
                 <i class="fab fa-x-twitter"></i>
             </a>
         </div>
-    </section>
-        <div class="main-buttons-wrapper">
-        </div>
-
-    <!-- About Fikanova Section -->
-    <section id="about" class="about">
-        <h2>About Fikanova</h2>
-        <div class="about-content">
-            <div class="about-card">
-                <h3>Who We Are</h3>
-                <p>Fikanova Limited is a cutting-edge technology company that bridges the gap between human creativity and artificial intelligence. We specialize in AI integration, tech consultancy, and custom software development.</p>
-            </div>
-            <div class="about-card">
-                <h3>Our Vision</h3>
-                <p>Transform imaginative ideas into practical tech and AI solutions that help businesses innovate and achieve their technological aspirations.</p>
-            </div>
-            <div class="about-card">
-                <h3>Our Mission</h3>
-                <p>Deliver innovative tech and AI solutions that turn creative concepts into reality, where imagination becomes algorithm.</p>
-            </div>
-        </div>
-        <h2 class="fade-in-up">Our Origin Story</h2>
-        <p class="about-intro fade-in-up delay-100">
-            Fikanova is a name born from the intersection of creativity, technology, and future-forward thinking. Our brand philosophy is encoded in the three words that form our identity: Fikra, Arcane, and Nova.
-        </p>
-            <!-- Removed Get Started button from Our Origin Story section -->
         
-        <div class="name-origin-grid">
-            <div class="origin-card fade-in-up delay-200">
-                <h4>Fikra</h4>
-                <h5>(Arabic: Idea/Imagination)</h5>
-                <p>Represents the limitless potential of human imagination and the initial spark of innovation that drives every project.</p>
-            </div>
-            <div class="origin-card green fade-in-up delay-300">
-                <h4>Arcane</h4>
-                <h5>(Latin: Deep/Mysterious)</h5>
-                <p>Symbolizes the complex, deep-learning algorithms and robust code that transforms abstract ideas into functional reality.</p>
-            </div>
-            <div class="origin-card yellow fade-in-up delay-400">
-                <h4>Nova</h4>
-                <h5>(Latin: New Star)</h5>
-                <p>Embodies the creation of a new, brilliant future—the measurable impact and disruptive excellence we deliver for our clients.</p>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Transform Ideas into AI-Enhanced Solutions</h1>
+                <p>Bridging human creativity with artificial intelligence to revolutionize your business operations across Kenya and beyond</p>
+                <div class="hero-buttons">
+                    <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave"class="btn btn-primary btn-pulse">Get Started</a>
+                    <a href="#services" class="btn btn-outline">Explore Services</a>
+                </div>
+                
+                <!-- Mobile Social Icons - Below CTA Buttons -->
+                <div class="hero-social-mobile">
+                    <a href="https://instagram.com/fikanovatech" target="_blank" class="social-icon instagram" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/fikanova" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://x.com/FikanovaTech" target="_blank" class="social-icon twitter" aria-label="Twitter">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
-        <!-- Removed Get Started button from previous location -->
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-        <h2>Our Services Today</h2>
-        <div class="services-grid">
-                <div class="service-card">
-                    <i class="fas fa-code"></i>
-                    <h3>Web Design & Development</h3>
+    <!-- Services Section - Moved Up -->
+    <section class="section" id="services">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Services Today</h2>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Web Design &amp; Development</h3>
                     <p>Stunning, responsive websites that captivate your audience and drive results</p>
                 </div>
-                <div class="service-card">
-                    <i class="fas fa-search"></i>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
                     <h3>SEO</h3>
                     <p>Boost your online visibility and reach the right customers at the right time</p>
                 </div>
-                <div class="service-card">
-                    <i class="fas fa-lightbulb"></i>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
                     <h3>Tech Consultations</h3>
                     <p>Expert solutions tailored to your business challenges and growth objectives</p>
                 </div>
-                <div class="service-card">
-                    <i class="fas fa-comments"></i>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
                     <h3>Chatbots</h3>
                     <p>Intelligent customer engagement that works 24/7 to support your business</p>
                 </div>
             </div>
+            <div style="text-align: center;">
+                <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave"class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
     </section>
 
-    <!-- Get Started Button (centered, below services, above portfolio) -->
-    <div class="get-started-wrapper">
-    <a href="#tally-open=3xOYWG&tally-layout=modal&tally-width=500&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="cta-btn small-btn" style="font-size:0.95rem; padding:0.5rem 1.2rem; border-radius:999px;">Get Started</a>
-    </div>
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title fade-in">About Fikanova</h2>
+            <div class="about-grid">
+                <div class="about-card fade-in">
+                    <h3>Who We Are</h3>
+                    <p>Fikanova Limited is a cutting-edge technology company that bridges the gap between human creativity and artificial intelligence. We specialize in AI integration, tech consultancy, and custom software development.</p>
+                </div>
+                <div class="about-card fade-in">
+                    <h3>Our Vision</h3>
+                    <p>Transform imaginative ideas into practical tech and AI solutions that help businesses innovate and achieve their technological aspirations.</p>
+                </div>
+                <div class="about-card fade-in">
+                    <h3>Our Mission</h3>
+                    <p>Deliver innovative tech and AI solutions that turn creative concepts into reality, where imagination becomes algorithm.</p>
+                </div>
+            </div>
+        </div>
     </section>
+
+    <!-- Founder Section -->
+    <section class="section founder-section" id="founder">
+        <div class="container">
+            <h2 class="section-title fade-in">Meet the Founder</h2>
+            <div class="founder-content">
+                <div class="founder-card fade-in">
+                    <div class="founder-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="founder-name">Nyaenya Moseti</h3>
+                    <p class="founder-title">Founder &amp; CEO</p>
+                    <p class="founder-subtitle">Solopreneur | Tech Innovator</p>
+                    <div class="founder-badge" style="background: rgba(255, 217, 102, 0.2); color: var(--accent-gold); border: 1px solid rgba(255, 217, 102, 0.4); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; font-size: 0.9rem;">
+  <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" style="color: inherit; text-decoration: none;">Contact Me</a>
+</div>
+                    <div class="founder-tagline">
+                        <p>Transforming visions into digital reality</p>
+                    </div>
+                </div>
+                <div class="founder-story fade-in">
+                    <h3>Solo Visionary Building the Future</h3>
+                    <p>Fikanova is currently in its pre-launch phase, carefully crafted by a solo founder with a vision to revolutionize how businesses leverage AI and technology. Every line of code, every design decision, and every client interaction is driven by a deep passion for excellence and innovation.</p>
+                    <p>As a solopreneur, I bring a unique advantage: complete dedication to your project's success. No bureaucracy, no delegation—just direct collaboration with someone who genuinely cares about transforming your ideas into reality. This hands-on approach ensures unparalleled quality and attention to detail.</p>
+                    <p>While we're preparing for an exciting official launch with an expanded team, early adopters get exclusive access to personalized service and competitive rates. Join us at the ground floor and be part of Fikanova's journey from startup to industry leader.</p>
+                    <div class="founder-quote">
+                        "Building Fikanova one exceptional project at a time. Pre-launch means you get the founder's full attention—no middlemen, just excellence."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Origin Story Section -->
+    <section class="section origin" id="origin">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Origin Story</h2>
+            <p class="origin-intro fade-in">Fikanova is a name born from the intersection of creativity, technology, and future-forward thinking. Our brand philosophy is encoded in the three words that form our identity:</p>
+            <div class="origin-grid">
+                <div class="origin-card fikra fade-in">
+                    <div class="origin-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Fikra</h3>
+                    <p class="origin-lang">Arabic: Idea/Imagination</p>
+                    <p>Represents the limitless potential of human imagination and the initial spark of innovation that drives every project.</p>
+                </div>
+                <div class="origin-card arcane fade-in">
+                    <div class="origin-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Arcane</h3>
+                    <p class="origin-lang">Latin: Deep/Mysterious</p>
+                    <p>Symbolizes the complex, deep-learning algorithms and robust code that transforms abstract ideas into functional reality.</p>
+                </div>
+                <div class="origin-card nova fade-in">
+                    <div class="origin-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Nova</h3>
+                    <p class="origin-lang">Latin: New Star</p>
+                    <p>Embodies the creation of a new, brilliant future—the measurable impact and disruptive excellence we deliver for our clients.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 
     <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-        <h2>Our Portfolio</h2>
-        <div class="portfolio-tabs">
-            <button class="tab-btn active" onclick="showTab('completed')">Completed Projects</button>
-            <button class="tab-btn" onclick="showTab('ongoing')">Ongoing Projects</button>
-        </div>
-
-        <div id="completed" class="tab-content active">
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/opalsuites.PNG" alt="Opal Suites" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
+    <section class="section" id="portfolio">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Portfolio</h2>
+            <div class="portfolio-tabs">
+                <button class="tab-btn active" data-tab="completed">Completed Projects</button>
+                <button class="tab-btn" data-tab="ongoing">Ongoing Projects</button>
+            </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <div class="project-card fade-in" data-category="completed">
                     <div class="project-content">
-                        <span class="project-badge">Completed</span>
                         <h3>Opal Suites</h3>
                         <p>Real estate website</p>
-                        <a href="https://opalsuites.co.ke/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
+                        <a href="https://opalsuites.co.ke/" target="_blank" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/etco.PNG" alt="ETCO Kenya" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
+                <div class="project-card fade-in" data-category="completed">
                     <div class="project-content">
-                        <span class="project-badge">Completed</span>
                         <h3>ETCO Kenya</h3>
                         <p>NGO website for education and community outreach</p>
-                        <a href="https://www.etco-kenya.org/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
+                        <a href="https://www.etco-kenya.org/" target="_blank" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/jenga.PNG" alt="Jenga365" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
+                <div class="project-card fade-in" data-category="completed">
                     <div class="project-content">
-                        <span class="project-badge">Completed</span>
                         <h3>Jenga365</h3>
                         <p>Mentorship platform</p>
-                        <a href="https://jenga365.com/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
+                        <a href="https://jenga365.com/" target="_blank" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/Chatbot.PNG" alt="Botpress Chatbot" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
+                <div class="project-card fade-in" data-category="completed">
                     <div class="project-content">
-                        <span class="project-badge">Completed</span>
                         <h3>Botpress Chatbot</h3>
                         <p>AI-powered chatbot for customer engagement</p>
-                        <a href="https://cdn.botpress.cloud/webchat/v3.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/04/19/22/20250419221035-5MC8KQXA.json" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
+                        <a href="https://cdn.botpress.cloud/webchat/v3.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/04/19/22/20250419221035-5MC8KQXA.json" target="_blank" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div style="text-align:center; margin:2rem 0;">
-                <a href="https://www.fikanova.co.ke/" target="_blank" class="cta-btn" style="font-size:1.1rem; padding:1rem 3rem;">View All Projects</a>
-            </div>
-        </div>
-
-        <div id="ongoing" class="tab-content">
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/fk ai.png" alt="Fikanova AI Platform" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
-                    <div class="project-content">
-                        <span class="project-badge ongoing">In Progress</span>
-                        <h3>Fikanova AI Platform</h3>
-                        <p>Workflow automation and AI agents integration</p>
-                        <a href="https://www.fikanova.co.ke/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/app.png" alt="Mobile App Development" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
-                    <div class="project-content">
-                        <span class="project-badge ongoing">In Progress</span>
-                        <h3>Mobile App Development</h3>
-                        <p>Cross-platform app with real-time tracking</p>
-                        <a href="https://www.fikanova.co.ke/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/data.png" alt="Data Analytics Dashboard" style="width:100%;height:200px;object-fit:cover;">
-                    </div>
-                    <div class="project-content">
-                        <span class="project-badge ongoing">In Progress</span>
-                        <h3>Data Analytics Dashboard</h3>
-                        <p>AI-powered insights for sports data</p>
-                        <a href="https://www.fikanova.co.ke/" target="_blank" class="cta-btn" style="margin-top:1rem;">View Project</a>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align:center; margin:2rem 0;">
-                <a href="https://www.fikanova.co.ke/" target="_blank" class="cta-btn" style="font-size:1.1rem; padding:1rem 3rem;">View All Projects</a>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#portfolio" class="btn btn-outline">View All Projects</a>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats" id="impact">
-        <h2>Our Impact</h2>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-number" data-target="10">0</div>
-                <div class="stat-label">Projects Completed</div>
+    <!-- Testimonials Section -->
+    <section class="section" id="testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in">What Our Clients Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-content">
+                        <p>"Fikanova delivered exactly what we needed for our real estate platform. Professional, responsive, and delivered on time."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h4>Opal Suites Team</h4>
+                        <p>Real Estate Platform</p>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-content">
+                        <p>"The chatbot integration has transformed our customer service. Available 24/7 and handles inquiries flawlessly."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h4>Tech Startup Client</h4>
+                        <p>AI Implementation</p>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-content">
+                        <p>"Working with Fikanova felt like having a dedicated tech partner. Exceptional attention to detail and innovative solutions."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h4>Jenga365</h4>
+                        <p>Mentorship Platform</p>
+                    </div>
+                </div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="8">0</div>
-                <div class="stat-label">Happy Clients</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="2025">0</div>
-                <div class="stat-label">Year Founded</div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section impact" id="impact">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Impact</h2>
+            <div class="impact-grid">
+                <div class="impact-item fade-in">
+                    <div class="impact-number" id="projectsCount" data-target="10+">0</div>
+                    <div class="impact-label">Projects Completed</div>
+                </div>
+                <div class="impact-item fade-in">
+                    <div class="impact-number" id="clientsCount" data-target="8+">0</div>
+                    <div class="impact-label">Happy Clients</div>
+                </div>
+                <div class="impact-item fade-in">
+                    <div class="impact-number" id="yearFounded" data-target="2025">2020</div>
+                    <div class="impact-label">Year Founded</div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Platform Section -->
-    <section class="platform" id="platform">
-        <div class="platform-content">
-            <h2>Innovation on the Horizon</h2>
-            <p class="platform-intro">Our upcoming platform will revolutionize how businesses operate with workflow automation and AI-powered agents integration. Get ready for something extraordinary.</p>
-            
-            <div class="platform-services">
-                <div class="platform-service-card">
-                    <i class="fas fa-clipboard-check"></i>
-                    <h3>Tech Audits</h3>
+    <section class="section platform" id="platform">
+        <div class="container">
+            <div class="platform-intro fade-in">
+                <h3>Next-Gen Automation</h3>
+                <p class="section-subtitle">Prepare to elevate your business as we introduce integrated AI-powered workflows and agent-driven solutions built for extraordinary outcomes.</p>
+            <div class="platform-grid">
+                <div class="platform-card fade-in">
+                    <h4>Tech Audits</h4>
                     <p>Comprehensive technology assessments to optimize your systems</p>
                 </div>
-                <div class="platform-service-card">
-                    <i class="fas fa-robot"></i>
-                    <h3>AI Integration</h3>
+                <div class="platform-card fade-in">
+                    <h4>AI Integration</h4>
                     <p>Seamless integration of AI tools into your business workflows</p>
                 </div>
-                <div class="platform-service-card">
-                    <i class="fas fa-laptop-code"></i>
-                    <h3>Custom Development</h3>
+                <div class="platform-card fade-in">
+                    <h4>Custom Development</h4>
                     <p>Tailored software solutions built to your specifications</p>
                 </div>
-                <div class="platform-service-card">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Data Analytics</h3>
+                <div class="platform-card fade-in">
+                    <h4>Data Analytics</h4>
                     <p>Transform your data into actionable business insights</p>
                 </div>
             </div>
-
-            <div class="section-contact">
-                <div class="platform-cta">
-                    <a href="#tally-open=3xOYWG&tally-layout=modal&tally-width=500&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="cta-btn small-btn" style="font-size:0.95rem; padding:0.5rem 1.2rem; border-radius:999px;">
-                        <i class="fas fa-paper-plane"></i>
-                        Book a Consultation
-                    </a>
-                </div>
+            <div style="text-align: center;">
+                <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" class="btn btn-secondary">Book a Consultation</a>
             </div>
+        </div>
+    </section>
 
-            <div class="resources-section">
-                <h3>Resources</h3>
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-header-content">
-                                <i class="fas fa-store"></i>
-                                <h4>Digital Store</h4>
-                            </div>
-                            <i class="fas fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="accordion-content-inner">
-                                <p>Access our curated collection of digital products, templates, and tools designed to accelerate your tech journey.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-header-content">
-                                <i class="fas fa-book"></i>
-                                <h4>AI Readiness Guide</h4>
-                            </div>
-                            <i class="fas fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="accordion-content-inner">
-                                <p>Comprehensive guide to assess your organization's AI readiness and create an implementation roadmap.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-header-content">
-                                <i class="fas fa-check-square"></i>
-                                <h4>Tech Audit Checklist</h4>
-                            </div>
-                            <i class="fas fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="accordion-content-inner">
-                                <p>Download our detailed checklist to evaluate your technology infrastructure and identify improvement areas.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-header-content">
-                                <i class="fas fa-archive"></i>
-                                <h4>Newsletter Archive</h4>
-                            </div>
-                            <i class="fas fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="accordion-content-inner">
-                                <p>Browse past editions of our newsletter featuring insights, tips, and updates from the world of AI and tech.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="platform-cta" style="text-align:center; margin-top:2rem;">
-                    <a href="#tally-open=n9bDXE&tally-layout=modal&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="cta-btn" style="font-size:1.1rem; padding:1rem 3rem;">Join the Waitlist</a>
-                </div>
+    <!-- Resources Section -->
+    <section class="section" id="resources">
+        <div class="container">
+            <h2 class="section-title fade-in">Resources</h2>
+            <ul class="resource-list">
+                <li class="fade-in"><i class="fas fa-store"></i> Digital Store</li>
+                <li class="fade-in"><i class="fas fa-book"></i> AI Readiness Guide</li>
+                <li class="fade-in"><i class="fas fa-tasks"></i> Tech Audit Checklist</li>
+                <li class="fade-in"><i class="fas fa-archive"></i> Newsletter Archive</li>
+            </ul>
+            <div class="cta-center">
+                <a href="#newsletter" class="btn btn-primary">Join the Waitlist</a>
             </div>
+        </div>
     </section>
 
     <!-- Newsletter Section -->
-    <section class="newsletter" id="newsletter">
-    <h2>Stay Updated</h2>
-        <p style="color: #6B7280; font-size: 1.1rem; margin-bottom: 2rem;">Subscribe to our newsletter for the latest insights on AI, tech innovations, and exclusive updates.</p>
- <div class="platform-cta" style="text-align:center; margin-top:2rem;">
-                    <a href="#tally-open=n9bDXE&tally-layout=modal&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="cta-btn" style="font-size:1.1rem; padding:1rem 3rem;">SUBSCRIBE</a>
-                </div>
+    <section class="section newsletter" id="newsletter">
+        <div class="container">
+            <h2 class="section-title fade-in">Stay Updated</h2>
+            <p class="section-subtitle fade-in">Subscribe to our newsletter for the latest insights on AI, tech innovations, and exclusive updates.</p>
+           <a href="#tally-open=n9bDXE&tally-layout=modal&tally-emoji-animation=wave&tally-auto-close=0&tally-form-events-forwarding=1" class="btn btn-secondary">SUBSCRIBE</a>
+        </div>
+    </section>
 
-    <div style="height:2.5rem;"></div>
-    <!-- Modern Responsive Footer -->
-    <footer class="simple-footer">
-        <div class="footer-inner">
-            <div class="footer-left">
-                <span class="footer-copyright">&copy; 2025 Fikanova Limited. All rights reserved.</span>
+    <!-- Contact Section -->
+    <section class="section" id="contact" style="display: none;">
+        <!-- This section serves as an anchor for contact CTAs -->
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Fikanova Limited</h4>
+                    <p style="color: var(--text-secondary); margin: 0;">Bridging human creativity with artificial intelligence</p>
+                </div>
+                <div class="footer-section">
+                    <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Services</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Web Development • SEO • AI Chatbots • Tech Consultancy</p>
+                </div>
+                <div class="footer-section">
+                    <div class="footer-social">
+                        <a href="https://instagram.com/fikanovatech" target="_blank" class="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/company/fikanova" target="_blank" class="linkedin" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://x.com/FikanovaTech" target="_blank" class="twitter" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
             </div>
-            <div class="footer-center">
-                <a href="#tally-open=3xOYWG&tally-layout=modal&tally-emoji-animation=wave" class="footer-btn">Let's Talk</a>
-            </div>
-            <div class="footer-right">
-                <a href="https://instagram.com/fikanovatech" target="_blank" aria-label="Instagram" class="footer-social"><i class="fab fa-instagram"></i></a>
-                <a href="https://linkedin.com/company/fikanova" target="_blank" aria-label="LinkedIn" class="footer-social"><i class="fab fa-linkedin"></i></a>
-                <a href="https://x.com/FikanovaTech" target="_blank" aria-label="X" class="footer-social"><i class="fab fa-x-twitter"></i></a>
+            <div class="footer-bottom">
+                <div>&copy; 2025 Fikanova Limited. All rights reserved.</div>
+                <a href="#contact" class="footer-cta">Ready to Transform Your Business?</a>
             </div>
         </div>
-        </footer>
-    </body>
-    </html>
+    </footer>
+</body>
+</html>
