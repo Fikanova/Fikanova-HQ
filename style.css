@@ -949,8 +949,11 @@ footer {
 }
 
 .logo-image {
-    height: 40px;
+    height: 30px;
     width: auto;
     display: block;
-  }
+    /* Adding the requested border styles */
+    border: 1px double rgb(6, 16, 153); /* Adjust '3px' for desired thickness */
+    border-radius: 5px; 
+}
   
