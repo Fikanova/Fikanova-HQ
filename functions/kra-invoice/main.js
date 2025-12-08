@@ -3,8 +3,7 @@ module.exports = async function ({ req, res }) {
         const { amount, type } = JSON.parse(req.body);
         let taxRate = 0.16;
         if (type === "TOT") taxRate = 0.03;
-        const tax = amount * taxRate;
-        return res.json({ net: amount, tax: tax, gross: amount + tax });
+        return res.json({ net: amount, tax: amount * taxRate, gross: amount * (1 + taxRate) });
     }
     return res.json({ error: "Post method required" });
 };

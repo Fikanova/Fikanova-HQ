@@ -1,96 +1,85 @@
 #!/bin/bash
 
-# Fikanova v5.0 Master Build Script
-# Architecture: Human Supervisor -> n8n (LangChain) -> Appwrite Functions (CrewAI) -> Storefront
+# Fikanova v5.3 Master Build Script (Debug Edition)
+# Includes detailed error logging for Appwrite setup to fix 401 errors.
 
-echo "🚀 Starting Fikanova v5.0 Construction..."
+echo "🚀 Starting Fikanova v5.3 Construction..."
 
 # --- 1. Create Directory Structure ---
-echo "📂 Creating Directories..."
-mkdir -p appwrite
-mkdir -p assets/js assets/css
-mkdir -p functions/kra-invoice      # Node.js
-mkdir -p functions/crewai-recon     # Python
-mkdir -p functions/impact-monitor   # Python
+mkdir -p appwrite assets/js assets/css functions/kra-invoice functions/crewai-recon functions/impact-monitor
+mkdir -p agents/product_lead agents/marketing_lead agents/cfo agents/cto agents/cio
 
-# Agent Departments
-mkdir -p agents/product_lead
-mkdir -p agents/marketing_lead
-mkdir -p agents/cfo
-mkdir -p agents/cto
-mkdir -p agents/cio
+# --- 2. Security Files ---
+cat <<EOF > .gitignore
+.env
+node_modules/
+__pycache__/
+.DS_Store
+EOF
 
-# --- 2. The Warehouse (Appwrite Setup Script) ---
-echo "🗄️ Generating Appwrite Schema & Seed Data..."
+cat <<EOF > .env.example
+APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+APPWRITE_PROJECT_ID=your_project_id
+APPWRITE_API_KEY=your_api_key_with_document_scopes
+EOF
+
+# --- 3. The Warehouse (Secure Appwrite Setup with Logging) ---
+echo "🗄️ Generating Secure Appwrite Schema..."
 
 cat <<'EOF' > appwrite/setup_appwrite.js
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { Client, Databases, ID, Permission, Role } = require('node-appwrite');
 
-// --- CONFIGURATION (REPLACE THESE) ---
-const ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
-const PROJECT_ID = '6936df5800371a655e8e'; 
-const API_KEY = 'standard_b85cc0aa853c87265645a865e7f18e5227c98f5b2c469b42ecfa628d23049451f79af13697fa6b6db905fdf6d8c9ffe2121d6e07d1b81ab032264271e0886c1f7987d5ecb89d32b5087695223a86c6d4d3cfa2ca0e6d76c71545c484b8eb35a11ece29951997ac248421c523edfd4fde30d350937bd4a2a473e1ffefe6ff779e';       
-const DATABASE_ID = '6936e65f0004d492d17c';
+const ENDPOINT = process.env.APPWRITE_ENDPOINT;
+const PROJECT_ID = process.env.APPWRITE_PROJECT_ID;
+const API_KEY = process.env.APPWRITE_API_KEY;
+const DATABASE_ID = 'Fikanova_DB';
 
-// --- SCHEMA DEFINITION ---
+if (!API_KEY || !PROJECT_ID) {
+    console.error("❌ ERROR: Missing API Keys in .env file.");
+    process.exit(1);
+}
+
+// SCHEMA DEFINITION
 const collections = [
-    {
-        name: 'Services',
-        id: 'Services',
-        attributes: [
-            { key: 'title', type: 'string', size: 128, required: true },
-            { key: 'slug', type: 'string', size: 64, required: true },
-            { key: 'category', type: 'string', size: 64, required: true }, // Dev, Mkt, AI
-            { key: 'short_description', type: 'string', size: 256, required: true },
-            { key: 'full_body_markdown', type: 'string', size: 5000, required: false },
-            { key: 'tally_form_id', type: 'string', size: 64, required: false },
-            { key: 'price_estimate', type: 'string', size: 64, required: false }
-        ]
-    },
-    {
-        name: 'Pages',
-        id: 'Pages',
-        attributes: [
-            { key: 'title', type: 'string', size: 128, required: true },
-            { key: 'slug', type: 'string', size: 64, required: true },
-            { key: 'content_markdown', type: 'string', size: 5000, required: true },
-            { key: 'hero_image', type: 'url', required: false },
-            { key: 'meta_description', type: 'string', size: 160, required: false }
-        ]
-    },
-    {
-        name: 'Clients',
-        id: 'Clients',
-        attributes: [
-            { key: 'name', type: 'string', size: 128, required: true },
-            { key: 'logo_url', type: 'url', required: true },
-            { key: 'website_url', type: 'url', required: false },
-            { key: 'status', type: 'string', size: 64, required: true }
-        ]
-    },
-    {
-        name: 'CaseStudies',
-        id: 'CaseStudies',
-        attributes: [
-            { key: 'title', type: 'string', size: 256, required: true },
-            { key: 'client_name', type: 'string', size: 128, required: true },
-            { key: 'summary_result', type: 'string', size: 256, required: true },
-            { key: 'full_story_markdown', type: 'string', size: 5000, required: true },
-            { key: 'service_category', type: 'string', size: 64, required: true }
-        ]
-    },
-    {
-        name: 'Impact_Metrics',
-        id: 'Impact_Metrics',
-        attributes: [
-            { key: 'client_reference', type: 'string', size: 128, required: true },
-            { key: 'metric_label', type: 'string', size: 64, required: true },
-            { key: 'metric_value', type: 'string', size: 64, required: true }
-        ]
-    }
+    { name: 'Services', id: 'Services', attributes: [
+        { key: 'title', type: 'string', size: 128, required: true },
+        { key: 'slug', type: 'string', size: 64, required: true },
+        { key: 'category', type: 'string', size: 64, required: true },
+        { key: 'short_description', type: 'string', size: 256, required: true },
+        { key: 'full_body_markdown', type: 'string', size: 5000, required: false },
+        { key: 'tally_form_id', type: 'string', size: 64, required: false },
+        { key: 'price_estimate', type: 'string', size: 64, required: false }
+    ]},
+    { name: 'Pages', id: 'Pages', attributes: [
+        { key: 'title', type: 'string', size: 128, required: true },
+        { key: 'slug', type: 'string', size: 64, required: true },
+        { key: 'content_markdown', type: 'string', size: 5000, required: true },
+        { key: 'hero_image', type: 'url', required: false },
+        { key: 'meta_description', type: 'string', size: 160, required: false }
+    ]},
+    { name: 'Clients', id: 'Clients', attributes: [
+        { key: 'name', type: 'string', size: 128, required: true },
+        { key: 'logo_url', type: 'url', required: true },
+        { key: 'website_url', type: 'url', required: false },
+        { key: 'status', type: 'string', size: 64, required: true }
+    ]},
+    { name: 'CaseStudies', id: 'CaseStudies', attributes: [
+        { key: 'title', type: 'string', size: 256, required: true },
+        { key: 'client_name', type: 'string', size: 128, required: true },
+        { key: 'summary_result', type: 'string', size: 256, required: true },
+        { key: 'full_story_markdown', type: 'string', size: 5000, required: true },
+        { key: 'service_category', type: 'string', size: 64, required: true }
+    ]},
+    { name: 'Impact_Metrics', id: 'Impact_Metrics', attributes: [
+        { key: 'client_reference', type: 'string', size: 128, required: true },
+        { key: 'metric_label', type: 'string', size: 64, required: true },
+        { key: 'metric_value', type: 'string', size: 64, required: true }
+    ]}
 ];
 
-// --- SEED DATA ---
+// SEED DATA
 const seedServices = [
     { title: "Web Development", slug: "web-development", category: "Development", short_description: "High-performance websites.", price_estimate: "Starts at KES 35,000", full_body_markdown: "## Fast. Secure. Scalable." },
     { title: "Mobile App Development", slug: "mobile-app-development", category: "Development", short_description: "Native Android & iOS apps.", price_estimate: "Starts at KES 80,000", full_body_markdown: "## Your Business in Their Pocket." },
@@ -108,153 +97,141 @@ const seedPages = [
     { title: "Our Story", slug: "our-story", hero_image: "https://via.placeholder.com/1200x400", content_markdown: "## From Lima Labs to Automation\nA journey of optimizing time, wealth, and knowledge.", meta_description: "The founding story." }
 ];
 
-// --- EXECUTION ---
 const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
 const databases = new Databases(client);
 
 async function setup() {
-    try {
-        console.log("🚀 Starting Fikanova DB Setup...");
-        try { await databases.create(DATABASE_ID, DATABASE_ID); } catch (e) {}
+    console.log("🚀 Starting DB Setup...");
+    
+    // 1. Create Database
+    try { 
+        await databases.create(DATABASE_ID, DATABASE_ID); 
+        console.log('✅ DB Created');
+    } catch(e) {
+        if (e.code === 409) console.log('ℹ️ DB Exists');
+        else console.error('❌ DB Creation Failed:', e.message);
+    }
 
-        for (const col of collections) {
-            try { await databases.createCollection(DATABASE_ID, col.id, col.name, [Permission.read(Role.any())]); } catch (e) {}
-            for (const attr of col.attributes) {
-                try {
-                    if (attr.type === 'string') await databases.createStringAttribute(DATABASE_ID, col.id, attr.key, attr.size, attr.required);
-                    if (attr.type === 'url') await databases.createUrlAttribute(DATABASE_ID, col.id, attr.key, attr.required);
-                    await new Promise(r => setTimeout(r, 200));
-                } catch (e) {}
+    // 2. Create Collections & Attributes
+    for (const col of collections) {
+        try { 
+            await databases.createCollection(DATABASE_ID, col.id, col.name, [Permission.read(Role.any())]); 
+            console.log(`✅ Collection ${col.name} Created`);
+        } catch(e) {
+            if (e.code === 409) console.log(`ℹ️ Collection ${col.name} Exists`);
+            else console.error(`❌ Collection ${col.name} Failed:`, e.message);
+        }
+
+        for (const attr of col.attributes) {
+            try {
+                if (attr.type === 'string') await databases.createStringAttribute(DATABASE_ID, col.id, attr.key, attr.size, attr.required);
+                if (attr.type === 'url') await databases.createUrlAttribute(DATABASE_ID, col.id, attr.key, attr.required);
+                await new Promise(r => setTimeout(r, 200));
+            } catch(e) {
+                // Ignore attribute exists errors
             }
         }
-        
-        console.log("⏳ Waiting for indexing...");
-        await new Promise(r => setTimeout(r, 3000));
+    }
+    
+    console.log("⏳ Indexing (3s)...");
+    await new Promise(r => setTimeout(r, 3000));
 
-        // Seed Data (Idempotent)
+    // 3. Seed Data (Documents)
+    try {
         const svc = await databases.listDocuments(DATABASE_ID, 'Services');
-        if (svc.total === 0) { for (const s of seedServices) await databases.createDocument(DATABASE_ID, 'Services', ID.unique(), s); }
-        const pg = await databases.listDocuments(DATABASE_ID, 'Pages');
-        if (pg.total === 0) { for (const p of seedPages) await databases.createDocument(DATABASE_ID, 'Pages', ID.unique(), p); }
+        if (svc.total === 0) { 
+            console.log("🌱 Seeding Services...");
+            for (const s of seedServices) await databases.createDocument(DATABASE_ID, 'Services', ID.unique(), s); 
+        } else {
+            console.log("ℹ️ Services already seeded.");
+        }
 
-        console.log("🎉 Warehouse Setup Complete.");
-    } catch (e) { console.error(e); }
+        const pg = await databases.listDocuments(DATABASE_ID, 'Pages');
+        if (pg.total === 0) { 
+            console.log("🌱 Seeding Pages...");
+            for (const p of seedPages) await databases.createDocument(DATABASE_ID, 'Pages', ID.unique(), p); 
+        } else {
+            console.log("ℹ️ Pages already seeded.");
+        }
+        
+        console.log("�� Database Ready.");
+    } catch(e) {
+        console.error("❌ Document Seeding Failed. CHECK API SCOPES (documents.read, documents.write):", e.message);
+    }
 }
 setup();
 EOF
 
-# --- 3. The Workforce (Real n8n/LangChain JSONs) ---
-echo "🤖 Generating Agent Workforce..."
-
-# 3.1 Product Lead Agent (Main Orchestrator)
+# --- 4. The Workforce (Agents) ---
+echo "🤖 Generating Agent Workflows..."
+# Product Lead
 cat <<'EOF' > agents/product_lead/main_orchestrator.json
 {
   "name": "Product Lead Agent",
   "nodes": [
-    {
-      "parameters": { "httpMethod": "POST", "path": "tally-webhook", "responseMode": "lastNode" },
-      "name": "Tally Trigger",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [100, 300]
-    },
-    {
-      "parameters": {
-        "text": "Analyze this lead: {{$json.body}}. 1. Classify Value. 2. Draft Quote Structure.",
-        "options": {}
-      },
-      "name": "Gemini Brain",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1,
-      "position": [300, 300]
-    },
-    {
-      "parameters": { "operation": "create", "name": "={{$json.client_name}}", "dealStage": "new", "amount": "={{$json.budget}}" },
-      "name": "HubSpot CRM",
-      "type": "n8n-nodes-base.hubspot",
-      "typeVersion": 1,
-      "position": [500, 300]
-    }
-  ],
-  "connections": {
-    "Tally Trigger": { "main": [[{ "node": "Gemini Brain", "type": "main", "index": 0 }]] },
-    "Gemini Brain": { "main": [[{ "node": "HubSpot CRM", "type": "main", "index": 0 }]] }
-  }
+    { "name": "Tally Trigger", "type": "n8n-nodes-base.webhook", "position": [100, 300] },
+    { "name": "Gemini Brain", "type": "@n8n/n8n-nodes-langchain.agent", "position": [300, 300] },
+    { "name": "HubSpot CRM", "type": "n8n-nodes-base.hubspot", "position": [500, 300] }
+  ]
 }
 EOF
-
-# 3.2 Full Sub-Agent Roster (Placeholders for complex logic)
-# Product Team
-echo '{"name": "Recon Bot (Crawl4AI)", "nodes": []}' > agents/product_lead/sub_recon_bot.json
-echo '{"name": "Intake Processor", "nodes": []}' > agents/product_lead/sub_intake_bot.json
+echo '{"name": "Recon Bot", "nodes": []}' > agents/product_lead/sub_recon_bot.json
 echo '{"name": "Quotation Generator", "nodes": []}' > agents/product_lead/sub_quotation_bot.json
+echo '{"name": "Intake Processor", "nodes": []}' > agents/product_lead/sub_intake_bot.json
 
-# Marketing Team
+# Marketing Lead
 echo '{"name": "Marketing Orchestrator", "nodes": []}' > agents/marketing_lead/main_orchestrator.json
 echo '{"name": "Case Study Writer", "nodes": []}' > agents/marketing_lead/sub_case_study_bot.json
 echo '{"name": "Social Poster", "nodes": []}' > agents/marketing_lead/sub_social_poster.json
 echo '{"name": "Newsletter Manager", "nodes": []}' > agents/marketing_lead/sub_newsletter_bot.json
 
-# CFO Team
+# CFO
 echo '{"name": "CFO Orchestrator", "nodes": []}' > agents/cfo/main_orchestrator.json
+echo '{"name": "KRA Tax Bot", "nodes": []}' > agents/cfo/sub_kra_tax_bot.json
 echo '{"name": "Expense Tracker", "nodes": []}' > agents/cfo/sub_expense_bot.json
 echo '{"name": "Runway Calculator", "nodes": []}' > agents/cfo/sub_runway_bot.json
-echo '{"name": "KRA Tax Bot", "nodes": []}' > agents/cfo/sub_kra_tax_bot.json
 
-# CTO Team
+# CTO
 echo '{"name": "CTO Orchestrator", "nodes": []}' > agents/cto/main_orchestrator.json
 echo '{"name": "Impact Monitor", "nodes": []}' > agents/cto/sub_impact_bot.json
 echo '{"name": "Uptime Monitor", "nodes": []}' > agents/cto/sub_uptime_bot.json
 echo '{"name": "Repo Watcher", "nodes": []}' > agents/cto/sub_repo_watcher.json
 
-# CIO Team
+# CIO
 echo '{"name": "CIO Orchestrator", "nodes": []}' > agents/cio/main_orchestrator.json
 echo '{"name": "Morning Brief", "nodes": []}' > agents/cio/sub_morning_brief.json
 echo '{"name": "Meeting Prep", "nodes": []}' > agents/cio/sub_meeting_prep.json
 
-# --- 4. The Backend Functions (KRA & CrewAI) ---
+# --- 5. Backend Functions ---
 echo "🧠 Generating Cloud Functions..."
-
-# 4.1 KRA Invoice (Node.js)
 cat <<'EOF' > functions/kra-invoice/main.js
 module.exports = async function ({ req, res }) {
     if (req.method === "POST") {
         const { amount, type } = JSON.parse(req.body);
         let taxRate = 0.16;
         if (type === "TOT") taxRate = 0.03;
-        const tax = amount * taxRate;
-        return res.json({ net: amount, tax: tax, gross: amount + tax });
+        return res.json({ net: amount, tax: amount * taxRate, gross: amount * (1 + taxRate) });
     }
     return res.json({ error: "Post method required" });
 };
 EOF
 echo '{"name": "kra-invoice","runtime": "node-18.0","entrypoint": "main.js"}' > functions/kra-invoice/appwrite.json
 
-# 4.2 Recon Bot (Python/CrewAI)
 cat <<'EOF' > functions/crewai-recon/main.py
-# This is the Specialist Agent Logic
 def main(context):
-    try:
-        url = context.req.body.get('url')
-        # Placeholder for CrewAI execution logic
-        # In production, this would initialize a CrewAI Agent to scrape the URL
-        return context.res.json({"status": "success", "analysis": f"Analyzed {url}"})
-    except Exception as e:
-        return context.res.json({"error": str(e)})
+    url = context.req.body.get('url')
+    return context.res.json({"status": "analyzed", "url": url})
 EOF
 echo "crewai" > functions/crewai-recon/requirements.txt
 echo '{"name": "crewai-recon","runtime": "python-3.9","entrypoint": "main.py"}' > functions/crewai-recon/appwrite.json
 
-# --- 5. The Storefront Templates ---
-echo "📄 Generating HTML Templates..."
-
-# 5.1 Service Template (Dynamic)
+# --- 6. Storefront Templates ---
+echo "📄 Generating Storefront..."
 cat <<EOF > service.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fikanova Service</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
@@ -263,15 +240,11 @@ cat <<EOF > service.html
     <div id="nav-placeholder"></div>
     <header class="bg-blue-900 text-white py-20 text-center">
         <h1 id="page-title" class="text-4xl font-bold">Loading...</h1>
-        <p id="page-subtitle" class="text-xl text-blue-200 mt-2"></p>
     </header>
     <main class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         <article id="page-content" class="md:col-span-2 prose max-w-none text-gray-700"></article>
         <aside class="md:col-span-1">
-            <div class="bg-white p-6 rounded shadow sticky top-4">
-                <h3 class="font-bold text-lg mb-2">Get a Quote</h3>
-                <div id="tally-container"></div>
-            </div>
+            <div id="tally-container"></div>
         </aside>
     </main>
     <script type="module" src="assets/js/main.js"></script>
@@ -280,37 +253,30 @@ cat <<EOF > service.html
 EOF
 
 cp service.html page.html
-echo "<h1>Portfolio Grid</h1>" > portfolio.html
-echo "<h1>Impact Dashboard</h1>" > impact.html
+echo "<h1>Portfolio</h1>" > portfolio.html
+echo "<h1>Impact</h1>" > impact.html
 echo "<h1>Newsletter</h1>" > newsletter.html
 echo "<h1>Resources</h1>" > resources.html
 
-# --- 6. The Frontend Logic (Menu & Content) ---
-echo "🧠 Generating Frontend Logic..."
-
+# --- 7. Frontend Logic ---
+echo "🧠 Generating JS Logic..."
 cat <<'EOF' > assets/js/main.js
 import { Client, Databases, Query } from "https://cdn.jsdelivr.net/npm/appwrite@14.0.0";
 
-const client = new Client()
-    .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('YOUR_PROJECT_ID'); // REPLACE THIS
-
+const client = new Client().setEndpoint('https://cloud.appwrite.io/v1').setProject('YOUR_PROJECT_ID'); // UPDATE THIS
 const db = new Databases(client);
 const DB_ID = 'Fikanova_DB';
 
-// 1. NAV BUILDER
 function loadNav() {
     const navHTML = `
     <nav class="bg-white shadow sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <a href="index.html" class="font-bold text-2xl text-blue-600">Fikanova</a>
             <div class="hidden md:flex space-x-8">
-                <!-- Solutions -->
                 <div class="group relative py-4">
                     <button class="font-medium hover:text-blue-600">Solutions ▾</button>
                     <div class="absolute left-0 mt-4 w-[600px] bg-white shadow-xl rounded-lg p-6 hidden group-hover:grid grid-cols-3 gap-4 border" id="nav-solutions">Loading...</div>
                 </div>
-                <!-- Company -->
                 <div class="group relative py-4">
                     <button class="font-medium hover:text-blue-600">Company ▾</button>
                     <div class="absolute left-0 mt-4 w-48 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block border">
@@ -319,27 +285,21 @@ function loadNav() {
                         <a href="impact.html" class="block px-4 py-2 hover:bg-gray-50">Impact</a>
                     </div>
                 </div>
-                <!-- Work -->
                 <div class="group relative py-4">
                     <button class="font-medium hover:text-blue-600">Work ▾</button>
                     <div class="absolute left-0 mt-4 w-48 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block border">
                         <a href="portfolio.html" class="block px-4 py-2 hover:bg-gray-50">Portfolio</a>
                         <a href="portfolio.html" class="block px-4 py-2 hover:bg-gray-50">Case Studies</a>
                         <a href="resources.html" class="block px-4 py-2 hover:bg-gray-50">Resources</a>
-                        <a href="newsletter.html" class="block px-4 py-2 hover:bg-gray-50">Newsletter</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>`;
-    const placeholder = document.getElementById('nav-placeholder');
-    if(placeholder) {
-        placeholder.innerHTML = navHTML;
-        fetchServicesMenu();
-    }
+    const ph = document.getElementById('nav-placeholder');
+    if(ph) { ph.innerHTML = navHTML; fetchServicesMenu(); }
 }
 
-// 2. FETCH MENU CONTENT
 async function fetchServicesMenu() {
     try {
         const res = await db.listDocuments(DB_ID, 'Services', [Query.limit(100)]);
@@ -352,34 +312,23 @@ async function fetchServicesMenu() {
             });
             html += `</ul></div>`;
         });
-        const container = document.getElementById('nav-solutions');
-        if(container) container.innerHTML = html;
+        document.getElementById('nav-solutions').innerHTML = html;
     } catch(e) {}
 }
 
-// 3. PAGE CONTENT LOADER
 async function loadPageContent() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('s');
-    const path = window.location.pathname;
-    
-    // Service & Page Loading
-    if ((path.includes('service.html') || path.includes('page.html')) && slug) {
-        const col = path.includes('service.html') ? 'Services' : 'Pages';
+    if ((location.pathname.includes('service.html') || location.pathname.includes('page.html')) && slug) {
+        const col = location.pathname.includes('service.html') ? 'Services' : 'Pages';
         const res = await db.listDocuments(DB_ID, col, [Query.equal('slug', slug)]);
         if (res.documents.length) {
             const data = res.documents[0];
             document.getElementById('page-title').innerText = data.title;
-            const sub = document.getElementById('page-subtitle');
-            if(sub) sub.innerText = data.short_description || "";
             document.getElementById('page-content').innerHTML = data.full_body_markdown || data.content_markdown;
-            
-            const formContainer = document.getElementById('tally-container');
-            if(formContainer && col === 'Services') {
+            if(col === 'Services') {
                 const formId = data.tally_form_id || 'w7e8K1';
-                formContainer.innerHTML = `<iframe src="https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&transparentBackground=1&service=${slug}" width="100%" height="400" frameborder="0"></iframe>`;
-            } else if (formContainer) {
-                formContainer.parentElement.style.display = 'none'; // Hide on static pages
+                document.getElementById('tally-container').innerHTML = `<iframe src="https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&transparentBackground=1&service=${slug}" width="100%" height="400" frameborder="0"></iframe>`;
             }
         }
     }
@@ -389,4 +338,4 @@ loadNav();
 loadPageContent();
 EOF
 
-echo "✅ Fikanova v5.0 Construction Complete."
+echo "✅ Fikanova v5.3 Construction Complete."

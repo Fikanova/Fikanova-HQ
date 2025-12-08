@@ -1,33 +1,8 @@
 {
   "name": "Product Lead Agent",
   "nodes": [
-    {
-      "parameters": { "httpMethod": "POST", "path": "tally-webhook", "responseMode": "lastNode" },
-      "name": "Tally Trigger",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [100, 300]
-    },
-    {
-      "parameters": {
-        "text": "Analyze this lead: {{$json.body}}. 1. Classify Value. 2. Draft Quote Structure.",
-        "options": {}
-      },
-      "name": "Gemini Brain",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1,
-      "position": [300, 300]
-    },
-    {
-      "parameters": { "operation": "create", "name": "={{$json.client_name}}", "dealStage": "new", "amount": "={{$json.budget}}" },
-      "name": "HubSpot CRM",
-      "type": "n8n-nodes-base.hubspot",
-      "typeVersion": 1,
-      "position": [500, 300]
-    }
-  ],
-  "connections": {
-    "Tally Trigger": { "main": [[{ "node": "Gemini Brain", "type": "main", "index": 0 }]] },
-    "Gemini Brain": { "main": [[{ "node": "HubSpot CRM", "type": "main", "index": 0 }]] }
-  }
+    { "name": "Tally Trigger", "type": "n8n-nodes-base.webhook", "position": [100, 300] },
+    { "name": "Gemini Brain", "type": "@n8n/n8n-nodes-langchain.agent", "position": [300, 300] },
+    { "name": "HubSpot CRM", "type": "n8n-nodes-base.hubspot", "position": [500, 300] }
+  ]
 }
