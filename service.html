@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fikanova Service</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
@@ -11,15 +10,11 @@
     <div id="nav-placeholder"></div>
     <header class="bg-blue-900 text-white py-20 text-center">
         <h1 id="page-title" class="text-4xl font-bold">Loading...</h1>
-        <p id="page-subtitle" class="text-xl text-blue-200 mt-2"></p>
     </header>
     <main class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         <article id="page-content" class="md:col-span-2 prose max-w-none text-gray-700"></article>
         <aside class="md:col-span-1">
-            <div class="bg-white p-6 rounded shadow sticky top-4">
-                <h3 class="font-bold text-lg mb-2">Get a Quote</h3>
-                <div id="tally-container"></div>
-            </div>
+            <div id="tally-container"></div>
         </aside>
     </main>
     <script type="module" src="assets/js/main.js"></script>

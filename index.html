@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fikanova — Transform Ideas into AI-Enhanced Solutions</title>
-    <meta name="description" content="Bridging human creativity with artificial intelligence. Transform your business with cutting-edge AI solutions, custom web development, and intelligent automation.">
+    <meta name="description"
+        content="Bridging human creativity with artificial intelligence. Transform your business with cutting-edge AI solutions, custom web development, and intelligent automation.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <link rel="stylesheet" href="style.css">
-    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Appwrite SDK (Global) -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+
 </head>
+
 <body>
     <div class="grid-background"></div>
 
@@ -36,7 +42,7 @@
             <div class="logo">
                 <img src="assets/logos/fikanova-logo1.png" class="logo-image" />
             </div>
-            
+
             <div class="nav-desktop">
                 <ul class="nav-menu">
                     <li id="nav-solutions-container" class="nav-item"></li>
@@ -57,7 +63,8 @@
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
             <div class="menu-group">
-                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="solutionsMenu">
                     <a href="#web" class="menu-item">Web Development</a>
                     <a href="#mobile" class="menu-item">Mobile Apps</a>
@@ -66,7 +73,8 @@
                 </div>
             </div>
             <div class="menu-group">
-                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="companyMenu">
                     <a href="#about" class="menu-item">About Us</a>
                     <a href="#impact" class="menu-item">Impact</a>
@@ -103,13 +111,8 @@
                 </a>
             </div>
 
-            <lottie-player 
-                class="lottie-hero"
-                src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay>
+            <lottie-player class="lottie-hero" src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json"
+                background="transparent" speed="1" loop autoplay>
             </lottie-player>
         </div>
     </section>
@@ -123,47 +126,39 @@
             </div>
             <div class="services-grid">
                 <div class="service-card scroll-reveal">
-                    <lottie-player 
-                        class="lottie-service-icon"
-                        src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-service-icon"
+                        src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent"
+                        speed="1" loop autoplay>
                     </lottie-player>
                     <h3>Web Development</h3>
-                    <p>Stunning, responsive websites that captivate your audience and drive results with modern design principles.</p>
+                    <p>Stunning, responsive websites that captivate your audience and drive results with modern design
+                        principles.</p>
                 </div>
                 <div class="service-card scroll-reveal">
-                    <lottie-player 
-                        class="lottie-service-icon"
-                        src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-service-icon"
+                        src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json" background="transparent"
+                        speed="1" loop autoplay>
                     </lottie-player>
                     <h3>AI Integration</h3>
-                    <p>Intelligent customer engagement that works 24/7 to support your business with advanced AI capabilities.</p>
+                    <p>Intelligent customer engagement that works 24/7 to support your business with advanced AI
+                        capabilities.</p>
                 </div>
                 <div class="service-card scroll-reveal">
-                    <lottie-player 
-                        class="lottie-service-icon"
-                        src="https://assets5.lottiefiles.com/packages/lf20_ydo1amjm.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-service-icon"
+                        src="https://assets5.lottiefiles.com/packages/lf20_ydo1amjm.json" background="transparent"
+                        speed="1" loop autoplay>
                     </lottie-player>
                     <h3>Tech Consulting</h3>
-                    <p>Expert solutions tailored to your business challenges and growth objectives with strategic guidance.</p>
+                    <p>Expert solutions tailored to your business challenges and growth objectives with strategic
+                        guidance.</p>
                 </div>
                 <div class="service-card scroll-reveal">
                     <div class="service-icon">
                         <i class="fas fa-search"></i>
                     </div>
                     <h3>SEO Optimization</h3>
-                    <p>Boost your online visibility and reach the right customers at the right time with data-driven strategies.</p>
+                    <p>Boost your online visibility and reach the right customers at the right time with data-driven
+                        strategies.</p>
                 </div>
             </div>
         </div>
@@ -174,37 +169,23 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item scroll-reveal">
-                    <lottie-player 
-                        class="lottie-stat"
-                        src="https://assets4.lottiefiles.com/packages/lf20_touohxv0.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-stat" src="https://assets4.lottiefiles.com/packages/lf20_touohxv0.json"
+                        background="transparent" speed="1" loop autoplay>
                     </lottie-player>
                     <h3>10+</h3>
                     <p>Projects Completed</p>
                 </div>
                 <div class="stat-item scroll-reveal">
-                    <lottie-player 
-                        class="lottie-stat"
-                        src="https://assets1.lottiefiles.com/packages/lf20_xyadoh9h.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-stat" src="https://assets1.lottiefiles.com/packages/lf20_xyadoh9h.json"
+                        background="transparent" speed="1" loop autoplay>
                     </lottie-player>
                     <h3>8+</h3>
                     <p>Happy Clients</p>
                 </div>
                 <div class="stat-item scroll-reveal">
-                    <lottie-player 
-                        class="lottie-stat"
-                        src="https://assets10.lottiefiles.com/packages/lf20_myejiggj.json"
-                        background="transparent"
-                        speed="1"
-                        loop
-                        autoplay>
+                    <lottie-player class="lottie-stat"
+                        src="https://assets10.lottiefiles.com/packages/lf20_myejiggj.json" background="transparent"
+                        speed="1" loop autoplay>
                     </lottie-player>
                     <h3>2025</h3>
                     <p>Year Founded</p>
@@ -232,7 +213,8 @@
 
             <div class="portfolio-tab-content portfolio-grid active" id="completed-tab">
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Opal Suites" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Opal Suites"
+                        class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Opal Suites</h3>
                         <p>Real estate website with advanced property search and virtual tours</p>
@@ -240,7 +222,8 @@
                     </div>
                 </div>
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80" alt="ETCO Kenya" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80" alt="ETCO Kenya"
+                        class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>ETCO Kenya</h3>
                         <p>NGO website for education and community outreach initiatives</p>
@@ -248,7 +231,8 @@
                     </div>
                 </div>
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Jenga365" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Jenga365"
+                        class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Jenga365</h3>
                         <p>Innovative mentorship platform connecting professionals</p>
@@ -256,7 +240,8 @@
                     </div>
                 </div>
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80" alt="Botpress Chatbot" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80"
+                        alt="Botpress Chatbot" class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Botpress Chatbot</h3>
                         <p>Intelligent chatbot for seamless customer engagement</p>
@@ -267,7 +252,8 @@
 
             <div class="portfolio-tab-content portfolio-grid" id="ongoing-tab">
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80" alt="Nondescriptd RFC" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80"
+                        alt="Nondescriptd RFC" class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Nondescripts RFC</h3>
                         <p>E-commerce platform for rugby merchandise and fan engagement</p>
@@ -275,7 +261,8 @@
                     </div>
                 </div>
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80" alt="Midesa" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80" alt="Midesa"
+                        class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Midesa</h3>
                         <p>Digital payments aggregator and marketplace</p>
@@ -283,7 +270,8 @@
                     </div>
                 </div>
                 <div class="portfolio-card scroll-reveal">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Analytics Dashboard" class="portfolio-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+                        alt="Analytics Dashboard" class="portfolio-image">
                     <div class="portfolio-content">
                         <h3>Analytics Dashboard</h3>
                         <p>Real-time analytics and performance tracking</p>
@@ -304,7 +292,7 @@
             <div class="testimonials-grid">
                 <div class="testimonial-card scroll-reveal">
                     <p class="testimonial-text">
-                        "Fikanova delivered exactly what we needed for our real estate platform. 
+                        "Fikanova delivered exactly what we needed for our real estate platform.
                         Professional, responsive, and delivered on time."
                     </p>
                     <div class="testimonial-author">
@@ -317,7 +305,7 @@
                 </div>
                 <div class="testimonial-card scroll-reveal">
                     <p class="testimonial-text">
-                        "The chatbot integration has transformed our customer service. 
+                        "The chatbot integration has transformed our customer service.
                         Available 24/7 and handles inquiries flawlessly."
                     </p>
                     <div class="testimonial-author">
@@ -330,7 +318,7 @@
                 </div>
                 <div class="testimonial-card scroll-reveal">
                     <p class="testimonial-text">
-                        "Working with Fikanova felt like having a dedicated tech partner. 
+                        "Working with Fikanova felt like having a dedicated tech partner.
                         Exceptional attention to detail and innovative solutions."
                     </p>
                     <div class="testimonial-author">
@@ -421,9 +409,12 @@
         </div>
     </footer>
 
-       <!-- Link to an external JavaScript file -->
-    <script src="script.js"></script>
-    <script type="module" src="dynamic-menu.js"></script>
+    <!-- JavaScript Files -->
+    <!-- 1. UI Interactions (Theme, Mobile Menu, Scroll, Tabs) -->
+    <script src="assets/js/script.js"></script>
+    <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
+    <script src="assets/js/dynamic-menu.js"></script>
 
 </body>
-</html
+
+</html>
