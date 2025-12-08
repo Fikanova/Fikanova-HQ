@@ -59,28 +59,40 @@
         </nav>
     </header>
 
-    <!-- MOBILE MENU - from index-final.html -->
+    <!-- MOBILE MENU - Dynamically populated by JavaScript -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
+            <!-- Solutions (Dynamic from Appwrite) -->
             <div class="menu-group">
                 <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i
                             class="fas fa-chevron-down"></i></span></button>
-                <div class="submenu" id="solutionsMenu">
-                    <a href="#web" class="menu-item">Web Development</a>
-                    <a href="#mobile" class="menu-item">Mobile Apps</a>
-                    <a href="#seo" class="menu-item">SEO Optimization</a>
-                    <a href="#ai" class="menu-item">AI Integration</a>
+                <div class="submenu" id="mobile-solutions-menu">
+                    <!-- Populated by dynamic-menu.js -->
+                    <span class="menu-item" style="color:var(--text-tertiary);">Loading...</span>
                 </div>
             </div>
+            <!-- Company -->
             <div class="menu-group">
                 <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i
                             class="fas fa-chevron-down"></i></span></button>
-                <div class="submenu" id="companyMenu">
-                    <a href="#about" class="menu-item">About Us</a>
-                    <a href="#impact" class="menu-item">Impact</a>
-                    <a href="#contact" class="menu-item">Contact</a>
+                <div class="submenu" id="mobile-company-menu">
+                    <a href="/page.html?p=about-us" class="menu-item">About Us</a>
+                    <a href="/page.html?p=our-story" class="menu-item">Our Story</a>
+                    <a href="/page.html?p=impact" class="menu-item">Impact</a>
                 </div>
             </div>
+            <!-- Work -->
+            <div class="menu-group">
+                <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
+                <div class="submenu" id="mobile-work-menu">
+                    <a href="/page.html?p=portfolio" class="menu-item">Portfolio</a>
+                    <a href="/page.html?p=case-studies" class="menu-item">Case Studies</a>
+                    <a href="/page.html?p=resources" class="menu-item">Resources</a>
+                    <a href="/page.html?p=newsletter" class="menu-item">Newsletter</a>
+                </div>
+            </div>
+            <!-- CTA -->
             <div class="menu-group" style="border-bottom:none;">
                 <a href="#contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
             </div>
