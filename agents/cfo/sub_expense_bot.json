@@ -1,1 +1,30 @@
-{"name": "Expense Tracker", "nodes": []}
+{
+    "name": "Expense Tracker",
+    "emoji": "🧾",
+    "description": "Tracks expenses via WhatsApp messages and logs to Google Sheets",
+    "status": "placeholder",
+    "parent_agent": "cfo",
+    "tools": [
+        "whatsapp",
+        "google_sheets",
+        "gemini"
+    ],
+    "triggers": [
+        "whatsapp_message"
+    ],
+    "inputs": {
+        "message": "string - WhatsApp expense message (e.g., 'Fuel 2500')",
+        "sender": "string - WhatsApp sender number",
+        "receipt_image": "string - Optional receipt photo URL"
+    },
+    "outputs": {
+        "expense_id": "string - Unique expense ID",
+        "category": "string - Expense category (auto-classified)",
+        "amount": "number - Expense amount in KES",
+        "sheet_row": "number - Row number in expense sheet"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

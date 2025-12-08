@@ -1,1 +1,30 @@
-{"name": "Runway Calculator", "nodes": []}
+{
+    "name": "Runway Calculator",
+    "emoji": "🛫",
+    "description": "Monitors cash runway and alerts on low balance thresholds",
+    "status": "placeholder",
+    "parent_agent": "cfo",
+    "tools": [
+        "google_sheets",
+        "whatsapp",
+        "gemini"
+    ],
+    "triggers": [
+        "daily_schedule",
+        "expense_logged"
+    ],
+    "inputs": {
+        "current_balance": "number - Current bank balance",
+        "monthly_burn": "number - Average monthly expenses",
+        "revenue_pipeline": "number - Expected incoming revenue"
+    },
+    "outputs": {
+        "runway_months": "number - Months of runway remaining",
+        "alert_level": "string - green/yellow/red status",
+        "recommendation": "string - AI-generated financial advice"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

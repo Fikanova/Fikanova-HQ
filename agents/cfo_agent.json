@@ -1,0 +1,13 @@
+{
+    "name": "CFO Agent",
+    "emoji": "💰",
+    "type": "lead_agent",
+    "folder": "cfo",
+    "description": "Manages financial operations, expense tracking, runway monitoring, and tax compliance",
+    "sub_agents": [
+        "sub_expense_bot",
+        "sub_runway_bot",
+        "sub_kra_tax_bot"
+    ],
+    "status": "placeholder"
+}

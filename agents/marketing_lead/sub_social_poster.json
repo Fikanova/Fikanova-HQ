@@ -1,1 +1,31 @@
-{"name": "Social Poster", "nodes": []}
+{
+    "name": "Social Poster",
+    "emoji": "📱",
+    "description": "Posts Impact wins and updates to LinkedIn automatically",
+    "status": "placeholder",
+    "parent_agent": "marketing_lead",
+    "tools": [
+        "linkedin",
+        "gemini",
+        "appwrite"
+    ],
+    "triggers": [
+        "impact_milestone",
+        "case_study_published",
+        "manual"
+    ],
+    "inputs": {
+        "content_type": "string - Type of post (win/milestone/update)",
+        "message": "string - Core message to post",
+        "media_urls": "array - Optional images or videos to attach"
+    },
+    "outputs": {
+        "post_id": "string - LinkedIn post ID",
+        "engagement_metrics": "object - Likes, comments, shares (fetched later)",
+        "posted_at": "datetime - Timestamp of posting"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

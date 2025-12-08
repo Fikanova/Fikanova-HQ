@@ -1,8 +1,50 @@
 {
   "name": "Product Lead Agent",
+  "emoji": "🚀",
+  "description": "Manages sales pipeline, client intake, and project scoping for Fikanova",
+  "status": "placeholder",
+  "tools": [
+    "hubspot",
+    "tally",
+    "gemini",
+    "appwrite"
+  ],
+  "triggers": [
+    "tally_form_submission",
+    "hubspot_deal_update"
+  ],
+  "sub_agents": [
+    "sub_recon_bot",
+    "sub_intake_bot",
+    "sub_quotation_bot"
+  ],
   "nodes": [
-    { "name": "Tally Trigger", "type": "n8n-nodes-base.webhook", "position": [100, 300] },
-    { "name": "Gemini Brain", "type": "@n8n/n8n-nodes-langchain.agent", "position": [300, 300] },
-    { "name": "HubSpot CRM", "type": "n8n-nodes-base.hubspot", "position": [500, 300] }
-  ]
+    {
+      "name": "Tally Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        100,
+        300
+      ]
+    },
+    {
+      "name": "Gemini Brain",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "name": "HubSpot CRM",
+      "type": "n8n-nodes-base.hubspot",
+      "position": [
+        500,
+        300
+      ]
+    }
+  ],
+  "workflow_id": null,
+  "created_at": "2024-12-09",
+  "updated_at": "2024-12-09"
 }

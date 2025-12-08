@@ -1,1 +1,32 @@
-{"name": "Morning Brief", "nodes": []}
+{
+    "name": "Morning Briefer",
+    "emoji": "☀️",
+    "description": "Sends 7 AM WhatsApp summary with daily priorities and key metrics",
+    "status": "placeholder",
+    "parent_agent": "cio",
+    "tools": [
+        "whatsapp",
+        "hubspot",
+        "google_calendar",
+        "google_sheets",
+        "gemini"
+    ],
+    "triggers": [
+        "daily_7am"
+    ],
+    "inputs": {
+        "include_sections": "array - Sections to include (deals/tasks/calendar/runway)",
+        "recipient": "string - WhatsApp number to send to",
+        "format": "string - brief/detailed summary format"
+    },
+    "outputs": {
+        "message_sent": "boolean - Whether WhatsApp was sent successfully",
+        "summary": "string - The generated morning brief content",
+        "priority_items": "array - Top 3 priorities for the day",
+        "alerts": "array - Any urgent items requiring attention"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}
