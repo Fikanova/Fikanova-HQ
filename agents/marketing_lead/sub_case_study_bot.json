@@ -1,1 +1,31 @@
-{"name": "Case Study Writer", "nodes": []}
+{
+    "name": "Case Study Writer",
+    "emoji": "✍️",
+    "description": "Auto-writes case studies and portfolio entries from finished deals",
+    "status": "placeholder",
+    "parent_agent": "marketing_lead",
+    "tools": [
+        "gemini",
+        "hubspot",
+        "appwrite",
+        "notion"
+    ],
+    "triggers": [
+        "hubspot_deal_won",
+        "manual"
+    ],
+    "inputs": {
+        "deal_id": "string - HubSpot deal ID of completed project",
+        "client_testimonial": "string - Optional client quote",
+        "metrics": "object - Impact metrics (pageSpeed, conversions, etc.)"
+    },
+    "outputs": {
+        "case_study_md": "string - Generated markdown case study",
+        "portfolio_entry": "object - Appwrite document for portfolio",
+        "social_snippet": "string - Short version for social media"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

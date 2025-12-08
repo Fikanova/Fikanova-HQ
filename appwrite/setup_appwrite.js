@@ -2,9 +2,9 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { Client, Databases, ID, Permission, Role } = require('node-appwrite');
 
-const ENDPOINT = process.env.APPWRITE_ENDPOINT;
-const PROJECT_ID = process.env.APPWRITE_PROJECT_ID;
-const API_KEY = process.env.APPWRITE_API_KEY;
+const ENDPOINT = process.env.VITE_APPWRITE_ENDPOINT;
+const PROJECT_ID = process.env.VITE_APPWRITE_PROJECT_ID;
+const API_KEY = process.env.VITE_APPWRITE_API_KEY;
 const DATABASE_ID = '693703ef001133c62d78';
 
 if (!API_KEY || !PROJECT_ID) {
@@ -56,6 +56,117 @@ const collections = [
             { key: 'client_reference', type: 'string', size: 128, required: true },
             { key: 'metric_label', type: 'string', size: 64, required: true },
             { key: 'metric_value', type: 'string', size: 64, required: true }
+        ]
+    },
+    // === AGENT WORKFORCE COLLECTIONS ===
+    // 💰 CFO Agent
+    {
+        name: 'Expenses', id: 'Expenses', attributes: [
+            { key: 'description', type: 'string', size: 256, required: true },
+            { key: 'amount', type: 'float', required: true },
+            { key: 'category', type: 'string', size: 64, required: true },
+            { key: 'date', type: 'datetime', required: true },
+            { key: 'receipt_url', type: 'url', required: false },
+            { key: 'logged_by', type: 'string', size: 64, required: true }
+        ]
+    },
+    {
+        name: 'Runway_Snapshots', id: 'Runway_Snapshots', attributes: [
+            { key: 'month', type: 'string', size: 7, required: true },
+            { key: 'balance', type: 'float', required: true },
+            { key: 'burn_rate', type: 'float', required: true },
+            { key: 'runway_months', type: 'float', required: true },
+            { key: 'alert_level', type: 'string', size: 16, required: true }
+        ]
+    },
+    // 💻 CTO Agent
+    {
+        name: 'Uptime_Logs', id: 'Uptime_Logs', attributes: [
+            { key: 'site_url', type: 'url', required: true },
+            { key: 'status', type: 'string', size: 16, required: true },
+            { key: 'response_time_ms', type: 'integer', required: true },
+            { key: 'checked_at', type: 'datetime', required: true }
+        ]
+    },
+    {
+        name: 'Repo_Activity', id: 'Repo_Activity', attributes: [
+            { key: 'repo_name', type: 'string', size: 128, required: true },
+            { key: 'commit_sha', type: 'string', size: 40, required: true },
+            { key: 'commit_message', type: 'string', size: 256, required: true },
+            { key: 'author', type: 'string', size: 64, required: true },
+            { key: 'pushed_at', type: 'datetime', required: true }
+        ]
+    },
+    // 📢 Marketing Agent
+    {
+        name: 'Social_Posts', id: 'Social_Posts', attributes: [
+            { key: 'platform', type: 'string', size: 32, required: true },
+            { key: 'content', type: 'string', size: 1000, required: true },
+            { key: 'post_url', type: 'url', required: false },
+            { key: 'posted_at', type: 'datetime', required: true },
+            { key: 'likes', type: 'integer', required: false },
+            { key: 'comments', type: 'integer', required: false }
+        ]
+    },
+    {
+        name: 'Newsletter_Campaigns', id: 'Newsletter_Campaigns', attributes: [
+            { key: 'subject', type: 'string', size: 256, required: true },
+            { key: 'sent_at', type: 'datetime', required: true },
+            { key: 'recipients_count', type: 'integer', required: true },
+            { key: 'open_rate', type: 'float', required: false },
+            { key: 'click_rate', type: 'float', required: false }
+        ]
+    },
+    // 🧠 CIO Agent
+    {
+        name: 'Daily_Briefs', id: 'Daily_Briefs', attributes: [
+            { key: 'date', type: 'string', size: 10, required: true },
+            { key: 'summary', type: 'string', size: 2000, required: true },
+            { key: 'priority_items', type: 'string', size: 1000, required: true },
+            { key: 'sent_at', type: 'datetime', required: true }
+        ]
+    },
+    // 🚀 Product Lead Agent
+    {
+        name: 'Lead_Intakes', id: 'Lead_Intakes', attributes: [
+            { key: 'tally_submission_id', type: 'string', size: 64, required: true },
+            { key: 'lead_type', type: 'string', size: 16, required: true },
+            { key: 'service_interest', type: 'string', size: 128, required: true },
+            { key: 'contact_email', type: 'email', required: true },
+            { key: 'contact_name', type: 'string', size: 128, required: true },
+            { key: 'received_at', type: 'datetime', required: true }
+        ]
+    },
+    {
+        name: 'Quotations', id: 'Quotations', attributes: [
+            { key: 'quote_number', type: 'string', size: 32, required: true },
+            { key: 'client_name', type: 'string', size: 128, required: true },
+            { key: 'total_amount', type: 'float', required: true },
+            { key: 'pdf_url', type: 'url', required: true },
+            { key: 'status', type: 'string', size: 32, required: true },
+            { key: 'created_at', type: 'datetime', required: true }
+        ]
+    },
+    // 💰 CFO Agent - Tax Compliance
+    {
+        name: 'Tax_Filings', id: 'Tax_Filings', attributes: [
+            { key: 'filing_period', type: 'string', size: 64, required: true },
+            { key: 'tax_type', type: 'string', size: 32, required: true },
+            { key: 'amount_due', type: 'float', required: true },
+            { key: 'status', type: 'string', size: 32, required: true },
+            { key: 'payment_slip_url', type: 'url', required: false },
+            { key: 'filing_date', type: 'datetime', required: false }
+        ]
+    },
+    // 🧠 CIO Agent - Agent Performance Monitoring
+    {
+        name: 'Agent_Logs', id: 'Agent_Logs', attributes: [
+            { key: 'agent_name', type: 'string', size: 64, required: true },
+            { key: 'action', type: 'string', size: 128, required: true },
+            { key: 'status', type: 'string', size: 32, required: true },
+            { key: 'error_message', type: 'string', size: 5000, required: false },
+            { key: 'execution_time', type: 'integer', required: false },
+            { key: 'logged_at', type: 'datetime', required: true }
         ]
     }
 ];
@@ -112,6 +223,10 @@ async function setup() {
             try {
                 if (attr.type === 'string') await databases.createStringAttribute(DATABASE_ID, col.id, attr.key, attr.size, attr.required);
                 if (attr.type === 'url') await databases.createUrlAttribute(DATABASE_ID, col.id, attr.key, attr.required);
+                if (attr.type === 'float') await databases.createFloatAttribute(DATABASE_ID, col.id, attr.key, attr.required);
+                if (attr.type === 'integer') await databases.createIntegerAttribute(DATABASE_ID, col.id, attr.key, attr.required);
+                if (attr.type === 'datetime') await databases.createDatetimeAttribute(DATABASE_ID, col.id, attr.key, attr.required);
+                if (attr.type === 'email') await databases.createEmailAttribute(DATABASE_ID, col.id, attr.key, attr.required);
                 await new Promise(r => setTimeout(r, 200));
             } catch (e) {
                 // Ignore attribute exists errors

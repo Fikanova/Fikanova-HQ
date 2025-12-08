@@ -1,1 +1,31 @@
-{"name": "Quotation Generator", "nodes": []}
+{
+    "name": "Quotation Generator",
+    "emoji": "📄",
+    "description": "Generates professional PDF quotations based on scoped requirements",
+    "status": "placeholder",
+    "parent_agent": "product_lead",
+    "tools": [
+        "pdf_generator",
+        "gemini",
+        "hubspot",
+        "email"
+    ],
+    "triggers": [
+        "manual",
+        "hubspot_deal_stage_change"
+    ],
+    "inputs": {
+        "deal_id": "string - HubSpot deal ID",
+        "scope": "object - Project scope details",
+        "pricing_tier": "string - Selected pricing package"
+    },
+    "outputs": {
+        "pdf_url": "string - URL to generated PDF quote",
+        "quote_number": "string - Unique quotation reference",
+        "sent_status": "boolean - Whether email was sent to client"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

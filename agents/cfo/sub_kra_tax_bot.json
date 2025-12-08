@@ -1,1 +1,33 @@
-{"name": "KRA Tax Bot", "nodes": []}
+{
+    "name": "KRA Tax Bot",
+    "emoji": "🏛️",
+    "description": "Calculates VAT/TOT for eTIMS compliance and generates tax reports",
+    "status": "placeholder",
+    "parent_agent": "cfo",
+    "tools": [
+        "google_sheets",
+        "kra_etims",
+        "gemini",
+        "pdf_generator"
+    ],
+    "triggers": [
+        "monthly_schedule",
+        "invoice_generated",
+        "manual"
+    ],
+    "inputs": {
+        "period": "string - Tax period (e.g., '2024-12')",
+        "invoices": "array - List of invoices for the period",
+        "expenses": "array - Deductible expenses"
+    },
+    "outputs": {
+        "vat_payable": "number - VAT amount due",
+        "tot_payable": "number - TOT amount due (if applicable)",
+        "etims_ready": "boolean - Ready for eTIMS submission",
+        "report_pdf": "string - Generated tax report PDF URL"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

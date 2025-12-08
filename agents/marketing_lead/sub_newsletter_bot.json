@@ -1,1 +1,31 @@
-{"name": "Newsletter Manager", "nodes": []}
+{
+    "name": "Newsletter Bot",
+    "emoji": "📧",
+    "description": "Manages email newsletter campaigns to the subscriber list",
+    "status": "placeholder",
+    "parent_agent": "marketing_lead",
+    "tools": [
+        "mailchimp",
+        "gemini",
+        "appwrite"
+    ],
+    "triggers": [
+        "weekly_schedule",
+        "manual",
+        "new_case_study"
+    ],
+    "inputs": {
+        "campaign_type": "string - Type (weekly_digest/announcement/case_study)",
+        "content": "object - Newsletter content sections",
+        "segment": "string - Subscriber segment to target"
+    },
+    "outputs": {
+        "campaign_id": "string - Mailchimp campaign ID",
+        "sent_count": "number - Emails successfully sent",
+        "open_rate": "number - Open rate (fetched later)"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

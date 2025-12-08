@@ -1,1 +1,29 @@
-{"name": "Intake Processor", "nodes": []}
+{
+    "name": "Intake Processor",
+    "emoji": "📥",
+    "description": "Classifies and processes Tally form submissions, routes leads to appropriate pipeline stages",
+    "status": "placeholder",
+    "parent_agent": "product_lead",
+    "tools": [
+        "tally",
+        "hubspot",
+        "gemini",
+        "appwrite"
+    ],
+    "triggers": [
+        "tally_form_submission"
+    ],
+    "inputs": {
+        "form_data": "object - Raw Tally form submission data",
+        "form_id": "string - The Tally form identifier"
+    },
+    "outputs": {
+        "lead_type": "string - Classification (hot/warm/cold)",
+        "service_category": "string - Matched service offering",
+        "hubspot_deal_id": "string - Created HubSpot deal ID"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

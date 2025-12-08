@@ -1,1 +1,31 @@
-{"name": "Uptime Monitor", "nodes": []}
+{
+    "name": "Uptime Monitor",
+    "emoji": "🟢",
+    "description": "Pings client websites and alerts on downtime",
+    "status": "placeholder",
+    "parent_agent": "cto",
+    "tools": [
+        "uptime_robot",
+        "whatsapp",
+        "appwrite"
+    ],
+    "triggers": [
+        "every_5_minutes",
+        "downtime_detected"
+    ],
+    "inputs": {
+        "sites": "array - List of site URLs to monitor",
+        "check_interval": "number - Check frequency in minutes",
+        "alert_threshold": "number - Seconds before alerting"
+    },
+    "outputs": {
+        "status": "string - up/down/degraded",
+        "response_time": "number - Response time in ms",
+        "uptime_percent": "number - Uptime percentage over 30 days",
+        "alert_sent": "boolean - Whether downtime alert was sent"
+    },
+    "nodes": [],
+    "workflow_id": null,
+    "created_at": "2024-12-09",
+    "updated_at": "2024-12-09"
+}

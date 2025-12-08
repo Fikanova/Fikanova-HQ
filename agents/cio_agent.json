@@ -1,0 +1,12 @@
+{
+    "name": "CIO Agent",
+    "emoji": "🧠",
+    "type": "lead_agent",
+    "folder": "cio",
+    "description": "Manages operational intelligence, daily briefings, and meeting preparation",
+    "sub_agents": [
+        "sub_morning_brief",
+        "sub_meeting_prep"
+    ],
+    "status": "placeholder"
+}
