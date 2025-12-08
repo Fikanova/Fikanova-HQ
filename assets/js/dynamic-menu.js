@@ -10,12 +10,6 @@ const Query = Appwrite.Query;
 const DB_ID = '693703ef001133c62d78';
 const SERVICES_COL = 'Services';
 
-// Verify Appwrite connection on load
-client.ping().then(() => {
-    console.log("✅ Appwrite connection verified");
-}).catch((error) => {
-    console.warn("⚠️ Appwrite ping failed:", error.message);
-});
 
 // --- MENU STRUCTURE DEFINITION ---
 const menuStructure = {
