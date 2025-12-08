@@ -37,17 +37,21 @@ const menuStructure = {
 
 // --- MAIN FUNCTION ---
 async function initMenu() {
+    // Render static menus immediately (Company, Work - both desktop and mobile)
     renderStaticMenus();
+
     try {
         const response = await databases.listDocuments(DB_ID, SERVICES_COL, [Query.limit(100)]);
         renderSolutionsMenu(response.documents);
+        renderMobileSolutionsMenu(response.documents);
     } catch (error) {
         console.warn("Menu Fetch Error:", error);
         renderSolutionsFallback();
+        renderMobileSolutionsFallback();
     }
 }
 
-// --- Render Static Menus (Company, Work) ---
+// --- Render Static Menus (Company, Work) - Desktop ---
 function renderStaticMenus() {
     const companyContainer = document.getElementById('nav-company-container');
     if (companyContainer) companyContainer.innerHTML = buildSimpleDropdown(menuStructure.company.label, menuStructure.company.links);
@@ -56,7 +60,7 @@ function renderStaticMenus() {
     if (workContainer) workContainer.innerHTML = buildSimpleDropdown(menuStructure.work.label, menuStructure.work.links);
 }
 
-// --- Render Dynamic Solutions Menu ---
+// --- Render Dynamic Solutions Menu - Desktop ---
 function renderSolutionsMenu(services) {
     const container = document.getElementById('nav-solutions-container');
     if (!container) return;
@@ -79,7 +83,28 @@ function renderSolutionsMenu(services) {
     container.innerHTML = html;
 }
 
-// --- Fallback for Solutions if fetch fails ---
+// --- Render Dynamic Solutions Menu - Mobile ---
+function renderMobileSolutionsMenu(services) {
+    const container = document.getElementById('mobile-solutions-menu');
+    if (!container) return;
+
+    let html = '';
+    menuStructure.solutions.categories.forEach(category => {
+        const categoryServices = services.filter(s => s.category === category);
+        html += `<div class="mobile-category"><strong style="font-size:0.75rem; color:var(--text-tertiary); text-transform:uppercase; display:block; margin:10px 0 5px;">${category}</strong>`;
+        if (categoryServices.length > 0) {
+            categoryServices.forEach(service => {
+                html += `<a href="/service.html?s=${service.slug}" class="menu-item">${service.title}</a>`;
+            });
+        } else {
+            html += `<span class="menu-item" style="color:var(--text-tertiary);">Coming soon</span>`;
+        }
+        html += `</div>`;
+    });
+    container.innerHTML = html;
+}
+
+// --- Fallback for Solutions if fetch fails - Desktop ---
 function renderSolutionsFallback() {
     const container = document.getElementById('nav-solutions-container');
     if (!container) return;
@@ -92,7 +117,19 @@ function renderSolutionsFallback() {
     container.innerHTML = html;
 }
 
-// --- HELPER: Build Simple Dropdowns ---
+// --- Fallback for Solutions if fetch fails - Mobile ---
+function renderMobileSolutionsFallback() {
+    const container = document.getElementById('mobile-solutions-menu');
+    if (!container) return;
+
+    let html = '';
+    menuStructure.solutions.categories.forEach(cat => {
+        html += `<span class="menu-item" style="color:var(--text-tertiary);">${cat}: Loading...</span>`;
+    });
+    container.innerHTML = html;
+}
+
+// --- HELPER: Build Simple Dropdowns (Desktop) ---
 function buildSimpleDropdown(label, links) {
     let html = `<span class="nav-link">${label} <i class="fas fa-chevron-down" style="font-size:0.75rem;"></i></span>`;
     html += `<div class="mega-menu" style="min-width: 250px; grid-template-columns: 1fr;"><div class="mega-menu-group">`;

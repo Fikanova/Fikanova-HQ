@@ -18,9 +18,9 @@ __pycache__/
 EOF
 
 cat <<EOF > .env.example
-APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
-APPWRITE_PROJECT_ID=your_project_id
-APPWRITE_API_KEY=your_api_key_with_document_scopes
+APPWRITE_ENDPOINT=
+APPWRITE_PROJECT_ID=
+APPWRITE_API_KEY=
 EOF
 
 # --- 3. The Warehouse (Secure Appwrite Setup with Logging) ---
