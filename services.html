@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fikanova Newsletter</title>
+    <title>Our Services — Fikanova</title>
     <meta name="description"
-        content="Subscribe to Fikanova's newsletter for the latest updates on AI, technology, and innovation.">
+        content="Explore Fikanova's comprehensive services including web development, AI integration, mobile apps, and digital marketing solutions.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -21,7 +21,7 @@
 <body>
     <div class="grid-background"></div>
 
-    <!-- FLOATING SOCIAL - from index.html -->
+    <!-- FLOATING SOCIAL -->
     <div class="social-float">
         <span class="follow-text">FOLLOW US</span>
         <a href="https://instagram.com/fikanovatech" target="_blank" class="social-float-icon" title="Instagram">
@@ -35,7 +35,7 @@
         </a>
     </div>
 
-    <!-- HEADER - from index.html -->
+    <!-- HEADER -->
     <header>
         <nav>
             <div class="logo">
@@ -58,40 +58,35 @@
         </nav>
     </header>
 
-    <!-- MOBILE MENU - Dynamically populated by JavaScript -->
+    <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <!-- Solutions (Dynamic from Appwrite) -->
             <div class="menu-group">
                 <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i
                             class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-solutions-menu">
-                    <!-- Populated by dynamic-menu.js -->
                     <span class="menu-item" style="color:var(--text-tertiary);">Loading...</span>
                 </div>
             </div>
-            <!-- Company -->
             <div class="menu-group">
                 <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i
                             class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-company-menu">
                     <a href="/page.html?p=about-us" class="menu-item">About Us</a>
                     <a href="/page.html?p=our-story" class="menu-item">Our Story</a>
-                    <a href="/page.html?p=impact" class="menu-item">Impact</a>
+                    <a href="/impact.html" class="menu-item">Impact</a>
                 </div>
             </div>
-            <!-- Work -->
             <div class="menu-group">
                 <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i
                             class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-work-menu">
-                    <a href="/page.html?p=portfolio" class="menu-item">Portfolio</a>
+                    <a href="/portfolio.html" class="menu-item">Portfolio</a>
                     <a href="/page.html?p=case-studies" class="menu-item">Case Studies</a>
-                    <a href="/page.html?p=resources" class="menu-item">Resources</a>
-                    <a href="/page.html?p=newsletter" class="menu-item">Newsletter</a>
+                    <a href="/resources.html" class="menu-item">Resources</a>
+                    <a href="/newsletter.html" class="menu-item">Newsletter</a>
                 </div>
             </div>
-            <!-- CTA -->
             <div class="menu-group" style="border-bottom:none;">
                 <a href="/#contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
             </div>
@@ -103,59 +98,62 @@
         <div class="container">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                Stay in the Loop
+                Comprehensive Solutions
             </div>
             <h1>
-                Our <span class="gradient-text">Newsletter</span><br>
-                Tech insights delivered
+                Our <span class="gradient-text">Services</span><br>
+                Tailored for growth
             </h1>
             <p>
-                Stay updated with the latest in AI, technology, and innovation.
+                From web development to AI integration, we provide end-to-end digital solutions.
             </p>
             <div class="cta-buttons">
-                <a href="mailto:newsletter@fikanova.co.ke?subject=Subscribe%20to%20Newsletter" class="btn btn-primary">
-                    <i class="fas fa-envelope"></i>
-                    Subscribe Now
+                <a href="/#contact" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i>
+                    Get Started
                 </a>
-                <a href="/services.html" class="btn btn-secondary">
-                    View Services
+                <a href="/portfolio.html" class="btn btn-secondary">
+                    View Our Work
                 </a>
             </div>
 
-            <lottie-player class="lottie-hero" src="https://assets5.lottiefiles.com/packages/lf20_puciaact.json"
+            <lottie-player class="lottie-hero" src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json"
                 background="transparent" speed="1" loop autoplay>
             </lottie-player>
         </div>
     </section>
+
+    <!-- Services Listing -->
     <main class="page-main">
         <div class="container">
-
-            <!-- Benefits Grid -->
+            <!-- Development Services -->
             <div class="section-header scroll-reveal">
-                <h2>What You'll Get</h2>
+                <h2>Development</h2>
+                <p>Build powerful digital products with our expert development team</p>
             </div>
-            <div class="services-grid">
-                <div class="service-card scroll-reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                    <h3>Weekly Updates</h3>
-                    <p>Curated news and insights about AI, web development, and emerging technologies.</p>
-                </div>
-                <div class="service-card scroll-reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>Exclusive Content</h3>
-                    <p>Behind-the-scenes looks at our projects and early access to case studies.</p>
-                </div>
-                <div class="service-card scroll-reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-gift"></i>
-                    </div>
-                    <h3>Special Offers</h3>
-                    <p>Subscriber-only discounts and priority access to our services.</p>
-                </div>
+            <div id="services-development" class="services-grid">
+                <!-- Populated by JavaScript -->
+                <div class="loading-skeleton" style="height: 200px;"></div>
+            </div>
+
+            <!-- Marketing Services -->
+            <div class="section-header scroll-reveal" style="margin-top: 80px;">
+                <h2>Marketing</h2>
+                <p>Grow your brand with strategic digital marketing</p>
+            </div>
+            <div id="services-marketing" class="services-grid">
+                <!-- Populated by JavaScript -->
+                <div class="loading-skeleton" style="height: 200px;"></div>
+            </div>
+
+            <!-- AI & Tech Services -->
+            <div class="section-header scroll-reveal" style="margin-top: 80px;">
+                <h2>AI & Technology</h2>
+                <p>Leverage cutting-edge AI and automation solutions</p>
+            </div>
+            <div id="services-ai" class="services-grid">
+                <!-- Populated by JavaScript -->
+                <div class="loading-skeleton" style="height: 200px;"></div>
             </div>
         </div>
     </main>
@@ -177,8 +175,8 @@
                     <h4>Services</h4>
                     <ul>
                         <li><a href="/service.html?s=web-development">Web Development</a></li>
-                        <li><a href="/service.html?s=ai-integration">AI Integration</a></li>
-                        <li><a href="/service.html?s=tech-consulting">Tech Consulting</a></li>
+                        <li><a href="/service.html?s=ai-automation">AI Integration</a></li>
+                        <li><a href="/service.html?s=tech-consultation">Tech Consulting</a></li>
                         <li><a href="/service.html?s=seo-optimization">SEO Optimization</a></li>
                     </ul>
                 </div>
@@ -191,39 +189,98 @@
                         <li><a href="mailto:info@fikanova.co.ke">Email</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                    </ul>
-                </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Fikanova Limited. All rights reserved.</p>
-                <div class="social-links" style="justify-content: center; margin-top: 20px;">
-                    <a href="https://twitter.com/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://linkedin.com/company/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://instagram.com/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
+                <p>&copy; 2025 Fikanova. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <!-- JavaScript Files -->
-    <!-- 1. UI Interactions (Theme, Mobile Menu, Scroll, Tabs) -->
     <script src="assets/js/script.js"></script>
-    <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
     <script src="assets/js/dynamic-menu.js"></script>
-    <!-- 3. Page Content Loader -->
-    <script src="assets/js/main.js"></script>
+    <script>
+        // Services Page - Load all services from Appwrite
+        (function () {
+            'use strict';
+
+            const client = new Appwrite.Client()
+                .setEndpoint('https://fra.cloud.appwrite.io/v1')
+                .setProject('6936df5800371a655e8e');
+
+            const db = new Appwrite.Databases(client);
+            const DB_ID = '693703ef001133c62d78';
+
+            // Category icons mapping
+            const categoryIcons = {
+                'Development': 'fas fa-code',
+                'Marketing': 'fas fa-chart-line',
+                'AI and Tech': 'fas fa-robot'
+            };
+
+            async function loadServices() {
+                try {
+                    const res = await db.listDocuments(DB_ID, 'Services', [Appwrite.Query.limit(100)]);
+
+                    const categories = {
+                        'Development': [],
+                        'Marketing': [],
+                        'AI and Tech': []
+                    };
+
+                    res.documents.forEach(service => {
+                        if (categories[service.category]) {
+                            categories[service.category].push(service);
+                        }
+                    });
+
+                    // Render each category
+                    renderCategory('services-development', categories['Development'], 'Development');
+                    renderCategory('services-marketing', categories['Marketing'], 'Marketing');
+                    renderCategory('services-ai', categories['AI and Tech'], 'AI and Tech');
+
+                } catch (e) {
+                    console.error('Error loading services:', e);
+                }
+            }
+
+            function renderCategory(containerId, services, category) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                if (services.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-secondary);">No services available in this category yet.</p>';
+                    return;
+                }
+
+                let html = '';
+                services.forEach(service => {
+                    html += `
+                        <div class="service-card scroll-reveal">
+                            <div class="service-icon">
+                                <i class="${categoryIcons[category] || 'fas fa-cog'}"></i>
+                            </div>
+                            <h3>${service.title}</h3>
+                            <p>${service.short_description || ''}</p>
+                            ${service.price_estimate ? `<p style="font-weight: 600; color: var(--primary); margin-top: 12px;">${service.price_estimate}</p>` : ''}
+                            <a href="/service.html?s=${service.slug}" class="btn btn-secondary" style="margin-top: 16px;">
+                                Learn More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            }
+
+            // Load on DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadServices);
+            } else {
+                loadServices();
+            }
+        })();
+    </script>
 </body>
 
 </html>
