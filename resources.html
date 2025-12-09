@@ -16,11 +16,6 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Appwrite SDK (Global) -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
-    <!-- JavaScript Files -->
-    <!-- 1. UI Interactions (Theme, Mobile Menu, Scroll, Tabs) -->
-    <script src="assets/js/script.js"></script>
-    <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
-    <script src="assets/js/dynamic-menu.js"></script>
 </head>
 
 <body>
@@ -103,22 +98,80 @@
         </div>
     </div>
 
-    <!-- Page Header -->
-    <header class="page-header">
+    <!-- Hero Section -->
+    <section class="hero">
         <div class="container">
-            <h1 id="page-title">Resources</h1>
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Learn & Grow
+            </div>
+            <h1>
+                Our <span class="gradient-text">Resources</span><br>
+                Knowledge for growth
+            </h1>
+            <p>
+                Guides, tutorials, and tools to help you succeed in the digital age.
+            </p>
+            <div class="cta-buttons">
+                <a href="/newsletter.html" class="btn btn-primary">
+                    <i class="fas fa-bell"></i>
+                    Get Notified
+                </a>
+                <a href="/services.html" class="btn btn-secondary">
+                    View Services
+                </a>
+            </div>
+
+            <lottie-player class="lottie-hero" src="https://assets8.lottiefiles.com/packages/lf20_vnikrcia.json"
+                background="transparent" speed="1" loop autoplay>
+            </lottie-player>
         </div>
-    </header>
+    </section>
     <main class="page-main">
         <div class="container">
-            <div class="page-grid">
-                <article id="page-content" class="page-article">
-                    <p>Access our collection of resources including guides, tutorials, and tools for AI and technology
-                        development.</p>
-                </article>
-                <aside class="page-sidebar">
-                    <div id="tally-container"></div>
-                </aside>
+            <!-- Resources Grid -->
+            <div class="services-grid">
+                <div class="service-card scroll-reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Guides</h3>
+                    <p>Comprehensive guides on web development, AI integration, and digital transformation.</p>
+                </div>
+                <div class="service-card scroll-reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Tutorials</h3>
+                    <p>Step-by-step video tutorials on implementing modern tech solutions.</p>
+                </div>
+                <div class="service-card scroll-reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Tools</h3>
+                    <p>Free tools and templates to accelerate your development workflow.</p>
+                </div>
+                <div class="service-card scroll-reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Case Studies</h3>
+                    <p>In-depth analysis of our successful projects and lessons learned.</p>
+                </div>
+            </div>
+
+            <!-- Coming Soon -->
+            <div class="cta-content scroll-reveal" style="margin-top: 60px;">
+                <h2>More Resources Coming Soon</h2>
+                <p>We're building a comprehensive resource library. Subscribe to be notified when new content is
+                    available.</p>
+                <div class="cta-buttons">
+                    <a href="/newsletter.html" class="btn btn-primary">
+                        <i class="fas fa-bell"></i>
+                        Get Notified
+                    </a>
+                </div>
             </div>
         </div>
     </main>
@@ -131,8 +184,8 @@
                     <h4>Company</h4>
                     <ul>
                         <li><a href="/page.html?p=about-us">About Us</a></li>
-                        <li><a href="/#services">Services</a></li>
-                        <li><a href="/#portfolio">Portfolio</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/portfolio.html">Portfolio</a></li>
                         <li><a href="/#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -185,6 +238,8 @@
     <script src="assets/js/script.js"></script>
     <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
     <script src="assets/js/dynamic-menu.js"></script>
+    <!-- 3. Page Content Loader -->
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>
