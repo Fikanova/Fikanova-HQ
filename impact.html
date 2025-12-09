@@ -26,7 +26,84 @@
 <body>
     <div class="grid-background"></div>
 
-    <div id="nav-placeholder"></div>
+    <!-- FLOATING SOCIAL - from index.html -->
+    <div class="social-float">
+        <span class="follow-text">FOLLOW US</span>
+        <a href="https://instagram.com/fikanovatech" target="_blank" class="social-float-icon" title="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://linkedin.com/company/fikanova" target="_blank" class="social-float-icon" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://twitter.com/FikanovaTech" target="_blank" class="social-float-icon" title="Twitter">
+            <i class="fab fa-twitter"></i>
+        </a>
+    </div>
+
+    <!-- HEADER - from index.html -->
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="assets/logos/fikanova-logo1.png" class="logo-image" /></a>
+            </div>
+
+            <div class="nav-desktop">
+                <ul class="nav-menu">
+                    <li id="nav-solutions-container" class="nav-item"></li>
+                    <li id="nav-company-container" class="nav-item"></li>
+                    <li id="nav-work-container" class="nav-item"></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/#contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+                <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MOBILE MENU - Dynamically populated by JavaScript -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <!-- Solutions (Dynamic from Appwrite) -->
+            <div class="menu-group">
+                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
+                <div class="submenu" id="mobile-solutions-menu">
+                    <!-- Populated by dynamic-menu.js -->
+                    <span class="menu-item" style="color:var(--text-tertiary);">Loading...</span>
+                </div>
+            </div>
+            <!-- Company -->
+            <div class="menu-group">
+                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
+                <div class="submenu" id="mobile-company-menu">
+                    <a href="/page.html?p=about-us" class="menu-item">About Us</a>
+                    <a href="/page.html?p=our-story" class="menu-item">Our Story</a>
+                    <a href="/page.html?p=impact" class="menu-item">Impact</a>
+                </div>
+            </div>
+            <!-- Work -->
+            <div class="menu-group">
+                <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i
+                            class="fas fa-chevron-down"></i></span></button>
+                <div class="submenu" id="mobile-work-menu">
+                    <a href="/page.html?p=portfolio" class="menu-item">Portfolio</a>
+                    <a href="/page.html?p=case-studies" class="menu-item">Case Studies</a>
+                    <a href="/page.html?p=resources" class="menu-item">Resources</a>
+                    <a href="/page.html?p=newsletter" class="menu-item">Newsletter</a>
+                </div>
+            </div>
+            <!-- CTA -->
+            <div class="menu-group" style="border-bottom:none;">
+                <a href="/#contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
     <header class="page-header">
         <div class="container">
             <h1 id="page-title">Loading...</h1>
