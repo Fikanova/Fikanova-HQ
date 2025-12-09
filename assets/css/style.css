@@ -145,10 +145,11 @@ body.theme-light header {
 nav {
     max-width: 100%;
     margin: 0 auto;
-    padding: 1.25rem 2rem;
+    padding: 10px 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: auto;
 }
 
 .logo {
@@ -255,8 +256,11 @@ body.theme-light .mega-menu {
 
 .nav-right {
     display: flex;
-    gap: 1.5rem;
+    gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    height: auto;
 }
 
 .theme-toggle {
@@ -286,16 +290,20 @@ body.theme-light .theme-toggle:hover {
     border: 2px solid var(--primary);
     background: transparent;
     color: var(--primary);
-    padding: 0.875rem 2rem;
+    padding: 8px 15px;
     border-radius: 50px;
     font-weight: 600;
-    font-size: 0.9375rem;
+    font-size: 13px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
+    white-space: nowrap;
+    width: auto;
+    max-width: 100%;
+    height: 40px;
 }
 
 .btn-call:hover {
@@ -956,4 +964,3 @@ footer {
     border: 1px double rgb(6, 16, 153); /* Adjust '3px' for desired thickness */
     border-radius: 5px; 
 }
-  
