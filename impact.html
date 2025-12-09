@@ -3,23 +3,104 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fikanova Impact</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+    <meta name="description"
+        content="Explore Fikanova's impact - See how we're making a difference with AI and technology solutions.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Appwrite SDK (Global) -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
 </head>
 
-<body class="bg-gray-50 font-sans">
+<body>
+    <div class="grid-background"></div>
+
     <div id="nav-placeholder"></div>
-    <header class="bg-blue-900 text-white py-20 text-center">
-        <h1 id="page-title" class="text-4xl font-bold">Loading...</h1>
+    <header class="page-header">
+        <div class="container">
+            <h1 id="page-title">Loading...</h1>
+        </div>
     </header>
-    <main class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
-        <article id="page-content" class="md:col-span-2 prose max-w-none text-gray-700"></article>
-        <aside class="md:col-span-1">
-            <div id="tally-container"></div>
-        </aside>
+    <main class="page-main">
+        <div class="container">
+            <div class="page-grid">
+                <article id="page-content" class="page-article"></article>
+                <aside class="page-sidebar">
+                    <div id="tally-container"></div>
+                </aside>
+            </div>
+        </div>
     </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/page.html?p=about-us">About Us</a></li>
+                        <li><a href="/#services">Services</a></li>
+                        <li><a href="/#portfolio">Portfolio</a></li>
+                        <li><a href="/#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="/service.html?s=web-development">Web Development</a></li>
+                        <li><a href="/service.html?s=ai-integration">AI Integration</a></li>
+                        <li><a href="/service.html?s=tech-consulting">Tech Consulting</a></li>
+                        <li><a href="/service.html?s=seo-optimization">SEO Optimization</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="https://twitter.com/fikanova" target="_blank">Twitter</a></li>
+                        <li><a href="https://linkedin.com/company/fikanova" target="_blank">LinkedIn</a></li>
+                        <li><a href="https://instagram.com/fikanova" target="_blank">Instagram</a></li>
+                        <li><a href="mailto:info@fikanova.co.ke">Email</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Fikanova Limited. All rights reserved.</p>
+                <div class="social-links" style="justify-content: center; margin-top: 20px;">
+                    <a href="https://twitter.com/fikanova" class="social-link" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/fikanova" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://instagram.com/fikanova" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <!-- 1. UI Interactions (Theme, Mobile Menu, Scroll, Tabs) -->
+    <script src="assets/js/script.js"></script>
+    <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
+    <script src="assets/js/dynamic-menu.js"></script>
+    <!-- 3. Page Content Loader -->
     <script type="module" src="assets/js/main.js"></script>
 </body>
 
