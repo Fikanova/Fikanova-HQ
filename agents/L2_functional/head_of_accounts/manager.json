@@ -1,0 +1,37 @@
+{
+    "name": "L2 - Head of Accounts",
+    "nodes": [
+        {
+            "name": "Invoice Request",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "KRA Tax Bot (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "KRA_BOT_ID"
+            }
+        },
+        {
+            "name": "Expense Tracker (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "EXPENSE_TRACKER_ID"
+            }
+        },
+        {
+            "name": "Runway Calculator (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "RUNWAY_CALC_ID"
+            }
+        },
+        {
+            "name": "ClampO (Governance Check)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CLAMPO_ID"
+            }
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "name": "L3 - Newsletter Bot",
+    "nodes": [
+        {
+            "name": "Trigger",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Appwrite (Get Subscribers)",
+            "type": "n8n-nodes-appwrite.appwrite"
+        },
+        {
+            "name": "Gmail (Send)",
+            "type": "n8n-nodes-base.gmail"
+        }
+    ]
+}

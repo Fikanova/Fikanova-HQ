@@ -1,0 +1,16 @@
+{
+    "name": "L1 - CIO Agent",
+    "nodes": [
+        {
+            "name": "Schedule Trigger (7AM)",
+            "type": "n8n-nodes-base.scheduleTrigger"
+        },
+        {
+            "name": "Head of Ops (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "HEAD_OF_OPS_ID"
+            }
+        }
+    ]
+}

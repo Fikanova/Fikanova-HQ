@@ -1,0 +1,21 @@
+{
+    "name": "L3 - Morning Briefer",
+    "nodes": [
+        {
+            "name": "Trigger",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "HubSpot (Get Deals)",
+            "type": "n8n-nodes-base.hubspot"
+        },
+        {
+            "name": "Gemini (Summarize)",
+            "type": "@n8n/n8n-nodes-langchain.agent"
+        },
+        {
+            "name": "WhatsApp (Send)",
+            "type": "n8n-nodes-base.whatsapp"
+        }
+    ]
+}

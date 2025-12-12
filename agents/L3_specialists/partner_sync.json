@@ -1,0 +1,17 @@
+{
+    "name": "L3 - Partner Sync",
+    "nodes": [
+        {
+            "name": "Trigger",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "HTTP Request (ETCO API)",
+            "type": "n8n-nodes-base.httpRequest"
+        },
+        {
+            "name": "Appwrite (Save Impact)",
+            "type": "n8n-nodes-appwrite.appwrite"
+        }
+    ]
+}
