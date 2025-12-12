@@ -1,0 +1,27 @@
+{
+    "name": "L2 - Head of Product",
+    "nodes": [
+        {
+            "name": "Tally Inbound",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Recon Bot (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "RECON_BOT_ID"
+            }
+        },
+        {
+            "name": "Quote Gen (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "QUOTE_GEN_ID"
+            }
+        },
+        {
+            "name": "HubSpot CRM",
+            "type": "n8n-nodes-base.hubspot"
+        }
+    ]
+}

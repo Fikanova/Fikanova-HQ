@@ -1,0 +1,88 @@
+{
+    "name": "L1 - CEO Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "updates": [
+                    "messages"
+                ]
+            },
+            "name": "WhatsApp Trigger",
+            "type": "n8n-nodes-base.whatsappTrigger",
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "text": "Analyze command: {{$json.messages[0].text.body}}. Route to correct C-Suite Exec.",
+                "options": {}
+            },
+            "name": "Strategy Engine (Gemini)",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.output}}",
+                                        "rightValue": "Finance",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CFO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.output}}",
+                                        "rightValue": "Product",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CTO"
+                        }
+                    ]
+                }
+            },
+            "name": "C-Suite Router",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+                500,
+                300
+            ]
+        }
+    ]
+}

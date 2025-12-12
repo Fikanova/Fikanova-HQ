@@ -1,0 +1,19 @@
+{
+    "name": "L1 - CMO Agent",
+    "nodes": [
+        {
+            "name": "Growth Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "cmo-trigger"
+            }
+        },
+        {
+            "name": "Head of Content (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "HEAD_OF_CONTENT_ID"
+            }
+        }
+    ]
+}

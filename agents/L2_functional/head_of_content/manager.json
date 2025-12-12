@@ -1,0 +1,30 @@
+{
+    "name": "L2 - Head of Content",
+    "nodes": [
+        {
+            "name": "Project Done",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Case Study Writer (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CASE_STUDY_ID"
+            }
+        },
+        {
+            "name": "Social Poster (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "SOCIAL_POSTER_ID"
+            }
+        },
+        {
+            "name": "Newsletter Manager (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "NEWSLETTER_ID"
+            }
+        }
+    ]
+}

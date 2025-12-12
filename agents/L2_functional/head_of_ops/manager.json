@@ -1,0 +1,23 @@
+{
+    "name": "L2 - Head of Ops",
+    "nodes": [
+        {
+            "name": "Daily Brief Request",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Morning Briefer (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "MORNING_BRIEFER_ID"
+            }
+        },
+        {
+            "name": "Meeting Prep (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "MEETING_PREP_ID"
+            }
+        }
+    ]
+}

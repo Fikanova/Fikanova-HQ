@@ -1,0 +1,19 @@
+{
+    "name": "L1 - CimpO Agent",
+    "nodes": [
+        {
+            "name": "Audit Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "cimpo-audit"
+            }
+        },
+        {
+            "name": "Head of ESG (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "HEAD_OF_ESG_ID"
+            }
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "L1 - CTO Agent",
+    "nodes": [
+        {
+            "name": "Tech Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "cto-trigger"
+            }
+        },
+        {
+            "name": "Head of Product (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "HEAD_OF_PRODUCT_ID"
+            }
+        }
+    ]
+}

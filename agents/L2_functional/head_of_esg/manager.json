@@ -1,0 +1,23 @@
+{
+    "name": "L2 - Head of ESG",
+    "nodes": [
+        {
+            "name": "Audit Request",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Partner Sync (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "PARTNER_SYNC_ID"
+            }
+        },
+        {
+            "name": "ESG Reporter (Call Specialist)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "ESG_REPORTER_ID"
+            }
+        }
+    ]
+}

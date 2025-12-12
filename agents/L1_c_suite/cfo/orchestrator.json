@@ -1,0 +1,19 @@
+{
+    "name": "L1 - CFO Agent",
+    "nodes": [
+        {
+            "name": "Finance Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "cfo-trigger"
+            }
+        },
+        {
+            "name": "Head of Accounts (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "HEAD_OF_ACCOUNTS_ID"
+            }
+        }
+    ]
+}

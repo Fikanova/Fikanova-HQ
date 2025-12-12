@@ -1,0 +1,17 @@
+{
+    "name": "L3 - Quote Generator",
+    "nodes": [
+        {
+            "name": "Trigger",
+            "type": "n8n-nodes-base.webhook"
+        },
+        {
+            "name": "Google Docs (Replace Text)",
+            "type": "n8n-nodes-base.googleDocs"
+        },
+        {
+            "name": "Drive (Export PDF)",
+            "type": "n8n-nodes-base.googleDrive"
+        }
+    ]
+}
