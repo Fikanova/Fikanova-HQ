@@ -4,14 +4,14 @@
     "version": "11.0.0",
     "scripts": {
         "dev": "astro dev",
-        "start": "astro dev",
+        "start": "node ./dist/server/entry.mjs",
         "build": "astro build",
         "preview": "astro preview"
     },
     "dependencies": {
-        "astro": "^4.0.0",
+        "astro": "4.16.18",
         "@astrojs/tailwind": "^5.0.0",
-        "@astrojs/node": "^8.0.0",
+        "@astrojs/node": "8.3.4",
         "@astrojs/react": "^3.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
