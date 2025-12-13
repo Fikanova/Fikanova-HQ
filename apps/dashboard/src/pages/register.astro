@@ -1,137 +1,226 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
-// SSR: Check if already logged in
+// No header/footer for register page
 const sessionCookie = Astro.cookies.get('session');
 if (sessionCookie?.value) {
     return Astro.redirect('/dashboard');
 }
 
 const roles = [
-    { id: 'user', label: 'Client', description: 'View projects, invoices, and download resources' },
-    { id: 'subscriber', label: 'Subscriber', description: 'Access newsletter and free resources' },
-    { id: 'learner', label: 'Learner', description: 'Access courses and learning materials' }
+    { id: 'user', label: 'Client', description: 'View projects and invoices' },
+    { id: 'subscriber', label: 'Subscriber', description: 'Newsletter and resources' },
+    { id: 'learner', label: 'Learner', description: 'Access courses' }
 ];
 ---
 
-<Layout title="Create Account">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-slate-900 mb-2">Create Account</h1>
-                <p class="text-slate-500">Join Fikanova to access your dashboard</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Fikanova Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .register-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 480px;
+        }
+        .register-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .register-logo img { height: 40px; }
+        .register-title { text-align: center; margin-bottom: 8px; }
+        .register-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 32px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); }
+        .oauth-btns { display: flex; gap: 12px; margin-bottom: 24px; }
+        .oauth-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.2s;
+        }
+        .oauth-btn:hover { border-color: var(--primary); }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            color: var(--text-tertiary);
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+        .role-options { display: flex; flex-direction: column; gap: 12px; }
+        .role-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .role-option:hover { border-color: var(--primary); }
+        .role-option input { margin-top: 4px; }
+        .role-label { font-weight: 500; }
+        .role-desc { font-size: 12px; color: var(--text-secondary); }
+        .btn-register {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+        .btn-register:hover { background: var(--primary-dark); }
+        .error-msg, .success-msg {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .error-msg { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+        .success-msg { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; }
+        .login-link { text-align: center; margin-top: 24px; color: var(--text-secondary); }
+        .login-link a { color: var(--primary); }
+        .approval-note { text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-tertiary); }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-logo">
+                <img src="/assets/logos/fikanova-logo1.png" alt="Fikanova">
+            </div>
+            <h1 class="register-title">Create Account</h1>
+            <p class="register-subtitle">Join Fikanova to access your dashboard</p>
+
+            <div class="oauth-btns">
+                <button id="googleBtn" class="oauth-btn">
+                    <i class="fab fa-google"></i> Google
+                </button>
+                <button id="githubBtn" class="oauth-btn">
+                    <i class="fab fa-github"></i> GitHub
+                </button>
             </div>
 
-            <!-- OAuth Buttons -->
-            <div class="space-y-3 mb-6">
-                <button id="googleBtn" class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                    <span class="font-medium">Continue with Google</span>
-                </button>
+            <div class="divider">or register with email</div>
+
+            <form id="registerForm">
+                <div id="errorMessage" class="error-msg"></div>
+                <div id="successMessage" class="success-msg"></div>
                 
-                <button id="githubBtn" class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    <span class="font-medium">Continue with GitHub</span>
-                </button>
-            </div>
-
-            <div class="relative mb-6">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
-                <div class="relative flex justify-center text-sm"><span class="px-2 bg-white text-slate-500">Or register with email</span></div>
-            </div>
-
-            <!-- Email Registration Form -->
-            <form id="registerForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
-                    <input type="text" id="name" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="John Doe">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="name" class="form-input" placeholder="John Doe" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" id="email" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="you@example.com">
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" id="password" required minlength="8" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="••••••••">
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" minlength="8" required>
                 </div>
 
-                <!-- Role Selection -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Account Type</label>
-                    <div class="space-y-2">
+                <div class="form-group">
+                    <label class="form-label">Account Type</label>
+                    <div class="role-options">
                         {roles.map((role, i) => (
-                            <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:border-blue-400 transition">
-                                <input type="radio" name="role" value={role.id} checked={i === 0} class="mt-1">
+                            <label class="role-option">
+                                <input type="radio" name="role" value={role.id} checked={i === 0}>
                                 <div>
-                                    <div class="font-medium text-slate-900">{role.label}</div>
-                                    <div class="text-xs text-slate-500">{role.description}</div>
+                                    <div class="role-label">{role.label}</div>
+                                    <div class="role-desc">{role.description}</div>
                                 </div>
                             </label>
                         ))}
                     </div>
                 </div>
 
-                <div id="errorMessage" class="hidden bg-red-50 text-red-600 p-3 rounded-lg text-sm"></div>
-                <div id="successMessage" class="hidden bg-green-50 text-green-600 p-3 rounded-lg text-sm"></div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
-                    Create Account
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-user-plus"></i> Create Account
                 </button>
             </form>
 
-            <p class="mt-4 text-center text-sm text-slate-500">
-                Already have an account? <a href="/" class="text-blue-600 hover:underline">Sign in</a>
+            <p class="login-link">
+                Already have an account? <a href="/">Sign in</a>
             </p>
-
-            <p class="mt-6 text-xs text-slate-400 text-center">
-                Note: New accounts require admin approval before full access is granted.
+            <p class="approval-note">
+                <i class="fas fa-info-circle"></i> New accounts require admin approval
             </p>
         </div>
     </div>
 
     <script is:inline>
-        const { Client, Account, ID, Teams } = Appwrite;
+        const { Client, Account, ID } = Appwrite;
         
         const client = new Client()
             .setEndpoint('https://fra.cloud.appwrite.io/v1')
             .setProject('6936df5800371a655e8e');
         
         const account = new Account(client);
-
         const errorDiv = document.getElementById('errorMessage');
         const successDiv = document.getElementById('successMessage');
 
-        function showError(msg) {
-            errorDiv.textContent = msg;
-            errorDiv.classList.remove('hidden');
-            successDiv.classList.add('hidden');
-        }
-
-        function showSuccess(msg) {
-            successDiv.textContent = msg;
-            successDiv.classList.remove('hidden');
-            errorDiv.classList.add('hidden');
-        }
-
-        // Google OAuth
         document.getElementById('googleBtn').addEventListener('click', () => {
-            account.createOAuth2Session('google', 
-                window.location.origin + '/dashboard',
-                window.location.origin + '/register'
-            );
+            account.createOAuth2Session('google', window.location.origin + '/dashboard', window.location.origin + '/register');
         });
 
-        // GitHub OAuth
         document.getElementById('githubBtn').addEventListener('click', () => {
-            account.createOAuth2Session('github',
-                window.location.origin + '/dashboard',
-                window.location.origin + '/register'
-            );
+            account.createOAuth2Session('github', window.location.origin + '/dashboard', window.location.origin + '/register');
         });
 
-        // Email Registration
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
             
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -139,30 +228,20 @@ const roles = [
             const role = document.querySelector('input[name="role"]:checked').value;
             
             try {
-                // Create user account
                 await account.create(ID.unique(), email, password, name);
-                
-                // Log them in
                 await account.createEmailPasswordSession(email, password);
-                
-                // Update preferences with requested role (pending approval)
-                await account.updatePrefs({ 
-                    requestedRole: role,
-                    roleApproved: false,
-                    registeredAt: new Date().toISOString()
-                });
-                
-                showSuccess('Account created! Awaiting admin approval for ' + role + ' access.');
-                
-                // Redirect after 2s
+                await account.updatePrefs({ requestedRole: role, roleApproved: false });
+                successDiv.textContent = 'Account created! Redirecting...';
+                successDiv.style.display = 'block';
                 setTimeout(() => {
                     document.cookie = 'session=active; path=/; max-age=86400';
                     window.location.href = '/dashboard';
-                }, 2000);
-                
+                }, 1500);
             } catch (error) {
-                showError(error.message || 'Registration failed. Please try again.');
+                errorDiv.textContent = error.message || 'Registration failed.';
+                errorDiv.style.display = 'block';
             }
         });
     </script>
-</Layout>
+</body>
+</html>

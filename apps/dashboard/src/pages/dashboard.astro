@@ -9,125 +9,248 @@ if (!sessionCookie?.value) {
 ---
 
 <Layout title="Dashboard">
-    <nav class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-900">Fikanova Portal</h1>
-            <div class="flex items-center gap-4">
-                <span id="userEmail" class="text-sm text-slate-500"></span>
-                <button id="logoutBtn" class="text-red-600 hover:underline text-sm">Logout</button>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <nav class="dashboard-nav">
+            <div class="dashboard-logo">
+                <a href="/dashboard"><img src="/assets/logos/fikanova-logo1.png" alt="Fikanova"></a>
             </div>
-        </div>
-    </nav>
+            <div class="dashboard-user">
+                <span id="userEmail"></span>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome back!</h2>
-            <p class="text-slate-500">Here's an overview of your account</p>
-        </div>
+    <!-- Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <div class="dashboard-welcome">
+                <h1>Welcome back!</h1>
+                <p>Here's an overview of your account</p>
+            </div>
 
-        <!-- Dashboard Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <div class="text-3xl font-bold text-blue-600">3</div>
-                <div class="text-slate-500 text-sm">Active Projects</div>
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Pending Invoices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Downloads</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">Agent Performance</div>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <div class="text-3xl font-bold text-green-600">2</div>
-                <div class="text-slate-500 text-sm">Pending Invoices</div>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <div class="text-3xl font-bold text-purple-600">7</div>
-                <div class="text-slate-500 text-sm">Resources Downloaded</div>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <div class="text-3xl font-bold text-orange-600">98%</div>
-                <div class="text-slate-500 text-sm">Agent Performance</div>
-            </div>
-        </div>
 
-        <!-- Role-based sections -->
-        <div id="adminSection" class="hidden mb-8">
-            <h3 class="text-lg font-bold text-slate-900 mb-4">Admin Controls</h3>
-            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                <p class="text-yellow-800">You have admin access. Manage users, agents, and system settings.</p>
+            <!-- Admin Section -->
+            <div id="adminSection" class="admin-section" style="display: none;">
+                <h3><i class="fas fa-shield-alt"></i> Admin Controls</h3>
+                <p>You have admin access. Manage users, agents, and system settings.</p>
             </div>
-        </div>
 
-        <!-- Projects Table -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="p-6 border-b border-slate-100">
-                <h3 class="font-bold text-slate-900">Your Projects</h3>
+            <!-- Projects Table -->
+            <div class="projects-section">
+                <h3>Your Projects</h3>
+                <table class="projects-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Website Redesign</td>
+                            <td><span class="status-badge in-progress">In Progress</span></td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Chatbot Integration</td>
+                            <td><span class="status-badge completed">Completed</span></td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="w-full">
-                <thead class="bg-slate-50">
-                    <tr>
-                        <th class="text-left p-4 text-sm font-medium text-slate-500">Project</th>
-                        <th class="text-left p-4 text-sm font-medium text-slate-500">Status</th>
-                        <th class="text-left p-4 text-sm font-medium text-slate-500">Progress</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-t border-slate-100">
-                        <td class="p-4 font-medium">Website Redesign</td>
-                        <td class="p-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">In Progress</span></td>
-                        <td class="p-4">
-                            <div class="w-full bg-slate-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="border-t border-slate-100">
-                        <td class="p-4 font-medium">Chatbot Integration</td>
-                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Completed</span></td>
-                        <td class="p-4">
-                            <div class="w-full bg-slate-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="container">
+            <p>&copy; 2025 Fikanova. <a href="https://fikanova.co.ke">Main Site</a> | <a href="https://store.fikanova.co.ke">Store</a></p>
+        </div>
+    </footer>
+
+    <style>
+        .dashboard-header {
+            background: var(--dark-card);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .dashboard-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dashboard-logo img { height: 32px; }
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        #userEmail { color: var(--text-secondary); }
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.25); }
+        .dashboard-main {
+            padding: 48px 24px;
+            min-height: calc(100vh - 200px);
+        }
+        .dashboard-welcome { margin-bottom: 32px; }
+        .dashboard-welcome h1 { margin-bottom: 8px; }
+        .dashboard-welcome p { color: var(--text-secondary); }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .stat-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .admin-section {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 48px;
+        }
+        .admin-section h3 { margin-bottom: 8px; color: var(--primary); }
+        .admin-section p { color: var(--text-secondary); }
+        .projects-section {
+            background: var(--dark-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .projects-section h3 { padding: 24px 24px 16px; }
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .projects-table th, .projects-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .projects-table th {
+            background: var(--dark-surface);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.in-progress { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .status-badge.completed { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--dark-surface);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .dashboard-footer {
+            background: var(--dark-card);
+            border-top: 1px solid var(--border-subtle);
+            padding: 24px;
+            text-align: center;
+        }
+        .dashboard-footer a { color: var(--primary); margin: 0 8px; }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+
     <script is:inline>
         const { Client, Account, Teams } = Appwrite;
-        
-        const client = new Client()
-            .setEndpoint('https://fra.cloud.appwrite.io/v1')
-            .setProject('6936df5800371a655e8e');
-        
+        const client = new Client().setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6936df5800371a655e8e');
         const account = new Account(client);
         const teams = new Teams(client);
 
-        // Load user info
         async function loadUser() {
             try {
                 const user = await account.get();
                 document.getElementById('userEmail').textContent = user.email;
                 
-                // Check if user is admin (in Admin team)
                 try {
                     const userTeams = await teams.list();
-                    const isAdmin = userTeams.teams.some(t => t.name === 'Admin');
-                    if (isAdmin) {
-                        document.getElementById('adminSection').classList.remove('hidden');
+                    if (userTeams.teams.some(t => t.name === 'Admin')) {
+                        document.getElementById('adminSection').style.display = 'block';
                     }
-                } catch (e) {
-                    // No team access
-                }
+                } catch (e) {}
             } catch (error) {
-                // Not logged in, redirect
                 document.cookie = 'session=; path=/; max-age=0';
                 window.location.href = '/';
             }
         }
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            try {
-                await account.deleteSession('current');
-            } catch (e) {}
+            try { await account.deleteSession('current'); } catch (e) {}
             document.cookie = 'session=; path=/; max-age=0';
             window.location.href = '/';
         });

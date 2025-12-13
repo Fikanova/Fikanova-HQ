@@ -1,9 +1,5 @@
 ---
-// No header/footer for login page
-const sessionCookie = Astro.cookies.get('session');
-if (sessionCookie?.value) {
-    return Astro.redirect('/dashboard');
-}
+// Store login page - no header/footer
 ---
 
 <!DOCTYPE html>
@@ -11,7 +7,7 @@ if (sessionCookie?.value) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Fikanova Portal</title>
+    <title>Login | Fikanova Store</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -33,31 +29,12 @@ if (sessionCookie?.value) {
             width: 100%;
             max-width: 420px;
         }
-        .login-logo {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .login-logo img {
-            height: 40px;
-        }
-        .login-title {
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .login-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
+        .login-logo { text-align: center; margin-bottom: 32px; }
+        .login-logo img { height: 40px; }
+        .login-title { text-align: center; margin-bottom: 8px; }
+        .login-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 32px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
         .form-input {
             width: 100%;
             padding: 14px 16px;
@@ -66,12 +43,8 @@ if (sessionCookie?.value) {
             border-radius: 12px;
             color: var(--text-primary);
             font-size: 16px;
-            transition: border-color 0.2s;
         }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        .form-input:focus { outline: none; border-color: var(--primary); }
         .btn-login {
             width: 100%;
             padding: 16px;
@@ -82,11 +55,8 @@ if (sessionCookie?.value) {
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .btn-login:hover {
-            background: var(--primary-dark);
-        }
+        .btn-login:hover { background: var(--primary-dark); }
         .error-msg {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -96,22 +66,8 @@ if (sessionCookie?.value) {
             margin-bottom: 16px;
             display: none;
         }
-        .register-link {
-            text-align: center;
-            margin-top: 24px;
-            color: var(--text-secondary);
-        }
-        .register-link a {
-            color: var(--primary);
-        }
-        .powered-by {
-            text-align: center;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-subtle);
-            color: var(--text-tertiary);
-            font-size: 12px;
-        }
+        .links { text-align: center; margin-top: 24px; color: var(--text-secondary); }
+        .links a { color: var(--primary); margin: 0 8px; }
     </style>
 </head>
 <body>
@@ -120,8 +76,8 @@ if (sessionCookie?.value) {
             <div class="login-logo">
                 <img src="/assets/logos/fikanova-logo1.png" alt="Fikanova">
             </div>
-            <h1 class="login-title">Client Portal</h1>
-            <p class="login-subtitle">Manage your projects, invoices, and analytics</p>
+            <h1 class="login-title">Store Login</h1>
+            <p class="login-subtitle">Access your purchases and downloads</p>
 
             <form id="loginForm">
                 <div id="errorMessage" class="error-msg"></div>
@@ -141,40 +97,30 @@ if (sessionCookie?.value) {
                 </button>
             </form>
 
-            <p class="register-link">
-                Don't have an account? <a href="/register">Register</a>
-            </p>
-
-            <p class="powered-by">
-                <i class="fas fa-lock"></i> Powered by Appwrite Auth
+            <p class="links">
+                <a href="/signup">Create Account</a> | <a href="/">Back to Store</a>
             </p>
         </div>
     </div>
 
     <script is:inline>
         const { Client, Account } = Appwrite;
-        
-        const client = new Client()
-            .setEndpoint('https://fra.cloud.appwrite.io/v1')
-            .setProject('6936df5800371a655e8e');
-        
+        const client = new Client().setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6936df5800371a655e8e');
         const account = new Account(client);
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
-            
             errorDiv.style.display = 'none';
             
             try {
-                await account.createEmailPasswordSession(email, password);
-                document.cookie = 'session=active; path=/; max-age=86400';
-                window.location.href = '/dashboard';
+                await account.createEmailPasswordSession(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                );
+                window.location.href = '/';
             } catch (error) {
-                errorDiv.textContent = error.message || 'Login failed. Please try again.';
+                errorDiv.textContent = error.message || 'Login failed.';
                 errorDiv.style.display = 'block';
             }
         });
