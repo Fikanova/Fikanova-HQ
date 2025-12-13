@@ -1,7 +1,15 @@
-(function () {
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScript);
+} else {
+    initScript();
+}
+
+function initScript() {
     'use strict';
     // =============================================================================
     // THEME TOGGLE
+
     // =============================================================================
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
@@ -137,4 +145,4 @@
 
     console.log("Script.js Loaded - Theme, Mobile Menu, Scroll Reveal Active");
 
-})(); // End IIFE
+} // End initScript
