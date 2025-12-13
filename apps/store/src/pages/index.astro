@@ -1,0 +1,173 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Products (would come from Appwrite in production)
+const products = [
+    {
+        id: 1,
+        name: "Sales Agent Template",
+        description: "Pre-configured n8n workflow for lead qualification and follow-up automation.",
+        price: 5000,
+        category: "AI Agents",
+        icon: "🤖"
+    },
+    {
+        id: 2,
+        name: "CFO Dashboard Template",
+        description: "Financial tracking spreadsheet with automated KRA tax calculations.",
+        price: 3500,
+        category: "Templates",
+        icon: "💰"
+    },
+    {
+        id: 3,
+        name: "Marketing Automation Pack",
+        description: "Complete social media scheduling and content generation workflows.",
+        price: 7500,
+        category: "AI Agents",
+        icon: "📢"
+    },
+    {
+        id: 4,
+        name: "Landing Page Kit",
+        description: "Modern, responsive landing page templates with Tailwind CSS.",
+        price: 2500,
+        category: "Templates",
+        icon: "🎨"
+    },
+    {
+        id: 5,
+        name: "Customer Support Bot",
+        description: "Botpress chatbot template with FAQ handling and escalation.",
+        price: 8000,
+        category: "AI Agents",
+        icon: "💬"
+    },
+    {
+        id: 6,
+        name: "Invoice Generator",
+        description: "Automated invoice creation with eTIMS compliance for Kenya.",
+        price: 4000,
+        category: "Tools",
+        icon: "📄"
+    }
+];
+
+const categories = ["All", "AI Agents", "Templates", "Tools"];
+---
+
+<Layout title="Digital Asset Store">
+    <nav class="border-b border-slate-200 sticky top-0 bg-white z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <a href="https://fikanova.co.ke" class="text-slate-500 hover:text-slate-900 text-sm">
+                    ← Back to Fikanova
+                </a>
+                <span class="text-xl font-bold text-slate-900">Store</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="/login" class="text-slate-600 hover:text-slate-900 text-sm">Login</a>
+                <button id="cartBtn" class="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium text-sm">
+                    Cart (<span id="cartCount">0</span>)
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div class="mb-12 text-center">
+            <h1 class="text-4xl font-bold text-slate-900 mb-4">Templates & AI Agents</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto">
+                Ready-to-use workflows, templates, and automation tools to supercharge your business.
+            </p>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex justify-center gap-3 mb-10">
+            {categories.map(cat => (
+                <button 
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 hover:border-blue-500 hover:text-blue-600 transition"
+                    data-category={cat}
+                >
+                    {cat}
+                </button>
+            ))}
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="productsGrid">
+            {products.map(product => (
+                <div class="product-card border border-slate-200 rounded-xl p-6 hover:shadow-lg transition group" data-category={product.category}>
+                    <div class="bg-slate-100 h-40 rounded-lg mb-4 flex items-center justify-center text-5xl group-hover:bg-blue-50 transition">
+                        {product.icon}
+                    </div>
+                    <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">{product.category}</span>
+                    <h3 class="font-bold text-lg text-slate-900 mt-3">{product.name}</h3>
+                    <p class="text-sm text-slate-500 mt-2 mb-4">{product.description}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-900">KES {product.price.toLocaleString()}</span>
+                        <button class="add-to-cart bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition" data-id={product.id} data-name={product.name} data-price={product.price}>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 mt-20 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2025 Fikanova Store. All digital products are delivered instantly.</p>
+        </div>
+    </footer>
+
+    <script is:inline>
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                document.querySelectorAll('.product-card').forEach(card => {
+                    if (category === 'All' || card.dataset.category === category) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                // Update active state
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('bg-slate-900', 'text-white'));
+                btn.classList.add('bg-slate-900', 'text-white');
+            });
+        });
+
+        // Add to cart
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = {
+                    id: btn.dataset.id,
+                    name: btn.dataset.name,
+                    price: parseInt(btn.dataset.price)
+                };
+                cart.push(item);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                btn.textContent = 'Added!';
+                btn.classList.add('bg-green-600');
+                setTimeout(() => {
+                    btn.textContent = 'Add to Cart';
+                    btn.classList.remove('bg-green-600');
+                }, 1500);
+            });
+        });
+
+        // Set first filter as active
+        document.querySelector('.filter-btn').classList.add('bg-slate-900', 'text-white');
+        updateCartCount();
+    </script>
+</Layout>

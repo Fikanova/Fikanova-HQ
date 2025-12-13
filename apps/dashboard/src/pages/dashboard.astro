@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// SSR: Check for auth
+const sessionCookie = Astro.cookies.get('session');
+if (!sessionCookie?.value) {
+    return Astro.redirect('/');
+}
+---
+
+<Layout title="Dashboard">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-900">Fikanova Portal</h1>
+            <div class="flex items-center gap-4">
+                <span id="userEmail" class="text-sm text-slate-500"></span>
+                <button id="logoutBtn" class="text-red-600 hover:underline text-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome back!</h2>
+            <p class="text-slate-500">Here's an overview of your account</p>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="text-3xl font-bold text-blue-600">3</div>
+                <div class="text-slate-500 text-sm">Active Projects</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="text-3xl font-bold text-green-600">2</div>
+                <div class="text-slate-500 text-sm">Pending Invoices</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="text-3xl font-bold text-purple-600">7</div>
+                <div class="text-slate-500 text-sm">Resources Downloaded</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="text-3xl font-bold text-orange-600">98%</div>
+                <div class="text-slate-500 text-sm">Agent Performance</div>
+            </div>
+        </div>
+
+        <!-- Role-based sections -->
+        <div id="adminSection" class="hidden mb-8">
+            <h3 class="text-lg font-bold text-slate-900 mb-4">Admin Controls</h3>
+            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                <p class="text-yellow-800">You have admin access. Manage users, agents, and system settings.</p>
+            </div>
+        </div>
+
+        <!-- Projects Table -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900">Your Projects</h3>
+            </div>
+            <table class="w-full">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="text-left p-4 text-sm font-medium text-slate-500">Project</th>
+                        <th class="text-left p-4 text-sm font-medium text-slate-500">Status</th>
+                        <th class="text-left p-4 text-sm font-medium text-slate-500">Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t border-slate-100">
+                        <td class="p-4 font-medium">Website Redesign</td>
+                        <td class="p-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">In Progress</span></td>
+                        <td class="p-4">
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="border-t border-slate-100">
+                        <td class="p-4 font-medium">Chatbot Integration</td>
+                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Completed</span></td>
+                        <td class="p-4">
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script is:inline>
+        const { Client, Account, Teams } = Appwrite;
+        
+        const client = new Client()
+            .setEndpoint('https://fra.cloud.appwrite.io/v1')
+            .setProject('6936df5800371a655e8e');
+        
+        const account = new Account(client);
+        const teams = new Teams(client);
+
+        // Load user info
+        async function loadUser() {
+            try {
+                const user = await account.get();
+                document.getElementById('userEmail').textContent = user.email;
+                
+                // Check if user is admin (in Admin team)
+                try {
+                    const userTeams = await teams.list();
+                    const isAdmin = userTeams.teams.some(t => t.name === 'Admin');
+                    if (isAdmin) {
+                        document.getElementById('adminSection').classList.remove('hidden');
+                    }
+                } catch (e) {
+                    // No team access
+                }
+            } catch (error) {
+                // Not logged in, redirect
+                document.cookie = 'session=; path=/; max-age=0';
+                window.location.href = '/';
+            }
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await account.deleteSession('current');
+            } catch (e) {}
+            document.cookie = 'session=; path=/; max-age=0';
+            window.location.href = '/';
+        });
+
+        loadUser();
+    </script>
+</Layout>

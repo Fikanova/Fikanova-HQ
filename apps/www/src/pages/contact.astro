@@ -1,0 +1,166 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Contact Us">
+    <div class="grid-background"></div>
+
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="/assets/logos/fikanova-logo1.png" class="logo-image" /></a>
+            </div>
+            <div class="nav-desktop">
+                <ul class="nav-menu">
+                    <li id="nav-solutions-container" class="nav-item"></li>
+                    <li id="nav-company-container" class="nav-item"></li>
+                    <li id="nav-work-container" class="nav-item"></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+                <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Let's Connect
+            </div>
+            <h1>
+                Get in <span class="gradient-text">Touch</span><br>
+                with our team
+            </h1>
+            <p>
+                Ready to transform your business? We'd love to hear from you.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <main class="page-main">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;">
+                
+                <!-- Contact Form -->
+                <div class="scroll-reveal">
+                    <h2 style="margin-bottom: 24px;">Send us a message</h2>
+                    <form id="contactForm" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Your Name</label>
+                            <input type="text" required 
+                                style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--dark-card); color: var(--text-primary);"
+                                placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email Address</label>
+                            <input type="email" required 
+                                style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--dark-card); color: var(--text-primary);"
+                                placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Subject</label>
+                            <select 
+                                style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--dark-card); color: var(--text-primary);">
+                                <option>General Inquiry</option>
+                                <option>Project Request</option>
+                                <option>Partnership</option>
+                                <option>Support</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Message</label>
+                            <textarea required rows="5"
+                                style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--dark-card); color: var(--text-primary); resize: vertical;"
+                                placeholder="Tell us about your project..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="scroll-reveal">
+                    <h2 style="margin-bottom: 24px;">Contact Information</h2>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div style="width: 48px; height: 48px; background: var(--glow-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-envelope" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px;">Email</h4>
+                                <a href="mailto:info@fikanova.co.ke" style="color: var(--primary);">info@fikanova.co.ke</a>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div style="width: 48px; height: 48px; background: var(--glow-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-phone" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px;">Phone</h4>
+                                <a href="tel:+254700000000" style="color: var(--primary);">+254 700 000 000</a>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div style="width: 48px; height: 48px; background: var(--glow-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px;">Location</h4>
+                                <p style="color: var(--text-secondary);">Nairobi, Kenya</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div style="width: 48px; height: 48px; background: var(--glow-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-clock" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px;">Business Hours</h4>
+                                <p style="color: var(--text-secondary);">Mon - Fri: 9:00 AM - 6:00 PM EAT</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div style="margin-top: 40px;">
+                        <h4 style="margin-bottom: 16px;">Follow Us</h4>
+                        <div style="display: flex; gap: 12px;">
+                            <a href="https://twitter.com/FikanovaTech" target="_blank" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://linkedin.com/company/fikanova" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://instagram.com/fikanovatech" target="_blank" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Fikanova Limited. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script is:inline src="/assets/js/script.js"></script>
+    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+</Layout>

@@ -1,28 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+---
+import Layout from '../layouts/Layout.astro';
+---
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fikanova — Transform Ideas into AI-Enhanced Solutions</title>
-    <meta name="description"
-        content="Bridging human creativity with artificial intelligence. Transform your business with cutting-edge AI solutions, custom web development, and intelligent automation.">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Appwrite SDK (Global) -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
-
-</head>
-
-<body>
+<Layout title="Transform Ideas into AI-Enhanced Solutions">
     <div class="grid-background"></div>
 
-    <!-- FLOATING SOCIAL - from index-final.html -->
+    <!-- FLOATING SOCIAL -->
     <div class="social-float">
         <span class="follow-text">FOLLOW US</span>
         <a href="https://instagram.com/fikanovatech" target="_blank" class="social-float-icon" title="Instagram">
@@ -36,11 +19,11 @@
         </a>
     </div>
 
-    <!-- HEADER - from index-final.html -->
+    <!-- HEADER -->
     <header>
         <nav>
             <div class="logo">
-                <img src="assets/logos/fikanova-logo1.png" class="logo-image" />
+                <img src="/assets/logos/fikanova-logo1.png" class="logo-image" />
             </div>
 
             <div class="nav-desktop">
@@ -59,40 +42,32 @@
         </nav>
     </header>
 
-    <!-- MOBILE MENU - Dynamically populated by JavaScript -->
+    <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <!-- Solutions (Dynamic from Appwrite) -->
             <div class="menu-group">
-                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i
-                            class="fas fa-chevron-down"></i></span></button>
+                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-solutions-menu">
-                    <!-- Populated by dynamic-menu.js -->
                     <span class="menu-item" style="color:var(--text-tertiary);">Loading...</span>
                 </div>
             </div>
-            <!-- Company -->
             <div class="menu-group">
-                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i
-                            class="fas fa-chevron-down"></i></span></button>
+                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-company-menu">
-                    <a href="/page.html?p=about-us" class="menu-item">About Us</a>
-                    <a href="/page.html?p=our-story" class="menu-item">Our Story</a>
-                    <a href="/page.html?p=impact" class="menu-item">Impact</a>
+                    <a href="/page?p=about-us" class="menu-item">About Us</a>
+                    <a href="/page?p=our-story" class="menu-item">Our Story</a>
+                    <a href="/impact" class="menu-item">Impact</a>
+                    <a href="/contact" class="menu-item">Contact Us</a>
                 </div>
             </div>
-            <!-- Work -->
             <div class="menu-group">
-                <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i
-                            class="fas fa-chevron-down"></i></span></button>
+                <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
                 <div class="submenu" id="mobile-work-menu">
-                    <a href="/page.html?p=portfolio" class="menu-item">Portfolio</a>
-                    <a href="/page.html?p=case-studies" class="menu-item">Case Studies</a>
-                    <a href="/page.html?p=resources" class="menu-item">Resources</a>
-                    <a href="/page.html?p=newsletter" class="menu-item">Newsletter</a>
+                    <a href="/portfolio" class="menu-item">Portfolio</a>
+                    <a href="/resources" class="menu-item">Resources</a>
+                    <a href="/newsletter" class="menu-item">Newsletter</a>
                 </div>
             </div>
-            <!-- CTA -->
             <div class="menu-group" style="border-bottom:none;">
                 <a href="#contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
             </div>
@@ -137,7 +112,6 @@
                 <p>Comprehensive services tailored to transform your business</p>
             </div>
             <div class="services-grid">
-                <!-- Development -->
                 <div class="service-card scroll-reveal">
                     <lottie-player class="lottie-service-icon"
                         src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent"
@@ -145,11 +119,10 @@
                     </lottie-player>
                     <h3>Development</h3>
                     <p>Web development, mobile apps, and custom software solutions built with modern technologies.</p>
-                    <a href="/services.html" class="btn btn-secondary" style="margin-top: 16px;">
+                    <a href="/services" class="btn btn-secondary" style="margin-top: 16px;">
                         View Services <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
-                <!-- Marketing -->
                 <div class="service-card scroll-reveal">
                     <lottie-player class="lottie-service-icon"
                         src="https://assets5.lottiefiles.com/packages/lf20_ydo1amjm.json" background="transparent"
@@ -157,11 +130,10 @@
                     </lottie-player>
                     <h3>Marketing</h3>
                     <p>SEO optimization, social media marketing, and content strategy to grow your brand online.</p>
-                    <a href="/services.html" class="btn btn-secondary" style="margin-top: 16px;">
+                    <a href="/services" class="btn btn-secondary" style="margin-top: 16px;">
                         View Services <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
-                <!-- AI & Technology -->
                 <div class="service-card scroll-reveal">
                     <lottie-player class="lottie-service-icon"
                         src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json" background="transparent"
@@ -169,7 +141,7 @@
                     </lottie-player>
                     <h3>AI & Technology</h3>
                     <p>Chatbot integration, AI automation, and tech consulting to modernize your business.</p>
-                    <a href="/services.html" class="btn btn-secondary" style="margin-top: 16px;">
+                    <a href="/services" class="btn btn-secondary" style="margin-top: 16px;">
                         View Services <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -238,7 +210,7 @@
                         <h3>Opal Suites</h3>
                         <p>Real estate website with advanced property search and virtual tours</p>
                         <span class="portfolio-tag">Web Development</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -251,7 +223,7 @@
                         <h3>ETCO Kenya</h3>
                         <p>NGO website for education and community outreach initiatives</p>
                         <span class="portfolio-tag">Web Design</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -264,7 +236,7 @@
                         <h3>Jenga365</h3>
                         <p>Innovative mentorship platform connecting professionals</p>
                         <span class="portfolio-tag">Platform</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -277,7 +249,7 @@
                         <h3>Botpress Chatbot</h3>
                         <p>Intelligent chatbot for seamless customer engagement</p>
                         <span class="portfolio-tag">AI Integration</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -294,7 +266,7 @@
                         <h3>Nondescripts RFC</h3>
                         <p>E-commerce platform for rugby merchandise and fan engagement</p>
                         <span class="portfolio-tag">E-commerce</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -307,7 +279,7 @@
                         <h3>Midesa</h3>
                         <p>Digital payments aggregator and marketplace</p>
                         <span class="portfolio-tag">FinTech</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -320,7 +292,7 @@
                         <h3>Analytics Dashboard</h3>
                         <p>Real-time analytics and performance tracking</p>
                         <span class="portfolio-tag">Dashboard</span>
-                        <a href="/portfolio.html" class="btn btn-secondary"
+                        <a href="/portfolio" class="btn btn-secondary"
                             style="margin-top: 12px; display: block; text-align: center;">View Project <i
                                 class="fas fa-arrow-right"></i></a>
                     </div>
@@ -329,7 +301,7 @@
 
             <!-- View All Projects Button -->
             <div class="cta-buttons" style="justify-content: center; margin-top: 48px;">
-                <a href="/portfolio.html" class="btn btn-primary">
+                <a href="/portfolio" class="btn btn-primary">
                     <i class="fas fa-th-large"></i>
                     View All Projects
                 </a>
@@ -465,10 +437,6 @@
     </footer>
 
     <!-- JavaScript Files -->
-    <!-- 1. UI Interactions (Theme, Mobile Menu, Scroll, Tabs) -->
-    <script src="assets/js/script.js"></script>
-    <!-- 2. Dynamic Navigation Menu (Uses Global Appwrite) -->
-    <script src="assets/js/dynamic-menu.js"></script>
-</body>
-
-</html>
+    <script is:inline src="/assets/js/script.js"></script>
+    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+</Layout>
