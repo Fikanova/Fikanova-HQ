@@ -437,6 +437,21 @@ import Layout from '../layouts/Layout.astro';
     </footer>
 
     <!-- JavaScript Files -->
-    <script is:inline src="/assets/js/script.js"></script>
-    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+    <script is:inline>
+        // Load external scripts after DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme, mobile menu, and scroll reveal
+            if (typeof loadScript !== 'undefined') return;
+            
+            function loadScript(src) {
+                const script = document.createElement('script');
+                script.src = src;
+                script.async = false;
+                document.body.appendChild(script);
+            }
+            
+            loadScript('/assets/js/script.js');
+            loadScript('/assets/js/dynamic-menu.js');
+        });
+    </script>
 </Layout>
