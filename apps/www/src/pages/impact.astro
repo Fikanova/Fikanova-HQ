@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Impact Dashboard">
+    <div class="grid-background"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="/assets/logos/fikanova-logo1.png" class="logo-image" /></a>
+            </div>
+            <div class="nav-desktop">
+                <ul class="nav-menu">
+                    <li id="nav-solutions-container" class="nav-item"></li>
+                    <li id="nav-company-container" class="nav-item"></li>
+                    <li id="nav-work-container" class="nav-item"></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge"><span class="badge-dot"></span>Measurable Results</div>
+            <h1>Our <span class="gradient-text">Impact</span></h1>
+            <p>Track record of delivering value for our clients</p>
+        </div>
+    </section>
+
+    <main class="page-main">
+        <div class="container">
+            <!-- Stats Grid -->
+            <div class="stats-grid" style="margin-bottom: 60px;">
+                <div class="stat-item scroll-reveal">
+                    <h3>10+</h3>
+                    <p>Projects Completed</p>
+                </div>
+                <div class="stat-item scroll-reveal">
+                    <h3>8+</h3>
+                    <p>Happy Clients</p>
+                </div>
+                <div class="stat-item scroll-reveal">
+                    <h3>98%</h3>
+                    <p>Client Satisfaction</p>
+                </div>
+                <div class="stat-item scroll-reveal">
+                    <h3>24/7</h3>
+                    <p>AI Agent Uptime</p>
+                </div>
+            </div>
+
+            <!-- Impact Stories -->
+            <div class="section-header scroll-reveal">
+                <h2>Impact Stories</h2>
+                <p>Real results from real businesses</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card scroll-reveal">
+                    <p class="testimonial-text">
+                        "Our website traffic increased by 300% after working with Fikanova on SEO optimization."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">OS</div>
+                        <div class="author-info">
+                            <h4>Opal Suites</h4>
+                            <p>Real Estate</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card scroll-reveal">
+                    <p class="testimonial-text">
+                        "The chatbot handles 80% of our customer inquiries automatically, saving us 20 hours per week."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">TC</div>
+                        <div class="author-info">
+                            <h4>Tech Startup</h4>
+                            <p>SaaS Company</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card scroll-reveal">
+                    <p class="testimonial-text">
+                        "From concept to launch in 6 weeks. The team delivered exactly what we envisioned."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">J3</div>
+                        <div class="author-info">
+                            <h4>Jenga365</h4>
+                            <p>Mentorship Platform</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2025 Fikanova Limited. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script is:inline src="/assets/js/script.js"></script>
+    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+</Layout>

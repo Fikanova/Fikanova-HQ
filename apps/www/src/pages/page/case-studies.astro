@@ -1,0 +1,89 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const caseStudies = [
+    {
+        client: 'Opal Suites',
+        industry: 'Real Estate',
+        challenge: 'Needed a modern property listing platform with virtual tours',
+        solution: 'Built custom website with advanced search and 360° property views',
+        results: ['300% increase in inquiries', '50% faster property discovery', '25% reduction in viewing no-shows']
+    },
+    {
+        client: 'Tech Startup',
+        industry: 'SaaS',
+        challenge: 'Overwhelmed support team handling repetitive questions',
+        solution: 'Deployed AI chatbot with FAQ automation and smart escalation',
+        results: ['80% of queries automated', '20 hours/week saved', '95% customer satisfaction']
+    }
+];
+---
+
+<Layout title="Case Studies">
+    <div class="grid-background"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="/assets/logos/fikanova-logo1.png" class="logo-image" /></a>
+            </div>
+            <div class="nav-desktop">
+                <ul class="nav-menu">
+                    <li id="nav-solutions-container" class="nav-item"></li>
+                    <li id="nav-company-container" class="nav-item"></li>
+                    <li id="nav-work-container" class="nav-item"></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge"><span class="badge-dot"></span>Success Stories</div>
+            <h1><span class="gradient-text">Case Studies</span></h1>
+            <p>Deep dives into how we've helped our clients succeed</p>
+        </div>
+    </section>
+
+    <main class="page-main">
+        <div class="container">
+            {caseStudies.map((study, i) => (
+                <div class="scroll-reveal" style={`max-width: 800px; margin: 0 auto ${i < caseStudies.length - 1 ? '60px' : '0'};`}>
+                    <div style="background: var(--dark-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 40px;">
+                        <span style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 14px;">{study.industry}</span>
+                        <h2 style="margin-top: 8px; margin-bottom: 24px;">{study.client}</h2>
+                        
+                        <h4 style="color: var(--text-tertiary); margin-bottom: 8px;">The Challenge</h4>
+                        <p style="margin-bottom: 24px;">{study.challenge}</p>
+                        
+                        <h4 style="color: var(--text-tertiary); margin-bottom: 8px;">Our Solution</h4>
+                        <p style="margin-bottom: 24px;">{study.solution}</p>
+                        
+                        <h4 style="color: var(--text-tertiary); margin-bottom: 12px;">Results</h4>
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+                            {study.results.map(result => (
+                                <li style="display: flex; align-items: center; gap: 12px;">
+                                    <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                    <span>{result}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2025 Fikanova Limited. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script is:inline src="/assets/js/script.js"></script>
+    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+</Layout>

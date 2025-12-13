@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+    { name: 'Opal Suites', description: 'Real estate platform with property search', category: 'Web Development', status: 'completed', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80' },
+    { name: 'ETCO Kenya', description: 'NGO website for education outreach', category: 'Web Design', status: 'completed', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
+    { name: 'Jenga365', description: 'Mentorship platform connecting professionals', category: 'Platform', status: 'completed', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80' },
+    { name: 'Botpress Chatbot', description: 'AI chatbot for customer engagement', category: 'AI Integration', status: 'completed', image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80' },
+    { name: 'Nondescripts RFC', description: 'E-commerce for rugby merchandise', category: 'E-commerce', status: 'in-progress', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80' },
+    { name: 'Midesa', description: 'Digital payments aggregator', category: 'FinTech', status: 'in-progress', image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80' }
+];
+---
+
+<Layout title="Portfolio">
+    <div class="grid-background"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="/assets/logos/fikanova-logo1.png" class="logo-image" /></a>
+            </div>
+            <div class="nav-desktop">
+                <ul class="nav-menu">
+                    <li id="nav-solutions-container" class="nav-item"></li>
+                    <li id="nav-company-container" class="nav-item"></li>
+                    <li id="nav-work-container" class="nav-item"></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge"><span class="badge-dot"></span>Our Work</div>
+            <h1>Our <span class="gradient-text">Portfolio</span></h1>
+            <p>Explore our completed and ongoing projects</p>
+        </div>
+    </section>
+
+    <main class="page-main">
+        <div class="container">
+            <div class="portfolio-grid">
+                {projects.map(project => (
+                    <div class="portfolio-card scroll-reveal">
+                        <span class={`status-badge ${project.status}`}>
+                            {project.status === 'completed' ? 'Completed' : 'In Progress'}
+                        </span>
+                        <img src={project.image} alt={project.name} class="portfolio-image">
+                        <div class="portfolio-content">
+                            <h3>{project.name}</h3>
+                            <p>{project.description}</p>
+                            <span class="portfolio-tag">{project.category}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2025 Fikanova Limited. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script is:inline src="/assets/js/script.js"></script>
+    <script is:inline src="/assets/js/dynamic-menu.js"></script>
+</Layout>
