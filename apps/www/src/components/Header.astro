@@ -1,0 +1,218 @@
+---
+/**
+ * Shared Header Component
+ * Static navigation with mega menus for Solutions, Company, and Work
+ */
+---
+
+<!-- HEADER -->
+<header>
+    <nav>
+        <a href="/" class="logo">
+            <img src="/assets/logos/fikanova-logo1.png" class="logo-image" alt="Fikanova" />
+        </a>
+
+        <div class="nav-desktop">
+            <ul class="nav-menu">
+                <!-- Solutions Dropdown -->
+                <li class="nav-item has-dropdown">
+                    <span class="nav-link">Solutions <i class="fas fa-chevron-down"></i></span>
+                    <div class="mega-menu">
+                        <div class="mega-menu-group">
+                            <h4>Development</h4>
+                            <a href="/service/web-development">Web Development</a>
+                            <a href="/service/mobile-app-development">Mobile App Development</a>
+                            <a href="/service/custom-software">Custom Software</a>
+                        </div>
+                        <div class="mega-menu-group">
+                            <h4>Marketing</h4>
+                            <a href="/service/seo-optimization">SEO Optimization</a>
+                            <a href="/service/social-media-marketing">Social Media Marketing</a>
+                            <a href="/service/content-strategy">Content Strategy</a>
+                        </div>
+                        <div class="mega-menu-group">
+                            <h4>AI & Tech</h4>
+                            <a href="/service/chatbot-integration">Chatbot Integration</a>
+                            <a href="/service/ai-automation">AI Automation</a>
+                            <a href="/service/tech-consultation">Tech Consultation</a>
+                        </div>
+                    </div>
+                </li>
+                <!-- Company Dropdown -->
+                <li class="nav-item has-dropdown">
+                    <span class="nav-link">Company <i class="fas fa-chevron-down"></i></span>
+                    <div class="dropdown-menu">
+                        <a href="/page/about-us">About Us</a>
+                        <a href="/page/our-story">Our Story</a>
+                        <a href="/impact">Impact</a>
+                        <a href="/contact">Contact Us</a>
+                    </div>
+                </li>
+                <!-- Work Dropdown -->
+                <li class="nav-item has-dropdown">
+                    <span class="nav-link">Work <i class="fas fa-chevron-down"></i></span>
+                    <div class="dropdown-menu">
+                        <a href="/portfolio">Portfolio</a>
+                        <a href="/page/case-studies">Case Studies</a>
+                        <a href="/resources">Resources</a>
+                        <a href="/newsletter">Newsletter</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+            <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-content">
+        <div class="menu-group">
+            <button class="submenu-toggle" data-target="mobile-solutions">Solutions <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <div class="submenu" id="mobile-solutions">
+                <div class="mobile-category-label">Development</div>
+                <a href="/service/web-development" class="menu-item">Web Development</a>
+                <a href="/service/mobile-app-development" class="menu-item">Mobile App Development</a>
+                <a href="/service/custom-software" class="menu-item">Custom Software</a>
+                <div class="mobile-category-label">Marketing</div>
+                <a href="/service/seo-optimization" class="menu-item">SEO Optimization</a>
+                <a href="/service/social-media-marketing" class="menu-item">Social Media Marketing</a>
+                <a href="/service/content-strategy" class="menu-item">Content Strategy</a>
+                <div class="mobile-category-label">AI & Tech</div>
+                <a href="/service/chatbot-integration" class="menu-item">Chatbot Integration</a>
+                <a href="/service/ai-automation" class="menu-item">AI Automation</a>
+                <a href="/service/tech-consultation" class="menu-item">Tech Consultation</a>
+            </div>
+        </div>
+        <div class="menu-group">
+            <button class="submenu-toggle" data-target="mobile-company">Company <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <div class="submenu" id="mobile-company">
+                <a href="/page/about-us" class="menu-item">About Us</a>
+                <a href="/page/our-story" class="menu-item">Our Story</a>
+                <a href="/impact" class="menu-item">Impact</a>
+                <a href="/contact" class="menu-item">Contact Us</a>
+            </div>
+        </div>
+        <div class="menu-group">
+            <button class="submenu-toggle" data-target="mobile-work">Work <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <div class="submenu" id="mobile-work">
+                <a href="/portfolio" class="menu-item">Portfolio</a>
+                <a href="/page/case-studies" class="menu-item">Case Studies</a>
+                <a href="/resources" class="menu-item">Resources</a>
+                <a href="/newsletter" class="menu-item">Newsletter</a>
+            </div>
+        </div>
+        <div class="menu-group" style="border-bottom:none;">
+            <a href="/contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Desktop dropdown styles - ensure visibility */
+.nav-item.has-dropdown {
+    position: relative;
+}
+.nav-item.has-dropdown .nav-link {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.nav-item.has-dropdown .nav-link i {
+    font-size: 0.65rem;
+    transition: transform 0.2s;
+}
+.nav-item:hover .nav-link i {
+    transform: rotate(180deg);
+}
+
+/* Mega menu (3-column for Solutions) */
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    margin-top: 12px;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    min-width: 550px;
+    padding: 24px;
+    background: var(--dark-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* Simple dropdown menu (for Company, Work) */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    margin-top: 12px;
+    z-index: 1000;
+    min-width: 200px;
+    padding: 16px;
+    background: var(--dark-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* Show on hover */
+.nav-item:hover .mega-menu,
+.nav-item:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Mega menu category */
+.mega-menu-group h4 {
+    color: var(--primary);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+.mega-menu-group a,
+.dropdown-menu a {
+    display: block;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.mega-menu-group a:hover,
+.dropdown-menu a:hover {
+    color: var(--text-primary);
+    padding-left: 8px;
+}
+
+/* Mobile category labels */
+.mobile-category-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    margin: 12px 0 6px;
+    padding-left: 12px;
+    font-weight: 600;
+}
+</style>
