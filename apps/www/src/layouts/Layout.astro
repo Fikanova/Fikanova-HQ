@@ -1,9 +1,14 @@
 ---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
 interface Props {
   title: string;
+  hideHeader?: boolean;
+  hideFooter?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, hideHeader = false, hideFooter = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -26,12 +31,16 @@ const { title } = Astro.props;
     
     <!-- Styles -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    
-    <!-- Appwrite -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
 </head>
 <body>
+    <div class="grid-background"></div>
+    
+    {!hideHeader && <Header />}
+    
     <slot />
+    
+    {!hideFooter && <Footer />}
+    
     <script is:inline src="/assets/js/script.js"></script>
 </body>
 </html>

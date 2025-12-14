@@ -3,8 +3,6 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Transform Ideas into AI-Enhanced Solutions">
-    <div class="grid-background"></div>
-
     <!-- FLOATING SOCIAL -->
     <div class="social-float">
         <span class="follow-text">FOLLOW US</span>
@@ -17,61 +15,6 @@ import Layout from '../layouts/Layout.astro';
         <a href="https://twitter.com/FikanovaTech" target="_blank" class="social-float-icon" title="Twitter">
             <i class="fab fa-twitter"></i>
         </a>
-    </div>
-
-    <!-- HEADER -->
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="/assets/logos/fikanova-logo1.png" class="logo-image" />
-            </div>
-
-            <div class="nav-desktop">
-                <ul class="nav-menu">
-                    <li id="nav-solutions-container" class="nav-item"></li>
-                    <li id="nav-company-container" class="nav-item"></li>
-                    <li id="nav-work-container" class="nav-item"></li>
-                </ul>
-            </div>
-
-            <div class="nav-right">
-                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-                <a href="#contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
-                <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- MOBILE MENU -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-content">
-            <div class="menu-group">
-                <button class="submenu-toggle" id="solutionsToggle">Solutions <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
-                <div class="submenu" id="mobile-solutions-menu">
-                    <span class="menu-item" style="color:var(--text-tertiary);">Loading...</span>
-                </div>
-            </div>
-            <div class="menu-group">
-                <button class="submenu-toggle" id="companyToggle">Company <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
-                <div class="submenu" id="mobile-company-menu">
-                    <a href="/page?p=about-us" class="menu-item">About Us</a>
-                    <a href="/page?p=our-story" class="menu-item">Our Story</a>
-                    <a href="/impact" class="menu-item">Impact</a>
-                    <a href="/contact" class="menu-item">Contact Us</a>
-                </div>
-            </div>
-            <div class="menu-group">
-                <button class="submenu-toggle" id="workToggle">Work <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
-                <div class="submenu" id="mobile-work-menu">
-                    <a href="/portfolio" class="menu-item">Portfolio</a>
-                    <a href="/resources" class="menu-item">Resources</a>
-                    <a href="/newsletter" class="menu-item">Newsletter</a>
-                </div>
-            </div>
-            <div class="menu-group" style="border-bottom:none;">
-                <a href="#contact" class="btn-call" style="width:100%;justify-content:center;">Contact Us</a>
-            </div>
-        </div>
     </div>
 
     <!-- Hero Section -->
@@ -378,64 +321,4 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#portfolio">Portfolio</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="#services">Web Development</a></li>
-                        <li><a href="#services">AI Integration</a></li>
-                        <li><a href="#services">Tech Consulting</a></li>
-                        <li><a href="#services">SEO Optimization</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Connect</h4>
-                    <ul>
-                        <li><a href="https://twitter.com/fikanova" target="_blank">Twitter</a></li>
-                        <li><a href="https://linkedin.com/company/fikanova" target="_blank">LinkedIn</a></li>
-                        <li><a href="https://instagram.com/fikanova" target="_blank">Instagram</a></li>
-                        <li><a href="mailto:info@fikanova.co.ke">Email</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Fikanova Limited. All rights reserved.</p>
-                <div class="social-links" style="justify-content: center; margin-top: 20px;">
-                    <a href="https://twitter.com/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://linkedin.com/company/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://instagram.com/fikanova" class="social-link" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript Files -->
-    <script is:inline src="/assets/js/dynamic-menu.js"></script>
 </Layout>

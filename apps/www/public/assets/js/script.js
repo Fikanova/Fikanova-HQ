@@ -17,7 +17,8 @@ function initScript() {
     function updateThemeIcon() {
         if (!themeToggle) return;
         const isLight = body.classList.contains('theme-light');
-        const icon = isLight ? 'fa-sun' : 'fa-moon';
+        // Show opposite icon: sun in dark mode (to switch to light), moon in light mode (to switch to dark)
+        const icon = isLight ? 'fa-moon' : 'fa-sun';
         themeToggle.innerHTML = `<i class="fas ${icon}"></i>`;
     }
 
