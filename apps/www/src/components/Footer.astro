@@ -1,12 +1,53 @@
 ---
 /**
- * Shared Footer Component
- * Consistent footer across all pages
+ * Shared Footer Component with Newsletter Signup
+ * Progressive disclosure - shows subscribe button after email input
  */
 ---
 
 <footer>
     <div class="container">
+        <!-- Newsletter Signup Section -->
+        <div class="footer-newsletter">
+            <p class="newsletter-heading">Sign up for AI insights and automation strategies</p>
+            <form id="footer-newsletter-form" class="newsletter-form">
+                <input type="hidden" name="newsletter_segment" value="termite_stack" />
+                <div class="input-wrapper">
+                    <input 
+                        type="email" 
+                        name="email"
+                        id="footer-newsletter-email"
+                        placeholder="email@example.com" 
+                        required
+                        class="newsletter-input"
+                    />
+                </div>
+                <div class="newsletter-extras" id="footer-newsletter-extras">
+                    <p class="newsletter-consent">
+                        Join The Termite Stack for weekly dispatches on AI agents, automation, 
+                        and building the future. No spam. Unsubscribe anytime.
+                    </p>
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </div>
+            </form>
+            <!-- Social Icons - Always visible -->
+            <div class="social-icons">
+                <a href="https://twitter.com/FikanovaTech" target="_blank" rel="noopener" aria-label="Twitter">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+                <a href="https://linkedin.com/company/fikanova" target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://instagram.com/fikanovatech" target="_blank" rel="noopener" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://github.com/fikanova" target="_blank" rel="noopener" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Solutions</h4>
@@ -32,7 +73,7 @@
                     <li><a href="/portfolio">Portfolio</a></li>
                     <li><a href="/page/case-studies">Case Studies</a></li>
                     <li><a href="/resources">Resources</a></li>
-                    <li><a href="/newsletter">Newsletter</a></li>
+                    <li><a href="/newsletter">The Termite Stack</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -45,19 +86,201 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Footer Bottom (no icons) -->
         <div class="footer-bottom">
             <p>&copy; 2025 Fikanova Limited. All rights reserved.</p>
-            <div class="social-links" style="justify-content: center; margin-top: 20px;">
-                <a href="https://twitter.com/FikanovaTech" class="social-link" target="_blank">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://linkedin.com/company/fikanova" class="social-link" target="_blank">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://instagram.com/fikanovatech" class="social-link" target="_blank">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
         </div>
     </div>
 </footer>
+
+<style>
+    /* Newsletter Signup in Footer */
+    .footer-newsletter {
+        text-align: center;
+        padding: 4rem 0;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 3rem;
+    }
+
+    .newsletter-heading {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        letter-spacing: 0.5px;
+    }
+
+    .newsletter-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .newsletter-input {
+        width: 100%;
+        padding: 1rem 0;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--border-medium);
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .newsletter-input::placeholder {
+        color: var(--text-tertiary);
+        font-style: italic;
+    }
+
+    .newsletter-input:focus {
+        border-bottom-color: var(--primary);
+    }
+
+    /* Progressive disclosure - hidden by default */
+    .newsletter-extras {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+        margin-top: 0;
+    }
+
+    .newsletter-extras.visible {
+        max-height: 200px;
+        opacity: 1;
+        margin-top: 1.5rem;
+    }
+
+    .newsletter-consent {
+        font-size: 0.8125rem;
+        color: var(--text-tertiary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .newsletter-btn {
+        padding: 0.875rem 2rem;
+        background: transparent;
+        border: 1px solid var(--text-secondary);
+        border-radius: 0;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .newsletter-btn:hover {
+        background: #ffffff;
+        border-color: #ffffff;
+        color: #000000;
+    }
+
+    body.theme-light .newsletter-btn:hover {
+        background: var(--accent-gold);
+        border-color: var(--accent-gold);
+        color: #0a1628;
+    }
+
+    /* Social Icons - Kempinski style */
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .social-icons a {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border-medium);
+        border-radius: 50%;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 1.125rem;
+        transition: all 0.3s ease;
+    }
+
+    .social-icons a:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    /* Footer Bottom - No icons */
+    .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-bottom p {
+        color: var(--text-tertiary);
+        font-size: 0.875rem;
+    }
+</style>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('footer-newsletter-form');
+    const emailInput = document.getElementById('footer-newsletter-email');
+    const extras = document.getElementById('footer-newsletter-extras');
+    
+    if (emailInput && extras) {
+        // Show extras when user starts typing email
+        emailInput.addEventListener('input', () => {
+            if (emailInput.value.trim().length > 0) {
+                extras.classList.add('visible');
+            } else {
+                extras.classList.remove('visible');
+            }
+        });
+
+        // Also show on focus if there's already content
+        emailInput.addEventListener('focus', () => {
+            if (emailInput.value.trim().length > 0) {
+                extras.classList.add('visible');
+            }
+        });
+    }
+    
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = form.querySelector('input[type="email"]');
+            const btn = form.querySelector('.newsletter-btn');
+            
+            if (input && input.value) {
+                btn.textContent = 'Subscribed!';
+                btn.style.background = '#10b981';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = 'white';
+                input.value = '';
+                
+                // Hide extras after successful subscription
+                if (extras) {
+                    extras.classList.remove('visible');
+                }
+                
+                setTimeout(() => {
+                    btn.textContent = 'Subscribe';
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 3000);
+            }
+        });
+    }
+});
+</script>
+

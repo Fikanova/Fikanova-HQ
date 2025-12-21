@@ -2,12 +2,23 @@
 import Layout from '../layouts/Layout.astro';
 
 const resources = [
-    { title: 'Getting Started with AI Chatbots', type: 'Guide', icon: 'fas fa-book' },
-    { title: 'SEO Checklist 2025', type: 'Checklist', icon: 'fas fa-tasks' },
-    { title: 'Website Launch Template', type: 'Template', icon: 'fas fa-file-alt' },
-    { title: 'Social Media Calendar', type: 'Template', icon: 'fas fa-calendar' },
-    { title: 'Tech Stack Decision Guide', type: 'Guide', icon: 'fas fa-code' },
-    { title: 'Client Onboarding Workflow', type: 'Workflow', icon: 'fas fa-project-diagram' }
+    { title: 'Getting Started with AI Chatbots', type: 'guide', icon: 'fas fa-book', description: 'Learn how to implement AI chatbots for your business' },
+    { title: 'SEO Checklist 2025', type: 'checklist', icon: 'fas fa-tasks', description: 'Complete SEO checklist for modern websites' },
+    { title: 'Website Launch Template', type: 'template', icon: 'fas fa-file-alt', description: 'Step-by-step template for launching websites' },
+    { title: 'Social Media Calendar', type: 'template', icon: 'fas fa-calendar', description: 'Plan your social media content effectively' },
+    { title: 'Tech Stack Decision Guide', type: 'guide', icon: 'fas fa-code', description: 'Choose the right technologies for your project' },
+    { title: 'Client Onboarding Workflow', type: 'workflow', icon: 'fas fa-project-diagram', description: 'Streamline your client onboarding process' },
+    { title: 'Marketing Automation Setup', type: 'guide', icon: 'fas fa-robot', description: 'Automate your marketing workflows' },
+    { title: 'Content Strategy Template', type: 'template', icon: 'fas fa-edit', description: 'Plan your content marketing strategy' },
+    { title: 'Project Management Checklist', type: 'checklist', icon: 'fas fa-check-double', description: 'Keep your projects on track' }
+];
+
+const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'guide', label: 'Guides' },
+    { id: 'template', label: 'Templates' },
+    { id: 'checklist', label: 'Checklists' },
+    { id: 'workflow', label: 'Workflows' }
 ];
 ---
 
@@ -22,20 +33,94 @@ const resources = [
 
     <main class="page-main">
         <div class="container">
-            <div class="services-grid">
+            <!-- Search and Filter -->
+            <div class="search-filter-container">
+                <div class="search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="resource-search" placeholder="Search resources..." />
+                </div>
+                <div class="filter-tabs">
+                    {categories.map((cat, index) => (
+                        <button 
+                            class={`filter-tab ${index === 0 ? 'active' : ''}`}
+                            data-filter={cat.id}
+                        >
+                            {cat.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <!-- Resources Grid -->
+            <div class="services-grid" id="resources-grid">
                 {resources.map(resource => (
-                    <div class="service-card scroll-reveal">
+                    <div class="service-card scroll-reveal" data-type={resource.type}>
                         <div class="service-icon">
                             <i class={resource.icon}></i>
                         </div>
                         <span style="color: var(--primary); font-size: 12px; font-weight: 600; text-transform: uppercase;">{resource.type}</span>
                         <h3 style="margin-top: 8px;">{resource.title}</h3>
+                        <p style="color: var(--text-tertiary); font-size: 14px; margin-top: 8px;">{resource.description}</p>
                         <a href="#" class="btn btn-secondary" style="margin-top: 16px;">
                             Download <i class="fas fa-download"></i>
                         </a>
                     </div>
                 ))}
             </div>
+
+            <!-- No Results -->
+            <div class="no-results" id="no-results" style="display: none;">
+                <h3>No resources found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
         </div>
     </main>
 </Layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('resource-search') as HTMLInputElement;
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const cards = document.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+        const noResults = document.getElementById('no-results') as HTMLElement;
+        let activeFilter = 'all';
+
+        function filterResources() {
+            const searchTerm = searchInput?.value.toLowerCase() || '';
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
+                const description = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                const type = card.dataset.type || '';
+
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || type === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        searchInput?.addEventListener('input', filterResources);
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                activeFilter = (tab as HTMLElement).dataset.filter || 'all';
+                filterResources();
+            });
+        });
+    });
+</script>

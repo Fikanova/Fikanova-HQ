@@ -1,25 +1,83 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CaseStudyCharts from '../../components/CaseStudyCharts.jsx';
 
 const caseStudies = [
+    {
+        client: 'Nondescripts RFC',
+        industry: 'E-commerce / Sports',
+        challenge: 'Needed to modernize merchandise sales and member engagement for Kenya\'s premier rugby club',
+        solution: 'Built complete e-commerce platform with membership management, event ticketing, and merchandise store',
+        results: ['240% revenue growth', '2,400 active members', '4.2% conversion rate'],
+        metrics: {
+            type: 'growth',
+            data: [100, 180, 320, 480, 620, 850, 1050, 1200],
+            labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8']
+        },
+        icon: '🏉',
+        techStack: ['Next.js', 'Stripe', 'Appwrite']
+    },
+    {
+        client: 'Jenga365',
+        industry: 'Mentorship Platform',
+        challenge: 'Legacy website with 4+ second load times affecting user retention and SEO rankings',
+        solution: 'Complete rebuild with modern stack, optimized images, lazy loading, and CDN implementation',
+        results: ['74% faster load time', '99.9% uptime', '45% more engagement'],
+        metrics: {
+            type: 'speed',
+            before: 4.2,
+            after: 1.1
+        },
+        icon: '🧱',
+        techStack: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+        client: 'CFO Agent v1',
+        industry: 'AI / Intelligence',
+        challenge: 'Manual financial operations consuming 40+ hours per week of executive time',
+        solution: 'Autonomous financial operations agent handling invoicing, expense tracking, and reporting',
+        results: ['480 hours saved', '98.5% accuracy', '1,200+ tasks automated'],
+        metrics: {
+            type: 'automation',
+            data: [0, 50, 150, 300, 520, 780, 1000, 1200],
+            labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8']
+        },
+        icon: '💰',
+        techStack: ['LangChain', 'GPT-4', 'n8n']
+    },
+    {
+        client: 'ETCO Kenya',
+        industry: 'NGO / Education',
+        challenge: 'Limited online presence hindering fundraising and volunteer recruitment efforts',
+        solution: 'Strategic LinkedIn content plan with AI-assisted copywriting and engagement automation',
+        results: ['900% follower growth', '340% more engagement', '5x volunteer apps'],
+        metrics: {
+            type: 'growth',
+            data: [120, 280, 450, 620, 890, 1200],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+        },
+        icon: '🌍',
+        techStack: ['Astro', 'Stripe', 'MapBox']
+    },
     {
         client: 'Opal Suites',
         industry: 'Real Estate',
         challenge: 'Needed a modern property listing platform with virtual tours',
-        solution: 'Built custom website with advanced search and 360° property views',
-        results: ['300% increase in inquiries', '50% faster property discovery', '25% reduction in viewing no-shows']
-    },
-    {
-        client: 'Tech Startup',
-        industry: 'SaaS',
-        challenge: 'Overwhelmed support team handling repetitive questions',
-        solution: 'Deployed AI chatbot with FAQ automation and smart escalation',
-        results: ['80% of queries automated', '20 hours/week saved', '95% customer satisfaction']
+        solution: 'Built custom website with advanced search, 360° property views, and SEO optimization',
+        results: ['300% more inquiries', '50% faster discovery', '25% fewer no-shows'],
+        metrics: {
+            type: 'comparison',
+            before: 45,
+            after: 180,
+            label: 'Monthly Inquiries'
+        },
+        icon: '🏠',
+        techStack: ['Next.js', 'Cloudinary', 'Vercel']
     }
 ];
 ---
 
-<Layout title="Case Studies">
+<Layout title="Case Studies | Fikanova">
     <section class="hero">
         <div class="container">
             <div class="hero-badge"><span class="badge-dot"></span>Success Stories</div>
@@ -30,30 +88,8 @@ const caseStudies = [
 
     <main class="page-main">
         <div class="container">
-            {caseStudies.map((study, i) => (
-                <div class="scroll-reveal" style={`max-width: 800px; margin: 0 auto ${i < caseStudies.length - 1 ? '60px' : '0'};`}>
-                    <div style="background: var(--dark-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 40px;">
-                        <span style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 14px;">{study.industry}</span>
-                        <h2 style="margin-top: 8px; margin-bottom: 24px;">{study.client}</h2>
-                        
-                        <h4 style="color: var(--text-tertiary); margin-bottom: 8px;">The Challenge</h4>
-                        <p style="margin-bottom: 24px;">{study.challenge}</p>
-                        
-                        <h4 style="color: var(--text-tertiary); margin-bottom: 8px;">Our Solution</h4>
-                        <p style="margin-bottom: 24px;">{study.solution}</p>
-                        
-                        <h4 style="color: var(--text-tertiary); margin-bottom: 12px;">Results</h4>
-                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
-                            {study.results.map(result => (
-                                <li style="display: flex; align-items: center; gap: 12px;">
-                                    <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                    <span>{result}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-            ))}
+            <!-- Interactive Case Study Cards -->
+            <CaseStudyCharts caseStudies={caseStudies} client:load />
         </div>
     </main>
 </Layout>

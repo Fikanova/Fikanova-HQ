@@ -4,7 +4,7 @@
  * Boagworld-inspired design with category tabs and pagination
  */
 import Layout from '../layouts/Layout.astro';
-import NewsletterSignup from '../components/NewsletterSignup.astro';
+// NewsletterSignup is in Footer.astro
 import { Client, Databases, Query } from 'appwrite';
 
 // Initialize Appwrite client
@@ -85,7 +85,7 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
                     to build autonomous systems that actually work.
                 </p>
                 <div class="hero-cta">
-                    <a href="#subscribe" class="btn-primary">
+                    <a href="#footer-newsletter-email" class="btn-primary" onclick="event.preventDefault(); document.getElementById('footer-newsletter-email').scrollIntoView({behavior: 'smooth', block: 'center'}); setTimeout(() => document.getElementById('footer-newsletter-email').focus(), 500);">
                         <i class="fas fa-chevron-down"></i>
                         Subscribe
                     </a>
@@ -182,22 +182,6 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
             )}
         </div>
     </main>
-
-    <!-- Subscribe Section -->
-    <section class="subscribe-section" id="subscribe">
-        <div class="container">
-            <div class="subscribe-wrapper">
-                <div class="subscribe-text">
-                    <h2>Join The Termite Stack</h2>
-                    <p>
-                        Weekly dispatches on AI agents, automation, and building the future. 
-                        No spam. Unsubscribe anytime.
-                    </p>
-                </div>
-                <NewsletterSignup />
-            </div>
-        </div>
-    </section>
 </Layout>
 
 <style>
@@ -292,19 +276,20 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
         align-items: center;
         gap: 0.5rem;
         padding: 0.875rem 1.5rem;
-        background: #c4785a;
-        border-radius: 0.25rem;
-        color: white;
+        background: #ffffff;
+        border-radius: 50px;
+        color: #000000;
         font-weight: 600;
-        font-size: 0.8125rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 0.875rem;
         text-decoration: none;
         transition: all 0.2s ease;
+        border: none;
     }
 
     .btn-primary:hover {
-        background: #b36a4d;
+        background: #000000;
+        color: #ffffff;
+        transform: translateY(-2px);
     }
 
     .btn-secondary {
@@ -312,21 +297,20 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
         align-items: center;
         gap: 0.5rem;
         padding: 0.875rem 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 0.25rem;
-        color: white;
+        background: transparent;
+        border: 2px solid #ffffff;
+        border-radius: 50px;
+        color: #ffffff;
         font-weight: 600;
-        font-size: 0.8125rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 0.875rem;
         text-decoration: none;
         transition: all 0.2s ease;
     }
 
     .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
+        background: #ffffff;
+        color: #000000;
+        transform: translateY(-2px);
     }
 
     /* Category Header */

@@ -1,82 +1,393 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ImpactDashboard from '../components/ImpactDashboard.jsx';
 ---
 
-<Layout title="Impact Dashboard">
+<Layout title="Impact | Fikanova">
     <section class="hero">
         <div class="container">
             <div class="hero-badge"><span class="badge-dot"></span>Measurable Results</div>
             <h1>Our <span class="gradient-text">Impact</span></h1>
-            <p>Track record of delivering value for our clients</p>
+            <p>Track record of delivering value for our clients and communities</p>
         </div>
     </section>
 
     <main class="page-main">
         <div class="container">
-            <!-- Stats Grid -->
-            <div class="stats-grid" style="margin-bottom: 60px;">
-                <div class="stat-item scroll-reveal">
+            <!-- Key Stats Grid -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-item">
                     <h3>10+</h3>
                     <p>Projects Completed</p>
                 </div>
-                <div class="stat-item scroll-reveal">
+                <div class="stat-item">
                     <h3>8+</h3>
                     <p>Happy Clients</p>
                 </div>
-                <div class="stat-item scroll-reveal">
+                <div class="stat-item">
                     <h3>98%</h3>
                     <p>Client Satisfaction</p>
                 </div>
-                <div class="stat-item scroll-reveal">
+                <div class="stat-item">
                     <h3>24/7</h3>
                     <p>AI Agent Uptime</p>
                 </div>
             </div>
 
-            <!-- Impact Stories -->
-            <div class="section-header scroll-reveal">
-                <h2>Impact Stories</h2>
-                <p>Real results from real businesses</p>
-            </div>
+            <!-- Live Dashboard -->
+            <ImpactDashboard client:load />
 
-            <div class="testimonials-grid">
-                <div class="testimonial-card scroll-reveal">
-                    <p class="testimonial-text">
-                        "Our website traffic increased by 300% after working with Fikanova on SEO optimization."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">OS</div>
-                        <div class="author-info">
-                            <h4>Opal Suites</h4>
-                            <p>Real Estate</p>
+            <!-- Impact Areas Section -->
+            <section class="impact-areas scroll-reveal">
+                <h2 class="section-title">Impact Areas</h2>
+                <p class="section-subtitle">Measuring our contribution to sustainable growth</p>
+                
+                <div class="impact-grid">
+                    <!-- Economic Impact -->
+                    <div class="impact-card">
+                        <div class="impact-header">
+                            <div class="impact-icon economic">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h3>Economic Impact</h3>
+                                <span class="impact-tag">SME Growth</span>
+                            </div>
+                        </div>
+                        <div class="impact-chart">
+                            <svg viewBox="0 0 200 80" class="area-chart">
+                                <defs>
+                                    <linearGradient id="economicGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:var(--accent-green);stop-opacity:0.4"/>
+                                        <stop offset="100%" style="stop-color:var(--accent-green);stop-opacity:0"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M0,70 L30,55 L60,50 L90,40 L120,35 L150,25 L180,15 L200,10 L200,80 L0,80 Z" fill="url(#economicGrad)"/>
+                                <polyline points="0,70 30,55 60,50 90,40 120,35 150,25 180,15 200,10" fill="none" stroke="var(--accent-green)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="impact-metrics">
+                            <div class="metric">
+                                <span class="metric-value">KES 120K</span>
+                                <span class="metric-label">Cost Savings</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">8</span>
+                                <span class="metric-label">SMEs Served</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Impact -->
+                    <div class="impact-card">
+                        <div class="impact-header">
+                            <div class="impact-icon social">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h3>Social Impact</h3>
+                                <span class="impact-tag">Community Growth</span>
+                            </div>
+                        </div>
+                        <div class="impact-chart">
+                            <svg viewBox="0 0 200 80" class="bar-chart">
+                                <rect x="10" y="60" width="25" height="20" fill="var(--accent-blue)" opacity="0.4"/>
+                                <rect x="45" y="50" width="25" height="30" fill="var(--accent-blue)" opacity="0.5"/>
+                                <rect x="80" y="35" width="25" height="45" fill="var(--accent-blue)" opacity="0.6"/>
+                                <rect x="115" y="25" width="25" height="55" fill="var(--accent-blue)" opacity="0.8"/>
+                                <rect x="150" y="10" width="25" height="70" fill="var(--accent-blue)"/>
+                            </svg>
+                        </div>
+                        <div class="impact-metrics">
+                            <div class="metric">
+                                <span class="metric-value">150+</span>
+                                <span class="metric-label">Lives Touched</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">2</span>
+                                <span class="metric-label">NGOs Supported</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Environmental Impact -->
+                    <div class="impact-card">
+                        <div class="impact-header">
+                            <div class="impact-icon environmental">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h3>Environmental Impact</h3>
+                                <span class="impact-tag">Sustainability</span>
+                            </div>
+                        </div>
+                        <div class="impact-chart donut-chart-container">
+                            <svg viewBox="0 0 100 100" class="donut-chart">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border-subtle)" stroke-width="10"/>
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--accent-green)" stroke-width="10"
+                                    stroke-dasharray="188.5 251.2"
+                                    style="transform: rotate(-90deg); transform-origin: center;"/>
+                            </svg>
+                            <div class="donut-center">
+                                <span class="donut-value">75%</span>
+                                <span class="donut-label">Digital First</span>
+                            </div>
+                        </div>
+                        <div class="impact-metrics">
+                            <div class="metric">
+                                <span class="metric-value">85</span>
+                                <span class="metric-label">kg CO₂ Reduced</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">100%</span>
+                                <span class="metric-label">Remote Work</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card scroll-reveal">
-                    <p class="testimonial-text">
-                        "The chatbot handles 80% of our customer inquiries automatically, saving us 20 hours per week."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">TC</div>
-                        <div class="author-info">
-                            <h4>Tech Startup</h4>
-                            <p>SaaS Company</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card scroll-reveal">
-                    <p class="testimonial-text">
-                        "From concept to launch in 6 weeks. The team delivered exactly what we envisioned."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">J3</div>
-                        <div class="author-info">
-                            <h4>Jenga365</h4>
-                            <p>Mentorship Platform</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="cta-section scroll-reveal">
+                <h2>Ready to measure your impact?</h2>
+                <p>Let's build something that makes a difference together.</p>
+                <a href="/contact" class="btn-primary">Start a Project</a>
+            </section>
         </div>
     </main>
 </Layout>
+
+<style>
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-bottom: 48px;
+    }
+
+    .stat-item {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+    }
+
+    .stat-item h3 {
+        font-size: 42px;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .stat-item p {
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+    }
+
+    /* Impact Areas */
+    .impact-areas {
+        margin-top: 64px;
+        margin-bottom: 64px;
+    }
+
+    .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .impact-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 28px;
+        transition: all 0.3s ease;
+    }
+
+    .impact-card:hover {
+        border-color: var(--border-medium);
+        transform: translateY(-4px);
+    }
+
+    .impact-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .impact-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .impact-icon.economic {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+    }
+
+    .impact-icon.social {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .impact-icon.environmental {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+    }
+
+    .impact-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 4px 0;
+    }
+
+    .impact-tag {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Charts */
+    .impact-chart {
+        height: 100px;
+        margin-bottom: 20px;
+    }
+
+    .area-chart, .bar-chart {
+        width: 100%;
+        height: 100%;
+    }
+
+    .donut-chart-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .donut-chart {
+        width: 100px;
+        height: 100px;
+    }
+
+    .donut-center {
+        position: absolute;
+        text-align: center;
+    }
+
+    .donut-value {
+        display: block;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .donut-label {
+        font-size: 10px;
+        color: var(--text-tertiary);
+    }
+
+    /* Impact Metrics */
+    .impact-metrics {
+        display: flex;
+        justify-content: space-around;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .metric {
+        text-align: center;
+    }
+
+    .metric-value {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .metric-label {
+        font-size: 12px;
+        color: var(--text-tertiary);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 24px;
+        padding: 60px 40px;
+    }
+
+    .cta-section h2 {
+        font-size: 28px;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        margin-bottom: 28px;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        background: var(--primary);
+        color: var(--dark-bg);
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stat-item h3 {
+            font-size: 32px;
+        }
+
+        .impact-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

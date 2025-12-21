@@ -144,6 +144,4 @@ function initScript() {
         });
     });
 
-    console.log("Script.js Loaded - Theme, Mobile Menu, Scroll Reveal Active");
-
 } // End initScript

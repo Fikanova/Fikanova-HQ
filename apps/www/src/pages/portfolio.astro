@@ -2,12 +2,28 @@
 import Layout from '../layouts/Layout.astro';
 
 const projects = [
-    { name: 'Opal Suites', description: 'Real estate platform with property search', category: 'Web Development', status: 'completed', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80' },
-    { name: 'ETCO Kenya', description: 'NGO website for education outreach', category: 'Web Design', status: 'completed', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
-    { name: 'Jenga365', description: 'Mentorship platform connecting professionals', category: 'Platform', status: 'completed', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80' },
-    { name: 'Botpress Chatbot', description: 'AI chatbot for customer engagement', category: 'AI Integration', status: 'completed', image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80' },
-    { name: 'Nondescripts RFC', description: 'E-commerce for rugby merchandise', category: 'E-commerce', status: 'in-progress', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80' },
-    { name: 'Midesa', description: 'Digital payments aggregator', category: 'FinTech', status: 'in-progress', image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80' }
+    { name: 'Opal Suites', description: 'Real estate platform with property search', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80' },
+    { name: 'ETCO Kenya', description: 'NGO website for education outreach', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
+    { name: 'Jenga365', description: 'Mentorship platform connecting professionals', category: 'apps', status: 'completed', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80' },
+    { name: 'Botpress Chatbot', description: 'AI chatbot for customer engagement', category: 'ai-chatbots', status: 'completed', image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80' },
+    { name: 'Nondescripts RFC', description: 'E-commerce for rugby merchandise', category: 'websites', status: 'ongoing', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80' },
+    { name: 'Midesa', description: 'Digital payments aggregator', category: 'custom-software', status: 'ongoing', image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80' },
+    { name: 'Marketing Automation Suite', description: 'Automated email and social media campaigns', category: 'automation', status: 'completed', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80' },
+    { name: 'Business Landing Template', description: 'Modern website template for startups', category: 'website-templates', status: 'completed', image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80' },
+    { name: 'Brand Marketing Campaign', description: 'Digital marketing strategy and execution', category: 'marketing', status: 'ongoing', image: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&q=80' }
+];
+
+const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'completed', label: 'Completed' },
+    { id: 'ongoing', label: 'Ongoing' },
+    { id: 'ai-chatbots', label: 'AI Chatbots' },
+    { id: 'automation', label: 'Automation' },
+    { id: 'apps', label: 'Apps' },
+    { id: 'custom-software', label: 'Custom Software' },
+    { id: 'marketing', label: 'Marketing' },
+    { id: 'websites', label: 'Websites' },
+    { id: 'website-templates', label: 'Website Templates' }
 ];
 ---
 
@@ -22,9 +38,30 @@ const projects = [
 
     <main class="page-main">
         <div class="container">
-            <div class="portfolio-grid">
+            <!-- Search and Filter -->
+            <div class="search-filter-container">
+                <div class="search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="portfolio-search" placeholder="Search projects..." />
+                </div>
+                <div class="filter-tabs">
+                    {categories.map((cat, index) => (
+                        <button 
+                            class={`filter-tab ${index === 0 ? 'active' : ''}`}
+                            data-filter={cat.id}
+                        >
+                            {cat.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="portfolio-grid" id="portfolio-grid">
                 {projects.map(project => (
-                    <div class="portfolio-card scroll-reveal">
+                    <div class="portfolio-card scroll-reveal" data-category={project.category} data-status={project.status}>
                         <span class={`status-badge ${project.status}`}>
                             {project.status === 'completed' ? 'Completed' : 'In Progress'}
                         </span>
@@ -32,11 +69,66 @@ const projects = [
                         <div class="portfolio-content">
                             <h3>{project.name}</h3>
                             <p>{project.description}</p>
-                            <span class="portfolio-tag">{project.category}</span>
+                            <span class="portfolio-tag">{project.category.replace('-', ' ')}</span>
                         </div>
                     </div>
                 ))}
             </div>
+
+            <!-- No Results -->
+            <div class="no-results" id="no-results" style="display: none;">
+                <h3>No projects found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
         </div>
     </main>
 </Layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('portfolio-search') as HTMLInputElement;
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const cards = document.querySelectorAll('.portfolio-card') as NodeListOf<HTMLElement>;
+        const noResults = document.getElementById('no-results') as HTMLElement;
+        let activeFilter = 'all';
+
+        function filterProjects() {
+            const searchTerm = searchInput?.value.toLowerCase() || '';
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const name = card.querySelector('h3')?.textContent?.toLowerCase() || '';
+                const description = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                const category = card.dataset.category || '';
+                const status = card.dataset.status || '';
+
+                const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || 
+                                     category === activeFilter || 
+                                     status === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        searchInput?.addEventListener('input', filterProjects);
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                activeFilter = (tab as HTMLElement).dataset.filter || 'all';
+                filterProjects();
+            });
+        });
+    });
+</script>
