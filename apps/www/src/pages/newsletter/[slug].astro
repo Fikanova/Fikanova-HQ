@@ -1,0 +1,451 @@
+---
+/**
+ * Dynamic Dispatch Route under /newsletter
+ * Renders individual article pages with markdown content
+ */
+import Layout from '../../layouts/Layout.astro';
+import { Client, Databases, Query } from 'appwrite';
+import { marked } from 'marked';
+
+// Initialize Appwrite client
+const client = new Client()
+    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
+    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+
+const databases = new Databases(client);
+const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
+const ARTICLES_COLLECTION_ID = 'Articles';
+
+// Configure marked for safe HTML output
+marked.setOptions({
+    gfm: true,
+    breaks: true
+});
+
+export async function getStaticPaths() {
+    const client = new Client()
+        .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
+        .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+    
+    const databases = new Databases(client);
+    const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
+    
+    try {
+        const response = await databases.listDocuments(
+            DATABASE_ID,
+            'Articles',
+            [Query.limit(100)]
+        );
+        
+        return response.documents.map((article) => ({
+            params: { slug: article.slug },
+            props: { article }
+        }));
+    } catch (error) {
+        console.error('Error fetching articles for static paths:', error);
+        return [];
+    }
+}
+
+interface Props {
+    article: {
+        $id: string;
+        title: string;
+        slug: string;
+        content: string;
+        excerpt: string;
+        tags?: string;
+        author?: string;
+        published_at: string;
+    };
+}
+
+const { article } = Astro.props;
+
+// Parse markdown content
+const htmlContent = marked.parse(article.content || '');
+
+// Format date
+function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+// Calculate read time (average 200 words per minute)
+function calculateReadTime(content: string): number {
+    const words = content.split(/\s+/).length;
+    return Math.max(1, Math.ceil(words / 200));
+}
+
+const readTime = calculateReadTime(article.content || '');
+---
+
+<Layout title={`${article.title} | The Termite Stack`}>
+    <article class="dispatch-article">
+        <div class="container">
+            <!-- Back Link -->
+            <a href="/newsletter" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to The Termite Stack
+            </a>
+
+            <!-- Article Header -->
+            <header class="article-header">
+                <div class="article-meta">
+                    <time datetime={article.published_at}>
+                        <i class="fas fa-calendar-alt"></i>
+                        {formatDate(article.published_at)}
+                    </time>
+                    <span class="read-time">
+                        <i class="fas fa-clock"></i>
+                        {readTime} min read
+                    </span>
+                    {article.author && (
+                        <span class="author">
+                            <i class="fas fa-user"></i>
+                            {article.author}
+                        </span>
+                    )}
+                </div>
+
+                <h1>{article.title}</h1>
+
+                {article.tags && (
+                    <div class="article-tags">
+                        {article.tags.split(',').map((tag: string) => (
+                            <span class="tag">{tag.trim()}</span>
+                        ))}
+                    </div>
+                )}
+            </header>
+
+            <!-- Article Content -->
+            <div class="article-content prose" set:html={htmlContent} />
+
+            <!-- Article Footer -->
+            <footer class="article-footer">
+                <div class="share-section">
+                    <span>Share this dispatch:</span>
+                    <div class="share-buttons">
+                        <a 
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="share-btn twitter"
+                            title="Share on Twitter"
+                        >
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a 
+                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="share-btn linkedin"
+                            title="Share on LinkedIn"
+                        >
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <button 
+                            class="share-btn copy"
+                            title="Copy link"
+                            onclick="copyLink()"
+                        >
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <a href="/newsletter" class="back-link-footer">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to The Termite Stack
+                </a>
+            </footer>
+        </div>
+    </article>
+</Layout>
+
+<style>
+    .dispatch-article {
+        padding: 120px 0 80px;
+    }
+
+    .container {
+        max-width: 800px;
+    }
+
+    /* Back Link */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--primary);
+        gap: 0.75rem;
+    }
+
+    .back-link i {
+        transition: transform 0.2s ease;
+    }
+
+    .back-link:hover i {
+        transform: translateX(-4px);
+    }
+
+    /* Article Header */
+    .article-header {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-meta time,
+    .article-meta .read-time,
+    .article-meta .author {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-tertiary);
+    }
+
+    .article-header h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        padding: 0.375rem 1rem;
+        background: rgba(102, 126, 234, 0.15);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 2rem;
+        font-size: 0.8125rem;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Article Content - Prose Styling */
+    .article-content {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: var(--text-secondary);
+    }
+
+    .article-content :global(h2) {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+    }
+
+    .article-content :global(h3) {
+        font-size: 1.375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .article-content :global(p) {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content :global(a) {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: opacity 0.2s ease;
+    }
+
+    .article-content :global(a:hover) {
+        opacity: 0.8;
+    }
+
+    .article-content :global(ul),
+    .article-content :global(ol) {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .article-content :global(li) {
+        margin-bottom: 0.5rem;
+    }
+
+    .article-content :global(blockquote) {
+        border-left: 4px solid var(--primary);
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: var(--text-tertiary);
+    }
+
+    .article-content :global(code) {
+        background: var(--dark-card);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.9em;
+        font-family: 'Fira Code', monospace;
+    }
+
+    .article-content :global(pre) {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        overflow-x: auto;
+    }
+
+    .article-content :global(pre code) {
+        background: none;
+        padding: 0;
+    }
+
+    .article-content :global(strong) {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .article-content :global(img) {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        margin: 2rem 0;
+    }
+
+    .article-content :global(hr) {
+        border: none;
+        border-top: 1px solid var(--border-subtle);
+        margin: 3rem 0;
+    }
+
+    /* Article Footer */
+    .article-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .share-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+
+    .share-section span {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .share-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.625rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .share-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .share-btn.twitter:hover {
+        color: #1DA1F2;
+        border-color: #1DA1F2;
+    }
+
+    .share-btn.linkedin:hover {
+        color: #0A66C2;
+        border-color: #0A66C2;
+    }
+
+    .back-link-footer {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .back-link-footer:hover {
+        gap: 0.75rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dispatch-article {
+            padding: 100px 0 60px;
+        }
+
+        .article-content {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script is:inline>
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const btn = document.querySelector('.share-btn.copy');
+            const icon = btn.querySelector('i');
+            icon.className = 'fas fa-check';
+            btn.style.color = '#10b981';
+            btn.style.borderColor = '#10b981';
+            
+            setTimeout(() => {
+                icon.className = 'fas fa-link';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }, 2000);
+        });
+    }
+</script>

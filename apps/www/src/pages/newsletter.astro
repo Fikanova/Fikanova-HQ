@@ -1,66 +1,715 @@
 ---
+/**
+ * The Termite Stack - Newsletter & Dispatches
+ * Boagworld-inspired design with category tabs and pagination
+ */
 import Layout from '../layouts/Layout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { Client, Databases, Query } from 'appwrite';
+
+// Initialize Appwrite client
+const client = new Client()
+    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
+    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+
+const databases = new Databases(client);
+const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
+const ARTICLES_COLLECTION_ID = 'Articles';
+
+// Fetch articles from Appwrite
+let articles: any[] = [];
+let fetchError = false;
+
+try {
+    const response = await databases.listDocuments(
+        DATABASE_ID,
+        ARTICLES_COLLECTION_ID,
+        [
+            Query.orderDesc('published_at'),
+            Query.limit(50)
+        ]
+    );
+    articles = response.documents;
+} catch (error) {
+    console.error('Error fetching articles:', error);
+    fetchError = true;
+}
+
+// Helper to format date
+function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+// Helper to truncate excerpt
+function truncateExcerpt(text: string, maxLength: number = 140): string {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+}
+
+// Generate placeholder image URL based on tags
+function getArticleImage(article: any): string {
+    const tags = article.tags?.toLowerCase() || '';
+    if (tags.includes('anthropic') || tags.includes('github') || tags.includes('mcp')) {
+        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80';
+    } else if (tags.includes('ai') || tags.includes('gemini')) {
+        return 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80';
+    } else if (tags.includes('agent')) {
+        return 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80';
+    }
+    return 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80';
+}
+
+// Get unique categories from articles
+const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(',').map((t: string) => t.trim()) || []))];
 ---
 
-<Layout title="Newsletter">
-    <section class="hero">
-        <div class="container">
-            <div class="hero-badge"><span class="badge-dot"></span>Stay Updated</div>
-            <h1><span class="gradient-text">Newsletter</span></h1>
-            <p>Get the latest insights on AI, tech, and digital growth</p>
+<Layout title="The Termite Stack - Newsletter">
+    <!-- Hero Section - Boagworld Style -->
+    <section class="hero-section">
+        <div class="hero-background">
+            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80" alt="" class="hero-bg-image" />
+            <div class="hero-overlay"></div>
         </div>
-    </section>
-
-    <main class="page-main">
-        <div class="container">
-            <div class="scroll-reveal" style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <div style="background: var(--dark-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 48px;">
-                    <i class="fas fa-envelope" style="font-size: 48px; color: var(--primary); margin-bottom: 24px;"></i>
-                    <h2 style="margin-bottom: 16px;">Subscribe to Our Newsletter</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 32px;">
-                        Join 500+ business owners getting weekly tips on AI automation, 
-                        web development, and digital marketing.
-                    </p>
-
-                    <form id="newsletterForm" style="display: flex; flex-direction: column; gap: 16px;">
-                        <input 
-                            type="email" 
-                            required
-                            placeholder="Enter your email"
-                            style="padding: 14px 20px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--dark-card); color: var(--text-primary); font-size: 16px;"
-                        >
-                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                            <i class="fas fa-paper-plane"></i> Subscribe
-                        </button>
-                    </form>
-
-                    <p style="margin-top: 16px; font-size: 12px; color: var(--text-tertiary);">
-                        No spam. Unsubscribe anytime.
-                    </p>
-                </div>
-
-                <div style="margin-top: 48px;">
-                    <h3 style="margin-bottom: 24px;">What You'll Get</h3>
-                    <div style="display: flex; flex-direction: column; gap: 16px; text-align: left;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                            <span>Weekly AI and tech trends</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                            <span>Exclusive templates and resources</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                            <span>Early access to new services</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                            <span>Case studies and success stories</span>
-                        </div>
-                    </div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-label">AI Insights & Automation Strategy</span>
+                <h1>Your AI Strategy Deserves Better, As Do You.</h1>
+                <p class="hero-description">
+                    I'm Nyaenya Moseti, curator of <a href="/newsletter">The Termite Stack</a>. 
+                    I help you cut through hype, misinformation, and stalled AI projects 
+                    to build autonomous systems that actually work.
+                </p>
+                <div class="hero-cta">
+                    <a href="#subscribe" class="btn-primary">
+                        <i class="fas fa-chevron-down"></i>
+                        Subscribe
+                    </a>
+                    <a href="#dispatches" class="btn-secondary">
+                        <i class="fas fa-chevron-right"></i>
+                        Read Dispatches
+                    </a>
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- Category Header with Tabs & Search -->
+    <section class="category-header" id="dispatches">
+        <div class="container">
+            <div class="category-nav">
+                <div class="category-tabs" id="categoryTabs">
+                    <button class="tab-btn active" data-category="all">All</button>
+                    <button class="tab-btn" data-category="ai">AI</button>
+                    <button class="tab-btn" data-category="agents">Agents</button>
+                    <button class="tab-btn" data-category="automation">Automation</button>
+                    <button class="tab-btn" data-category="open-source">Open Source</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search dispatches..." />
+                    <button class="search-btn" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dispatches Grid -->
+    <main class="dispatches-main">
+        <div class="container">
+            {fetchError ? (
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to Load Dispatches</h3>
+                    <p>Please check back later.</p>
+                </div>
+            ) : articles.length === 0 ? (
+                <div class="empty-state">
+                    <i class="fas fa-satellite"></i>
+                    <h3>Dispatches Incoming</h3>
+                    <p>Subscribe below to be notified when we publish.</p>
+                </div>
+            ) : (
+                <>
+                    <div class="dispatches-grid" id="dispatchesGrid">
+                        {articles.slice(0, 9).map((article) => (
+                            <article class="dispatch-card" data-tags={article.tags?.toLowerCase() || ''}>
+                                <a href={`/newsletter/${article.slug}`} class="card-link">
+                                    <div class="card-image">
+                                        <img src={getArticleImage(article)} alt={article.title} loading="lazy" />
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="article-meta">
+                                            <time datetime={article.published_at}>
+                                                {formatDate(article.published_at)}
+                                            </time>
+                                            {article.author && (
+                                                <span class="author">• {article.author}</span>
+                                            )}
+                                        </div>
+                                        <h3>{article.title}</h3>
+                                        <p class="excerpt">{truncateExcerpt(article.excerpt)}</p>
+                                        <span class="read-link">
+                                            Read dispatch <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </div>
+                                </a>
+                            </article>
+                        ))}
+                    </div>
+
+                    {articles.length > 9 && (
+                        <div class="pagination">
+                            <button class="page-btn active" data-page="1">1</button>
+                            <button class="page-btn" data-page="2">2</button>
+                            {articles.length > 18 && (
+                                <button class="page-btn" data-page="3">3</button>
+                            )}
+                        </div>
+                    )}
+
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <h3>No dispatches found</h3>
+                        <p>Try a different search term or category.</p>
+                    </div>
+                </>
+            )}
+        </div>
     </main>
+
+    <!-- Subscribe Section -->
+    <section class="subscribe-section" id="subscribe">
+        <div class="container">
+            <div class="subscribe-wrapper">
+                <div class="subscribe-text">
+                    <h2>Join The Termite Stack</h2>
+                    <p>
+                        Weekly dispatches on AI agents, automation, and building the future. 
+                        No spam. Unsubscribe anytime.
+                    </p>
+                </div>
+                <NewsletterSignup />
+            </div>
+        </div>
+    </section>
 </Layout>
+
+<style>
+    /* Hero Section - Boagworld Style */
+    .hero-section {
+        position: relative;
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+    }
+
+    .hero-bg-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.4) saturate(0.8);
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(10, 10, 15, 0.95) 0%,
+            rgba(10, 10, 15, 0.7) 50%,
+            rgba(10, 10, 15, 0.4) 100%
+        );
+    }
+
+    .hero-container {
+        position: relative;
+        z-index: 1;
+        padding: 140px 0 100px;
+    }
+
+    .hero-content {
+        max-width: 600px;
+    }
+
+    .hero-label {
+        display: inline-block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-section h1 {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.15;
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+    }
+
+    .hero-description {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        line-height: 1.75;
+        margin-bottom: 2rem;
+    }
+
+    .hero-description a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: #c4785a;
+        border-radius: 0.25rem;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background: #b36a4d;
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.25rem;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Category Header */
+    .category-header {
+        background: var(--dark-surface);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 1.5rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .category-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .category-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 0.625rem 1.25rem;
+        background: transparent;
+        border: 1px solid var(--border-subtle);
+        border-radius: 2rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .tab-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .search-box input {
+        padding: 0.625rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        width: 200px;
+        outline: none;
+    }
+
+    .search-box input::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .search-btn {
+        padding: 0.625rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-tertiary);
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .search-btn:hover {
+        color: var(--primary);
+    }
+
+    /* Dispatches Grid */
+    .dispatches-main {
+        padding: 4rem 0;
+        background: var(--dark-bg);
+        min-height: 50vh;
+    }
+
+    .dispatches-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .dispatch-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .dispatch-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .card-image {
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .dispatch-card:hover .card-image img {
+        transform: scale(1.05);
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.8125rem;
+        color: var(--text-tertiary);
+    }
+
+    .card-content h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+    }
+
+    .card-content .excerpt {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .read-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: gap 0.2s ease;
+    }
+
+    .dispatch-card:hover .read-link {
+        gap: 0.75rem;
+    }
+
+    .read-link i {
+        font-size: 0.75rem;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 3rem;
+    }
+
+    .page-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.5rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .page-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .page-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    /* No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .no-results i {
+        font-size: 2.5rem;
+        color: var(--text-tertiary);
+        margin-bottom: 1rem;
+    }
+
+    .no-results h3 {
+        margin-bottom: 0.5rem;
+    }
+
+    .no-results p {
+        color: var(--text-secondary);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--dark-card);
+        border: 1px dashed var(--border-medium);
+        border-radius: 1rem;
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+    }
+
+    /* Subscribe Section */
+    .subscribe-section {
+        padding: 5rem 0;
+        background: var(--dark-surface);
+    }
+
+    .subscribe-wrapper {
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .subscribe-text {
+        margin-bottom: 2rem;
+    }
+
+    .subscribe-text h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .subscribe-text p {
+        color: var(--text-secondary);
+        font-size: 1.0625rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .dispatches-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: 70vh;
+        }
+
+        .hero-container {
+            padding: 100px 0 60px;
+        }
+
+        .category-nav {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+        }
+
+        .dispatches-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const categoryTabs = document.querySelectorAll('.tab-btn');
+    const dispatchCards = document.querySelectorAll('.dispatch-card');
+    const noResults = document.getElementById('noResults');
+    const dispatchesGrid = document.getElementById('dispatchesGrid');
+
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            filterCards(query, getActiveCategory());
+        });
+    }
+
+    // Category tab functionality
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            filterCards(searchInput?.value.toLowerCase() || '', tab.dataset.category);
+        });
+    });
+
+    function getActiveCategory() {
+        const activeTab = document.querySelector('.tab-btn.active');
+        return activeTab?.dataset.category || 'all';
+    }
+
+    function filterCards(query, category) {
+        let visibleCount = 0;
+        
+        dispatchCards.forEach(card => {
+            const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+            const excerpt = card.querySelector('.excerpt')?.textContent.toLowerCase() || '';
+            const tags = card.dataset.tags || '';
+            
+            const matchesSearch = title.includes(query) || excerpt.includes(query);
+            const matchesCategory = category === 'all' || tags.includes(category);
+            
+            if (matchesSearch && matchesCategory) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (noResults) {
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    }
+
+    // Pagination (client-side for now)
+    const pageButtons = document.querySelectorAll('.page-btn');
+    pageButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            pageButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // For static site, would need to implement actual pagination
+            // Currently showing all on page 1
+        });
+    });
+});
+</script>

@@ -168,6 +168,18 @@ const collections = [
             { key: 'execution_time', type: 'integer', required: false },
             { key: 'logged_at', type: 'datetime', required: true }
         ]
+    },
+    // 📰 Pulse/Blog Articles
+    {
+        name: 'Articles', id: 'Articles', attributes: [
+            { key: 'title', type: 'string', size: 256, required: true },
+            { key: 'slug', type: 'string', size: 128, required: true },
+            { key: 'excerpt', type: 'string', size: 500, required: true },
+            { key: 'content', type: 'string', size: 50000, required: true }, // Markdown content
+            { key: 'tags', type: 'string', size: 256, required: false },
+            { key: 'author', type: 'string', size: 128, required: false },
+            { key: 'published_at', type: 'datetime', required: true }
+        ]
     }
 ];
 

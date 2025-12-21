@@ -1,0 +1,233 @@
+---
+/**
+ * NewsletterSignup Component
+ * HubSpot-compatible newsletter form with Fikanova "Glassy" cyberpunk aesthetic
+ * Uses standard HTML form fields that HubSpot's Non-Forms feature can scrape
+ */
+---
+
+<div class="newsletter-signup">
+    <div class="newsletter-container">
+        <div class="newsletter-glow"></div>
+        <div class="newsletter-content">
+            <div class="newsletter-icon">
+                <i class="fas fa-satellite-dish"></i>
+            </div>
+            <h3 class="newsletter-title">Join The Termite Stack</h3>
+            <p class="newsletter-description">
+                Get weekly dispatches on AI innovation, tech insights, and digital growth strategies.
+            </p>
+            
+            <form id="newsletter-form" class="newsletter-form">
+                <input type="hidden" name="newsletter_segment" value="general_pulse" />
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        placeholder="Enter your email"
+                        required
+                        class="newsletter-input"
+                    />
+                    <button type="submit" class="newsletter-btn">
+                        <span>Subscribe</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <p class="newsletter-disclaimer">
+                No spam. Unsubscribe anytime. Join 500+ founders.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .newsletter-signup {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .newsletter-container {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 3rem 2.5rem;
+        background: rgba(26, 26, 26, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 1.5rem;
+        overflow: hidden;
+    }
+
+    .newsletter-glow {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(102, 126, 234, 0.15) 0%,
+            rgba(168, 85, 247, 0.1) 25%,
+            transparent 70%
+        );
+        pointer-events: none;
+        animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    .newsletter-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .newsletter-icon {
+        font-size: 2.5rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+        animation: icon-float 3s ease-in-out infinite;
+    }
+
+    @keyframes icon-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .newsletter-title {
+        font-family: 'Noto Sans', 'Inter', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.02em;
+    }
+
+    .newsletter-description {
+        font-size: 1rem;
+        color: #a1a1aa;
+        margin-bottom: 1.5rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    .newsletter-form {
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .newsletter-input {
+        flex: 1;
+        min-width: 200px;
+        max-width: 300px;
+        padding: 0.875rem 1.25rem;
+        background: rgba(10, 10, 10, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        color: #ffffff;
+        font-size: 0.9375rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .newsletter-input::placeholder {
+        color: #71717a;
+    }
+
+    .newsletter-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .newsletter-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #667eea, #a855f7);
+        border: none;
+        border-radius: 0.75rem;
+        color: #ffffff;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .newsletter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    .newsletter-btn:active {
+        transform: translateY(0);
+    }
+
+    .newsletter-disclaimer {
+        font-size: 0.75rem;
+        color: #71717a;
+        margin-top: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .newsletter-container {
+            padding: 2rem 1.5rem;
+            margin: 0 1rem;
+        }
+
+        .form-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .newsletter-input {
+            max-width: 100%;
+        }
+
+        .newsletter-btn {
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+    // Form submission handler with success feedback
+    document.getElementById('newsletter-form')?.addEventListener('submit', function(e) {
+        const btn = this.querySelector('.newsletter-btn');
+        const originalContent = btn.innerHTML;
+        
+        // Show loading state briefly
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+        btn.disabled = true;
+        
+        // Let the form submit normally for HubSpot to capture
+        // Show success after a delay
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.style.background = '';
+                btn.disabled = false;
+                this.reset();
+            }, 3000);
+        }, 1000);
+    });
+</script>
