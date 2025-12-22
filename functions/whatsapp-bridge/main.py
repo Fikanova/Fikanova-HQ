@@ -18,6 +18,7 @@ APPWRITE_API_KEY = os.environ.get('APPWRITE_API_KEY')
 DATABASE_ID = os.environ.get('DATABASE_ID', '693703ef001133c62d78')
 SOZURI_WEBHOOK_SECRET = os.environ.get('SOZURI_WEBHOOK_SECRET', '')
 N8N_CEO_WEBHOOK_URL = os.environ.get('N8N_CEO_WEBHOOK_URL', '')
+WHATSAPP_WEBHOOK_VERIFY_TOKEN = os.environ.get('WHATSAPP_WEBHOOK_VERIFY_TOKEN', '')
 
 # C-Suite routing keywords
 AGENT_ROUTING = {
@@ -61,10 +62,34 @@ def main(context):
     Appwrite Function Entry Point
     
     Handles:
-    1. Inbound: Sozuri webhook → classify → store in Communications → trigger n8n
-    2. Outbound: API call to send WhatsApp message (for agent responses)
+    1. Meta Webhook Verification (GET request)
+    2. Inbound: Sozuri/Meta webhook → classify → store in Communications → trigger n8n
+    3. Outbound: API call to send WhatsApp message (for agent responses)
     """
     try:
+        req = context.req
+        
+        # === META WEBHOOK VERIFICATION (GET request) ===
+        # Meta sends: GET /?hub.mode=subscribe&hub.verify_token=XXX&hub.challenge=YYY
+        if req.method == 'GET':
+            # Get query parameters
+            query = req.query if hasattr(req, 'query') else {}
+            
+            hub_mode = query.get('hub.mode', '')
+            hub_verify_token = query.get('hub.verify_token', '')
+            hub_challenge = query.get('hub.challenge', '')
+            
+            context.log(f"Webhook verification: mode={hub_mode}, challenge={hub_challenge}")
+            
+            if hub_mode == 'subscribe' and hub_verify_token == WHATSAPP_WEBHOOK_VERIFY_TOKEN:
+                context.log("Webhook verified successfully!")
+                # Return the challenge as plain text
+                return context.res.send(hub_challenge, 200, {'Content-Type': 'text/plain'})
+            else:
+                context.log(f"Verification failed: token mismatch or invalid mode")
+                return context.res.json({'error': 'Verification failed'}, 403)
+        
+        # === POST REQUESTS (Inbound/Outbound messages) ===
         # Initialize Appwrite
         client = Client()
         client.set_endpoint(APPWRITE_ENDPOINT)
@@ -72,8 +97,7 @@ def main(context):
         client.set_key(APPWRITE_API_KEY)
         databases = Databases(client)
         
-        # Parse request
-        req = context.req
+        # Parse request body
         body = req.body if hasattr(req, 'body') else '{}'
         
         if isinstance(body, str):
