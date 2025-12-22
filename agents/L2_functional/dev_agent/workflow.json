@@ -1,0 +1,89 @@
+{
+    "name": "L2 - Dev Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "dev-agent",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Dev_Agent_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Dev Agent at Fikanova. Execute this development task:\n\n{{ $json.task || $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Appwrite function deployment\n- GitHub PR management\n- Code review\n- Bug triage\n\nProvide:\n1. Analysis of the task\n2. Recommended action steps\n3. Any blockers or concerns",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "analyze",
+            "name": "Analyze_Task",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Dev Agent', analysis: $json.text }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Dev_Agent_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Analyze_Task",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Analyze_Task": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CTO"
+        }
+    ]
+}

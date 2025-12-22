@@ -1,0 +1,235 @@
+{
+    "name": "L1 - CMO Agent (Growth)",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "cmo-trigger",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "cmo-trigger",
+            "name": "CMO_Inbound_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CMO of Fikanova. Analyze this marketing/content request and decide the next action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. content_create - New blog post, article, or social content\n2. content_edit - Refine existing content for brand voice\n3. newsletter_send - Send to The Termite Stack subscribers\n4. social_post - Post to LinkedIn/X\n5. youtube_upload - Upload video content\n6. campaign_launch - HubSpot marketing campaign\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"marketing_lead\" | \"editor\",\n  \"priority\": \"high\" | \"medium\" | \"low\",\n  \"brief\": \"What needs to be done\"\n}",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "cmo-classify",
+            "name": "CMO_Intent_Classifier",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.decision = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.decision = { action: 'content_create', delegate_to: 'marketing_lead', priority: 'medium' };\n}\nreturn items;"
+            },
+            "id": "cmo-parse",
+            "name": "CMO_Parse_Decision",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "leftValue": "={{ $json.decision.delegate_to }}",
+                                    "operation": "equals",
+                                    "rightValue": "marketing_lead"
+                                }
+                            },
+                            "output": 0
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "leftValue": "={{ $json.decision.delegate_to }}",
+                                    "operation": "equals",
+                                    "rightValue": "editor"
+                                }
+                            },
+                            "output": 1
+                        }
+                    ]
+                },
+                "fallbackOutput": 2
+            },
+            "id": "cmo-router",
+            "name": "CMO_Sub_Agent_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                700,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.MARKETING_LEAD_WORKFLOW_ID }}",
+                "mode": "once",
+                "options": {}
+            },
+            "id": "marketing-lead",
+            "name": "CMO_Delegate_Marketing_Lead",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                900,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.EDITOR_AGENT_WORKFLOW_ID }}",
+                "mode": "once",
+                "options": {}
+            },
+            "id": "editor-agent",
+            "name": "CMO_Delegate_Editor",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                900,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'CMO', action: $json.decision?.action, delegated_to: $json.decision?.delegate_to }) }}",
+                "options": {}
+            },
+            "id": "cmo-response",
+            "name": "CMO_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                1100,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "CMO_Inbound_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Intent_Classifier",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Intent_Classifier": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Parse_Decision",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Parse_Decision": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Sub_Agent_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Sub_Agent_Router": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Delegate_Marketing_Lead",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CMO_Delegate_Editor",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CMO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Delegate_Marketing_Lead": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Delegate_Editor": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "L1"
+        },
+        {
+            "name": "c-suite"
+        },
+        {
+            "name": "growth"
+        }
+    ]
+}

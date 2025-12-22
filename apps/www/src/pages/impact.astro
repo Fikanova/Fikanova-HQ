@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ImpactDashboard from '../components/ImpactDashboard.jsx';
+import A2UIUnified from '../components/A2UIUnified.jsx';
 ---
 
 <Layout title="Impact | Fikanova">
@@ -33,6 +34,11 @@ import ImpactDashboard from '../components/ImpactDashboard.jsx';
                     <p>AI Agent Uptime</p>
                 </div>
             </div>
+
+            <!-- A2UI Global Trace - LIVE PROOF OF WORK -->
+            <section class="a2ui-section scroll-reveal">
+                <A2UIUnified client:load mode="globalTrace" />
+            </section>
 
             <!-- Live Dashboard -->
             <ImpactDashboard client:load />

@@ -1,0 +1,89 @@
+{
+    "name": "L2 - Editor Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "editor-agent",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Editor_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Editor at Fikanova. Refine this content for brand voice and tone:\n\n{{ $json.content || $json.draft || JSON.stringify($json) }}\n\nStyle Guide:\n- Technical, not corporate jargon\n- Witty where appropriate\n- Nairobi-centric cultural awareness\n- Short sentences. Punchy.\n- Forbidden: synergy, leverage, holistic, utilize, facilitate, revolutionary\n\nReturn the refined version with:\n1. Improved headline\n2. Tightened copy\n3. Stronger CTA",
+                "options": {
+                    "temperature": 0.5
+                }
+            },
+            "id": "refine",
+            "name": "Refine_Content",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Editor', refined: $json.text }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Editor_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Refine_Content",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Refine_Content": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CMO"
+        }
+    ]
+}

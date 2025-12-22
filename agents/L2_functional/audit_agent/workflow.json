@@ -1,0 +1,126 @@
+{
+    "name": "L2 - Audit Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "audit-agent",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Audit_Agent_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "getAll",
+                "databaseId": "={{ $env.DATABASE_ID }}",
+                "collectionId": "Agent_Logs",
+                "limit": 50,
+                "options": {
+                    "orderByField": "timestamp",
+                    "orderByDirection": "DESC"
+                }
+            },
+            "id": "fetch-logs",
+            "name": "Fetch_Agent_Logs",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Audit Agent. Analyze these agent logs for compliance issues:\n\n{{ JSON.stringify($json.documents) }}\n\nCheck for:\n- Error patterns\n- SLA violations\n- Access anomalies\n- Learning opportunities\n\nProvide:\n1. Summary of findings\n2. Compliance score (0-100)\n3. Recommended follow-ups",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "analyze",
+            "name": "Analyze_Compliance",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                500,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Audit Agent', report: $json.text }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                700,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Audit_Agent_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Fetch_Agent_Logs",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fetch_Agent_Logs": {
+            "main": [
+                [
+                    {
+                        "node": "Analyze_Compliance",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Analyze_Compliance": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CimpO"
+        }
+    ]
+}

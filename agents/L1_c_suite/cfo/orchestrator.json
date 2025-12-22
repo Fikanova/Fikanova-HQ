@@ -1,0 +1,231 @@
+{
+    "name": "L1 - CFO Agent (Wealth)",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "cfo-trigger",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "cfo-trigger",
+            "name": "CFO_Inbound_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CFO of Fikanova. Analyze this financial request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. ledger_update - Record transaction in Google Sheets\n2. mpesa_stk - Initiate M-Pesa STK Push payment\n3. invoice_generate - Generate KRA eTIMS invoice\n4. expense_log - Log an expense\n5. runway_report - Calculate burn rate / runway\n6. revenue_track - Track revenue from HubSpot deals\n\n## Tools Available:\n- Google Sheets (Central Ledger)\n- M-Pesa Daraja API\n- KRA eTIMS Bridge\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"amount\": 0,\n  \"category\": \"revenue\" | \"expense\" | \"payment\",\n  \"requires_approval\": true | false,\n  \"description\": \"Brief description\"\n}",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cfo-classify",
+            "name": "CFO_Intent_Classifier",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.decision = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.decision = { action: 'ledger_update', amount: 0, category: 'expense', requires_approval: false };\n}\nreturn items;"
+            },
+            "id": "cfo-parse",
+            "name": "CFO_Parse_Decision",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "leftValue": "={{ $json.decision.requires_approval }}",
+                        "operation": "equals",
+                        "rightValue": true
+                    }
+                }
+            },
+            "id": "cfo-hitl-check",
+            "name": "CFO_HITL_Check",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2,
+            "position": [
+                700,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "={{ $env.HUMANLAYER_API_URL }}",
+                "method": "POST",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "action",
+                            "value": "={{ $json.decision.action }}"
+                        },
+                        {
+                            "name": "amount",
+                            "value": "={{ $json.decision.amount }}"
+                        },
+                        {
+                            "name": "description",
+                            "value": "={{ $json.decision.description }}"
+                        },
+                        {
+                            "name": "phone",
+                            "value": "={{ $env.FOUNDER_PHONE }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "cfo-hitl",
+            "name": "CFO_HITL_Request",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                900,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.SKILL_LEDGER_ID }}",
+                "mode": "once",
+                "options": {}
+            },
+            "id": "cfo-ledger",
+            "name": "CFO_Execute_Ledger",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                900,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'CFO', action: $json.decision?.action, amount: $json.decision?.amount }) }}",
+                "options": {}
+            },
+            "id": "cfo-response",
+            "name": "CFO_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                1100,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "CFO_Inbound_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Intent_Classifier",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Intent_Classifier": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Parse_Decision",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Parse_Decision": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_HITL_Check",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_HITL_Check": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_HITL_Request",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CFO_Execute_Ledger",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_HITL_Request": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Execute_Ledger": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "L1"
+        },
+        {
+            "name": "c-suite"
+        },
+        {
+            "name": "wealth"
+        }
+    ]
+}

@@ -64,3 +64,58 @@ All communications stored in Appwrite `Communications` collection:
 - `channel`: 'whatsapp' | 'dashboard'
 - `to_agent`: CEO, CFO, CTO, CMO, CIO, CimpO
 - `status`: 'pending' | 'processed' | 'failed'
+
+## HumanLayer.dev - Mobile Terminal
+
+For state-changing actions, the system routes through HumanLayer for WhatsApp approval:
+
+```
+┌──────────────┐     ┌─────────────────┐     ┌──────────────┐
+│  Agent wants │────▶│  HumanLayer.dev │────▶│  WhatsApp    │
+│  to publish  │     │  Approval API   │     │  Notification│
+└──────────────┘     └─────────────────┘     └──────┬───────┘
+                                                    │
+                                                    ▼
+                                             ┌──────────────┐
+                                             │  Supervisor  │
+                                             │  APPROVE/    │
+                                             │  REJECT      │
+                                             └──────┬───────┘
+                                                    │
+                                                    ▼
+                                             ┌──────────────┐
+                                             │  Callback    │
+                                             │  Webhook     │
+                                             └──────────────┘
+```
+
+### HITL-Required Actions
+
+| Action Type | Example | Requires Approval |
+|-------------|---------|-------------------|
+| Publish content | Blog post, tweet | ✅ Yes |
+| Send email | Newsletter blast | ✅ Yes |
+| Make payment | M-Pesa STK Push | ✅ Yes |
+| Update database | Delete records | ✅ Yes |
+| Read data | Query articles | ❌ No |
+| Generate draft | Create PRD | ❌ No |
+
+### Approval Message Format
+
+```
+🔔 Approval Required
+
+Action: publish_blog
+Title: "How We Built Our AI Workforce"
+Platform: HubSpot + Appwrite
+
+Reply APPROVE or REJECT
+```
+
+### Environment Variables (HumanLayer)
+
+```bash
+HUMANLAYER_API_KEY=xxx       # HumanLayer API key
+FOUNDER_PHONE=+254xxxxxxxx   # Supervisor WhatsApp number
+```
+

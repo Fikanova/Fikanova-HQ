@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CaseStudyCharts from '../../components/CaseStudyCharts.jsx';
+import A2UIUnified from '../../components/A2UIUnified.jsx';
 
 const caseStudies = [
     {
@@ -88,8 +89,46 @@ const caseStudies = [
 
     <main class="page-main">
         <div class="container">
+            <!-- A2UI Project Pulse - LIVE CLIENT ACTIVITY -->
+            <section class="a2ui-section">
+                <div class="pulse-header">
+                    <h2><i class="fas fa-heartbeat"></i> Live Project Pulse</h2>
+                    <p>Real-time agent activity across client projects</p>
+                </div>
+                <A2UIUnified client:load mode="projectPulse" />
+            </section>
+
             <!-- Interactive Case Study Cards -->
             <CaseStudyCharts caseStudies={caseStudies} client:load />
         </div>
     </main>
 </Layout>
+
+<style>
+    .a2ui-section {
+        margin-bottom: 48px;
+    }
+
+    .pulse-header {
+        margin-bottom: 20px;
+    }
+
+    .pulse-header h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .pulse-header h2 i {
+        color: var(--primary);
+    }
+
+    .pulse-header p {
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+</style>
+

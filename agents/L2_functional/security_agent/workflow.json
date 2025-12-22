@@ -1,0 +1,89 @@
+{
+    "name": "L2 - Security Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "security-agent",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Security_Agent_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Security Agent at Fikanova. Perform a trust audit on:\n\n{{ $json.target || $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Environment variable exposure\n- API key leakage\n- Dependency vulnerabilities\n- Access control issues\n- CORS/CSRF concerns\n\nProvide:\n1. Risk assessment (low/medium/high)\n2. Findings\n3. Recommended mitigations",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "audit",
+            "name": "Security_Audit",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Security Agent', audit: $json.text }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Security_Agent_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Security_Audit",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Security_Audit": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CTO"
+        }
+    ]
+}

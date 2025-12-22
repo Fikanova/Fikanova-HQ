@@ -1,0 +1,212 @@
+{
+    "name": "L1 - CIO Agent (Knowledge)",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "cio-trigger",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "cio-trigger",
+            "name": "CIO_Inbound_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CIO of Fikanova. Analyze this knowledge/data request.\n\nRequest: {{ $json.message || JSON.stringify($json) }}\n\nActions: article_create, article_search, log_query, knowledge_index, prd_generate, documentation_update\n\nTools: Appwrite DB (articles, agent_logs), skill_prd_generator\n\nRespond JSON: { \"action\": \"...\", \"delegate_to\": \"librarian\", \"collection\": \"articles\" | \"agent_logs\", \"description\": \"...\" }",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cio-classify",
+            "name": "CIO_Intent_Classifier",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const r = items[0].json.text || '{}';\ntry { items[0].json.decision = JSON.parse(r.replace(/```json\\n?|```/g, '').trim()); } catch { items[0].json.decision = { action: 'article_search', delegate_to: 'librarian' }; }\nreturn items;"
+            },
+            "id": "cio-parse",
+            "name": "CIO_Parse",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "leftValue": "={{ $json.decision.action }}",
+                                    "operation": "equals",
+                                    "rightValue": "prd_generate"
+                                }
+                            },
+                            "output": 0
+                        }
+                    ]
+                },
+                "fallbackOutput": 1
+            },
+            "id": "cio-router",
+            "name": "CIO_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                700,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.SKILL_PRD_GENERATOR_ID }}",
+                "mode": "once"
+            },
+            "id": "prd-skill",
+            "name": "CIO_PRD_Skill",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                900,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.LIBRARIAN_AGENT_WORKFLOW_ID }}",
+                "mode": "once"
+            },
+            "id": "librarian",
+            "name": "CIO_Librarian_Agent",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                900,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'CIO', action: $json.decision?.action }) }}"
+            },
+            "id": "cio-response",
+            "name": "CIO_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                1100,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "CIO_Inbound_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_Intent_Classifier",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_Intent_Classifier": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_Parse",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_Parse": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_Router": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_PRD_Skill",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CIO_Librarian_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_PRD_Skill": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_Librarian_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CIO_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L1"
+        },
+        {
+            "name": "c-suite"
+        },
+        {
+            "name": "knowledge"
+        }
+    ]
+}

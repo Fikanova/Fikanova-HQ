@@ -1,0 +1,89 @@
+{
+    "name": "L2 - Marketing Lead Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "marketing-lead",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Marketing_Lead_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Marketing Lead at Fikanova. Create content based on this brief:\n\n{{ $json.brief || $json.message || JSON.stringify($json) }}\n\nGuidelines:\n- Use the Fikanova voice: Technical, witty, Nairobi-centric\n- No corporate jargon (synergy, leverage, holistic)\n- Reference the 3 Elements Theory where relevant\n\nProvide:\n1. Headline\n2. Hook (first 2 sentences)\n3. Body outline\n4. CTA",
+                "options": {
+                    "temperature": 0.7
+                }
+            },
+            "id": "generate",
+            "name": "Generate_Content",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Marketing Lead', content: $json.text }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Marketing_Lead_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Generate_Content",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Generate_Content": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CMO"
+        }
+    ]
+}

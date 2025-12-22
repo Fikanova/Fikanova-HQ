@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import A2UIUnified from '../../components/A2UIUnified.jsx';
 ---
 
 <Layout title="About Us | Fikanova">
@@ -198,6 +199,16 @@ graph TD
     Support --> T4
                     </pre>
                 </div>
+            </section>
+
+            <!-- A2UI Workforce HUD - LIVE EMPLOYEE DIRECTORY -->
+            <section class="a2ui-workforce scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Live Status</span>
+                    <h2>Agent Workforce HUD</h2>
+                    <p class="section-subtitle">We are a high-functioning machine. Watch our agents work in real-time.</p>
+                </div>
+                <A2UIUnified client:load mode="workforce" />
             </section>
 
             <!-- 3 Elements Theory -->

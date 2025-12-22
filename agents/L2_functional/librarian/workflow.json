@@ -1,0 +1,89 @@
+{
+    "name": "L2 - Librarian Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "librarian-agent",
+                "responseMode": "responseNode"
+            },
+            "id": "trigger",
+            "name": "Librarian_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "getAll",
+                "databaseId": "={{ $env.DATABASE_ID }}",
+                "collectionId": "Articles",
+                "limit": 20,
+                "options": {}
+            },
+            "id": "fetch-articles",
+            "name": "Fetch_Articles",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Librarian', articles: $json.documents }) }}"
+            },
+            "id": "response",
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Librarian_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Fetch_Articles",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fetch_Articles": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CIO"
+        }
+    ]
+}
