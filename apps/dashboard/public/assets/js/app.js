@@ -3,7 +3,7 @@
  * Combines: Theme Toggle, Mobile Menu, Portfolio Tabs, Scroll Reveal, Dynamic Navigation
  */
 
-import { Client, Databases, Query } from "https://cdn.jsdelivr.net/npm/appwrite@14.0.0";
+import { Client, Databases, Query } from "https://cdn.jsdelivr.net/npm/appwrite@16.0.0/+esm";
 
 // =============================================================================
 // APPWRITE CONFIGURATION

@@ -22,7 +22,7 @@ const roles = [
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.0/dist/appwrite.min.js"></script>
     <style>
         .register-container {
             min-height: 100vh;
@@ -195,15 +195,17 @@ const roles = [
     </div>
 
     <script is:inline>
-        const { Client, Account, ID } = Appwrite;
-        
-        const client = new Client()
-            .setEndpoint('https://fra.cloud.appwrite.io/v1')
-            .setProject('6936df5800371a655e8e');
-        
-        const account = new Account(client);
-        const errorDiv = document.getElementById('errorMessage');
-        const successDiv = document.getElementById('successMessage');
+        // Wait for Appwrite SDK to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const { Client, Account, ID } = window.Appwrite;
+            
+            const client = new Client()
+                .setEndpoint('https://fra.cloud.appwrite.io/v1')
+                .setProject('6936df5800371a655e8e');
+            
+            const account = new Account(client);
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
 
         document.getElementById('googleBtn').addEventListener('click', () => {
             account.createOAuth2Session('google', window.location.origin + '/dashboard', window.location.origin + '/register');
@@ -238,6 +240,7 @@ const roles = [
                 errorDiv.style.display = 'block';
             }
         });
+        }); // Close DOMContentLoaded
     </script>
 </body>
 </html>
