@@ -34,37 +34,37 @@ const roles = [
         .register-card {
             background: var(--dark-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 48px;
+            border-radius: 20px;
+            padding: 32px 40px;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
         }
         .register-logo {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
-        .register-logo img { height: 40px; }
-        .register-title { text-align: center; margin-bottom: 8px; }
-        .register-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 32px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .register-logo img { height: 36px; }
+        .register-title { text-align: center; margin-bottom: 4px; font-size: 1.5rem; }
+        .register-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.9rem; }
         .form-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 14px;
             background: var(--dark-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 15px;
         }
         .form-input:focus { outline: none; border-color: var(--primary); }
-        .oauth-btns { display: flex; gap: 12px; margin-bottom: 24px; }
+        .oauth-btns { display: flex; gap: 10px; margin-bottom: 16px; }
         .oauth-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             background: var(--dark-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--text-primary);
             font-weight: 500;
             cursor: pointer;
@@ -73,14 +73,16 @@ const roles = [
             justify-content: center;
             gap: 8px;
             transition: border-color 0.2s;
+            font-size: 0.9rem;
         }
         .oauth-btn:hover { border-color: var(--primary); }
         .divider {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 16px;
             color: var(--text-tertiary);
+            font-size: 0.85rem;
         }
         .divider::before, .divider::after {
             content: '';
@@ -88,33 +90,33 @@ const roles = [
             height: 1px;
             background: var(--border-subtle);
         }
-        .role-options { display: flex; flex-direction: column; gap: 12px; }
-        .role-option {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 16px;
+        .form-select {
+            width: 100%;
+            padding: 12px 14px;
             background: var(--dark-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 15px;
             cursor: pointer;
-            transition: border-color 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239ca3af' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
         }
-        .role-option:hover { border-color: var(--primary); }
-        .role-option input { margin-top: 4px; }
-        .role-label { font-weight: 500; }
-        .role-desc { font-size: 12px; color: var(--text-secondary); }
+        .form-select:focus { outline: none; border-color: var(--primary); }
+        .form-select option { background: var(--dark-surface); color: var(--text-primary); }
         .btn-register {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 24px;
+            margin-top: 16px;
         }
         .btn-register:hover { background: var(--primary-dark); }
         .error-msg, .success-msg {
@@ -125,9 +127,9 @@ const roles = [
         }
         .error-msg { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
         .success-msg { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; }
-        .login-link { text-align: center; margin-top: 24px; color: var(--text-secondary); }
+        .login-link { text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 0.9rem; }
         .login-link a { color: var(--primary); }
-        .approval-note { text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-tertiary); }
+        .approval-note { text-align: center; margin-top: 10px; font-size: 11px; color: var(--text-tertiary); }
     </style>
 </head>
 <body>
@@ -171,17 +173,11 @@ const roles = [
 
                 <div class="form-group">
                     <label class="form-label">Account Type</label>
-                    <div class="role-options">
+                    <select id="role" class="form-select" required>
                         {roles.map((role, i) => (
-                            <label class="role-option">
-                                <input type="radio" name="role" value={role.id} checked={i === 0}>
-                                <div>
-                                    <div class="role-label">{role.label}</div>
-                                    <div class="role-desc">{role.description}</div>
-                                </div>
-                            </label>
+                            <option value={role.id} selected={i === 0}>{role.label} - {role.description}</option>
                         ))}
-                    </div>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn-register">
@@ -225,7 +221,7 @@ const roles = [
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const role = document.querySelector('input[name="role"]:checked').value;
+            const role = document.getElementById('role').value;
             
             try {
                 await account.create(ID.unique(), email, password, name);

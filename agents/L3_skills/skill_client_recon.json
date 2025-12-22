@@ -1,0 +1,460 @@
+{
+    "name": "CMO Skill: Client Recon",
+    "nodes": [
+        {
+            "parameters": {
+                "events": [
+                    "databases.*.collections.*.documents.*.create"
+                ],
+                "projectId": "={{ $env.APPWRITE_PROJECT_ID }}",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Lead_Intakes"
+            },
+            "id": "appwrite-trigger",
+            "name": "Appwrite_Lead_Created",
+            "type": "n8n-nodes-appwrite.appwriteTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            },
+            "webhookId": "lead-intake-client-recon"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Extract lead data\nconst doc = items[0].json;\n\nconst leadData = {\n  lead_id: doc.$id,\n  contact_name: doc.contact_name,\n  contact_email: doc.contact_email,\n  service_interest: doc.service_interest,\n  linkedin_url: doc.linkedin_url || null,\n  x_url: doc.x_url || null,\n  instagram_url: doc.instagram_url || null\n};\n\n// Check if any social URL exists\nconst hasSocialLinks = leadData.linkedin_url || leadData.x_url || leadData.instagram_url;\n\nif (!hasSocialLinks) {\n  items[0].json = { skip: true, reason: 'No social links to audit', lead_id: leadData.lead_id };\n} else {\n  items[0].json = { ...leadData, skip: false };\n}\n\nreturn items;"
+            },
+            "id": "extract-lead",
+            "name": "Extract_Lead_Data",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.skip }}",
+                                        "rightValue": false,
+                                        "operator": {
+                                            "type": "boolean",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Has_Social_Links"
+                        }
+                    ]
+                },
+                "fallbackOutput": "extra"
+            },
+            "id": "check-links",
+            "name": "Check_Has_Links",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.linkedin_url }}",
+                "options": {
+                    "timeout": 10000,
+                    "redirect": {
+                        "redirect": {
+                            "followRedirects": true
+                        }
+                    }
+                },
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "User-Agent",
+                            "value": "Mozilla/5.0 (compatible; FikanovaBot/1.0)"
+                        }
+                    ]
+                }
+            },
+            "id": "fetch-linkedin",
+            "name": "Fetch_LinkedIn_Page",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                750,
+                200
+            ],
+            "continueOnFail": true
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.x_url }}",
+                "options": {
+                    "timeout": 10000
+                },
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "User-Agent",
+                            "value": "Mozilla/5.0 (compatible; FikanovaBot/1.0)"
+                        }
+                    ]
+                }
+            },
+            "id": "fetch-x",
+            "name": "Fetch_X_Page",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                750,
+                350
+            ],
+            "continueOnFail": true
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.instagram_url }}",
+                "options": {
+                    "timeout": 10000
+                },
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "User-Agent",
+                            "value": "Mozilla/5.0 (compatible; FikanovaBot/1.0)"
+                        }
+                    ]
+                }
+            },
+            "id": "fetch-ig",
+            "name": "Fetch_Instagram_Page",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                750,
+                500
+            ],
+            "continueOnFail": true
+        },
+        {
+            "parameters": {
+                "mode": "combine",
+                "combineBy": "combineAll",
+                "options": {}
+            },
+            "id": "merge-social",
+            "name": "Merge_Social_Data",
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3,
+            "position": [
+                1000,
+                350
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "// Combine all fetched data into analysis context\nconst leadData = $('Extract_Lead_Data').first().json;\n\nconst linkedinData = items.find(i => i.json?.linkedin_html) || {};\nconst xData = items.find(i => i.json?.x_html) || {};\nconst igData = items.find(i => i.json?.ig_html) || {};\n\n// Extract text content from HTML (simplified - real implementation would parse HTML)\nconst extractText = (html, maxLen = 2000) => {\n  if (!html) return 'Not available';\n  // Remove HTML tags and truncate\n  const text = String(html).replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  return text.substring(0, maxLen);\n};\n\nitems[0].json = {\n  lead_id: leadData.lead_id,\n  contact_name: leadData.contact_name,\n  linkedin_url: leadData.linkedin_url,\n  x_url: leadData.x_url,\n  instagram_url: leadData.instagram_url,\n  linkedin_content: extractText(linkedinData.json?.data || linkedinData.json?.body, 1500),\n  x_content: extractText(xData.json?.data || xData.json?.body, 1500),\n  ig_content: extractText(igData.json?.data || igData.json?.body, 1500)\n};\n\nreturn [items[0]];"
+            },
+            "id": "prepare-analysis",
+            "name": "Prepare_Analysis_Context",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1200,
+                350
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CMO Marketing Lead Agent for Fikanova, performing a Client Recon Audit.\n\n## Lead Information:\n- Name: {{ $json.contact_name }}\n- LinkedIn: {{ $json.linkedin_url || 'Not provided' }}\n- X/Twitter: {{ $json.x_url || 'Not provided' }}\n- Instagram: {{ $json.instagram_url || 'Not provided' }}\n\n## Scraped Content (may be partial):\n\n### LinkedIn:\n{{ $json.linkedin_content }}\n\n### X/Twitter:\n{{ $json.x_content }}\n\n### Instagram:\n{{ $json.ig_content }}\n\n## Your Task:\nAnalyze the client's digital presence and generate a comprehensive audit:\n\n1. **Suggested Vibe** - Classify their brand personality:\n   - Professional (corporate, B2B focused)\n   - Edgy (bold, provocative, youth-focused)\n   - Kenyan-focused (local culture, Swahili elements)\n   - Inspirational (motivational, community-building)\n   - Technical (developer/tech-focused)\n   - Luxury (premium, exclusive)\n\n2. **Marketing Gaps** - Identify weaknesses:\n   - Posting frequency issues\n   - Platform underutilization\n   - Content quality problems\n   - Engagement issues\n   - Brand consistency problems\n\n3. **Web Integration Suggestions** - Fikanova services that would help:\n   - Live social feed embeds\n   - Automated posting systems\n   - Content calendar tools\n   - Analytics dashboards\n   - AI content generation\n\n## Output Format (JSON):\n```json\n{\n  \"suggested_vibe\": \"Professional|Edgy|Kenyan-focused|Inspirational|Technical|Luxury\",\n  \"vibe_reasoning\": \"2-3 sentence explanation of why this vibe fits\",\n  \"marketing_gaps\": [\n    { \"platform\": \"LinkedIn|X|Instagram|General\", \"gap\": \"description\", \"severity\": \"high|medium|low\" },\n    ...\n  ],\n  \"web_integrations\": [\n    { \"suggestion\": \"what to implement\", \"benefit\": \"expected outcome\", \"priority\": 1-5 },\n    ...\n  ],\n  \"platform_activity\": {\n    \"linkedin\": { \"status\": \"active|dormant|missing\", \"last_activity_estimate\": \"recent|weeks|months|unknown\" },\n    \"x\": { \"status\": \"active|dormant|missing\", \"last_activity_estimate\": \"recent|weeks|months|unknown\" },\n    \"instagram\": { \"status\": \"active|dormant|missing\", \"last_activity_estimate\": \"recent|weeks|months|unknown\" }\n  },\n  \"priority_actions\": [\n    \"Top action 1\",\n    \"Top action 2\",\n    \"Top action 3\"\n  ],\n  \"audit_score\": 1-100,\n  \"executive_summary\": \"2-3 sentence summary of audit findings\"\n}\n```\n\nRespond with valid JSON only.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "gemini-audit",
+            "name": "CMO_Gemini_Client_Audit",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1450,
+                350
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\nconst leadData = $('Extract_Lead_Data').first().json;\n\ntry {\n  const audit = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n  \n  items[0].json = {\n    lead_id: leadData.lead_id,\n    contact_name: leadData.contact_name,\n    suggested_vibe: audit.suggested_vibe || 'Professional',\n    vibe_reasoning: audit.vibe_reasoning || '',\n    marketing_gaps: JSON.stringify(audit.marketing_gaps || []),\n    web_integrations: JSON.stringify(audit.web_integrations || []),\n    platform_activity: JSON.stringify(audit.platform_activity || {}),\n    priority_actions: JSON.stringify(audit.priority_actions || []),\n    audit_score: audit.audit_score || 50,\n    parsed: true\n  };\n} catch (e) {\n  items[0].json = {\n    lead_id: leadData.lead_id,\n    contact_name: leadData.contact_name,\n    suggested_vibe: 'Unknown',\n    vibe_reasoning: 'Audit parsing failed',\n    marketing_gaps: '[]',\n    web_integrations: '[]',\n    platform_activity: '{}',\n    priority_actions: '[]',\n    audit_score: 0,\n    parsed: false,\n    error: e.message\n  };\n}\n\nreturn items;"
+            },
+            "id": "parse-audit",
+            "name": "Parse_Audit_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1700,
+                350
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "create",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Client_Audits",
+                "data": {
+                    "lead_id": "={{ $json.lead_id }}",
+                    "contact_name": "={{ $json.contact_name }}",
+                    "suggested_vibe": "={{ $json.suggested_vibe }}",
+                    "vibe_reasoning": "={{ $json.vibe_reasoning }}",
+                    "marketing_gaps": "={{ $json.marketing_gaps }}",
+                    "web_integrations": "={{ $json.web_integrations }}",
+                    "platform_activity": "={{ $json.platform_activity }}",
+                    "priority_actions": "={{ $json.priority_actions }}",
+                    "audit_score": "={{ $json.audit_score }}",
+                    "audited_at": "={{ new Date().toISOString() }}",
+                    "audited_by": "CMO_Marketing_Lead"
+                }
+            },
+            "id": "save-audit",
+            "name": "Save_To_Client_Audits",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                1950,
+                350
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "update",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Lead_Intakes",
+                "documentId": "={{ $json.lead_id || $('Extract_Lead_Data').first().json.lead_id }}",
+                "data": {
+                    "audit_status": "audited"
+                }
+            },
+            "id": "update-lead",
+            "name": "Update_Lead_Audited",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                2200,
+                350
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Log skipped lead\nconsole.log('Skipped lead audit - no social links:', items[0].json.reason);\nreturn items;"
+            },
+            "id": "log-skip",
+            "name": "Log_Skipped",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                750,
+                600
+            ]
+        }
+    ],
+    "connections": {
+        "Appwrite_Lead_Created": {
+            "main": [
+                [
+                    {
+                        "node": "Extract_Lead_Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract_Lead_Data": {
+            "main": [
+                [
+                    {
+                        "node": "Check_Has_Links",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Check_Has_Links": {
+            "main": [
+                [
+                    {
+                        "node": "Fetch_LinkedIn_Page",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Fetch_X_Page",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Fetch_Instagram_Page",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Log_Skipped",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fetch_LinkedIn_Page": {
+            "main": [
+                [
+                    {
+                        "node": "Merge_Social_Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fetch_X_Page": {
+            "main": [
+                [
+                    {
+                        "node": "Merge_Social_Data",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "Fetch_Instagram_Page": {
+            "main": [
+                [
+                    {
+                        "node": "Merge_Social_Data",
+                        "type": "main",
+                        "index": 2
+                    }
+                ]
+            ]
+        },
+        "Merge_Social_Data": {
+            "main": [
+                [
+                    {
+                        "node": "Prepare_Analysis_Context",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Prepare_Analysis_Context": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Gemini_Client_Audit",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Gemini_Client_Audit": {
+            "main": [
+                [
+                    {
+                        "node": "Parse_Audit_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse_Audit_Response": {
+            "main": [
+                [
+                    {
+                        "node": "Save_To_Client_Audits",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Save_To_Client_Audits": {
+            "main": [
+                [
+                    {
+                        "node": "Update_Lead_Audited",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "meta": {
+        "templateCredsSetupCompleted": true
+    },
+    "pinData": {},
+    "versionId": "1.0.0",
+    "triggerCount": 0,
+    "tags": [
+        {
+            "id": "cmo",
+            "name": "CMO"
+        },
+        {
+            "id": "skill",
+            "name": "Skill"
+        },
+        {
+            "id": "recon",
+            "name": "Recon"
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ClientProfileCard from './ClientProfileCard';
 
 /**
  * Animated Counter Component
@@ -731,6 +732,21 @@ function ProjectDetailsPanel({ project, onClose }) {
                     {/* Right Column: Visualization */}
                     <div className="details-visual">
                         <AnimatedCounter project={project} />
+
+                        {/* Client Profile Card - Social Footprint */}
+                        {project.socials && Object.keys(project.socials).length > 0 && (
+                            <div style={{ marginTop: '16px' }}>
+                                <ClientProfileCard
+                                    client={{
+                                        name: project.client,
+                                        linkedin: project.socials.linkedin,
+                                        x: project.socials.x,
+                                        instagram: project.socials.instagram,
+                                        website: project.socials.website
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -134,7 +134,12 @@ const collections = [
             { key: 'service_interest', type: 'string', size: 128, required: true },
             { key: 'contact_email', type: 'email', required: true },
             { key: 'contact_name', type: 'string', size: 128, required: true },
-            { key: 'received_at', type: 'datetime', required: true }
+            { key: 'received_at', type: 'datetime', required: true },
+            // Social URLs for CMO Agent auditing
+            { key: 'linkedin_url', type: 'url', required: false },
+            { key: 'x_url', type: 'url', required: false },
+            { key: 'instagram_url', type: 'url', required: false },
+            { key: 'audit_status', type: 'string', size: 32, required: false }  // pending, in_progress, completed
         ]
     },
     {
@@ -245,6 +250,22 @@ const collections = [
             { key: 'system_prompt_url', type: 'url', required: true },
             { key: 'usage_count', type: 'integer', required: false },
             { key: 'published_at', type: 'datetime', required: true }
+        ]
+    },
+    // 🔍 CMO Agent - Client Audits (social profile analysis)
+    {
+        name: 'Client_Audits', id: 'Client_Audits', attributes: [
+            { key: 'lead_id', type: 'string', size: 64, required: true },        // Reference to Lead_Intakes
+            { key: 'contact_name', type: 'string', size: 128, required: true },
+            { key: 'suggested_vibe', type: 'string', size: 64, required: true }, // Professional, Edgy, Kenyan-focused, etc.
+            { key: 'vibe_reasoning', type: 'string', size: 500, required: false },
+            { key: 'marketing_gaps', type: 'string', size: 2000, required: true }, // JSON array of gaps
+            { key: 'web_integrations', type: 'string', size: 2000, required: true }, // JSON array of suggestions
+            { key: 'platform_activity', type: 'string', size: 2000, required: false }, // JSON with platform stats
+            { key: 'priority_actions', type: 'string', size: 1000, required: false }, // Top 3 recommended actions
+            { key: 'audit_score', type: 'integer', required: false },            // 1-100 overall brand health
+            { key: 'audited_at', type: 'datetime', required: true },
+            { key: 'audited_by', type: 'string', size: 64, required: true }      // Agent name
         ]
     }
 ];

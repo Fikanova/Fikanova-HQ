@@ -1,0 +1,280 @@
+{
+    "name": "CMO Brand Brief Generator",
+    "nodes": [
+        {
+            "parameters": {
+                "events": [
+                    "databases.*.collections.*.documents.*.create"
+                ],
+                "projectId": "={{ $env.APPWRITE_PROJECT_ID }}",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Lead_Intakes"
+            },
+            "id": "appwrite-trigger",
+            "name": "Appwrite_Lead_Created",
+            "type": "n8n-nodes-appwrite.appwriteTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            },
+            "webhookId": "lead-intake-brand-brief"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Extract social links from the new lead document\nconst doc = items[0].json;\n\nconst socialLinks = {\n  linkedin_url: doc.linkedin_url || null,\n  x_url: doc.x_url || null,\n  instagram_url: doc.instagram_url || null,\n  lead_id: doc.$id,\n  contact_name: doc.contact_name,\n  contact_email: doc.contact_email,\n  service_interest: doc.service_interest\n};\n\n// Only proceed if at least one social link exists\nconst hasSocialLinks = socialLinks.linkedin_url || socialLinks.x_url || socialLinks.instagram_url;\n\nif (!hasSocialLinks) {\n  items[0].json.skip = true;\n  items[0].json.reason = 'No social links provided';\n} else {\n  items[0].json = socialLinks;\n  items[0].json.skip = false;\n}\n\nreturn items;"
+            },
+            "id": "extract-social",
+            "name": "Extract_Social_Links",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.skip }}",
+                                        "rightValue": false,
+                                        "operator": {
+                                            "type": "boolean",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Has_Social_Links"
+                        }
+                    ]
+                },
+                "fallbackOutput": "extra"
+            },
+            "id": "check-links",
+            "name": "Check_Has_Links",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CMO Marketing Lead Agent for Fikanova. Generate a comprehensive Brand Brief based on the lead's social media presence.\n\n## Lead Information:\n- Name: {{ $json.contact_name }}\n- Email: {{ $json.contact_email }}\n- Service Interest: {{ $json.service_interest }}\n\n## Social Profiles to Analyze:\n- LinkedIn: {{ $json.linkedin_url || 'Not provided' }}\n- X/Twitter: {{ $json.x_url || 'Not provided' }}\n- Instagram: {{ $json.instagram_url || 'Not provided' }}\n\n## Your Task:\nAnalyze the provided social profiles (where available) and generate a Brand Brief that includes:\n\n1. **Brand Voice Assessment** - Tone, style, personality based on their social presence\n2. **Content Themes** - Key topics they focus on\n3. **Audience Analysis** - Who they seem to target\n4. **Platform Strategy** - How they use each platform\n5. **Optimization Opportunities** - Quick wins we can offer\n6. **Recommended Services** - Which Fikanova services would benefit them most\n\n## Output Format (JSON):\n```json\n{\n  \"brand_voice\": {\n    \"tone\": \"professional|casual|playful|authoritative\",\n    \"personality_traits\": [\"list\", \"of\", \"traits\"],\n    \"sample_phrases\": [\"example\", \"phrases\"]\n  },\n  \"content_themes\": [\"theme1\", \"theme2\", \"theme3\"],\n  \"target_audience\": {\n    \"demographics\": \"description\",\n    \"interests\": [\"interest1\", \"interest2\"],\n    \"pain_points\": [\"pain1\", \"pain2\"]\n  },\n  \"platform_analysis\": {\n    \"linkedin\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"x\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"instagram\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" }\n  },\n  \"quick_wins\": [\"opportunity1\", \"opportunity2\"],\n  \"recommended_services\": [\"service1\", \"service2\"],\n  \"executive_summary\": \"2-3 sentence summary of brand positioning and opportunities\"\n}\n```\n\nRespond with valid JSON only.",
+                "options": {
+                    "temperature": 0.4
+                }
+            },
+            "id": "cmo-brand-brief",
+            "name": "CMO_Generate_Brand_Brief",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                750,
+                250
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\nconst leadData = $('Extract_Social_Links').first().json;\n\ntry {\n  const brandBrief = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n  items[0].json = {\n    lead_id: leadData.lead_id,\n    contact_name: leadData.contact_name,\n    contact_email: leadData.contact_email,\n    brand_brief: brandBrief,\n    parsed: true\n  };\n} catch (e) {\n  items[0].json = {\n    lead_id: leadData.lead_id,\n    contact_name: leadData.contact_name,\n    raw_response: response,\n    error: 'Failed to parse brand brief',\n    parsed: false\n  };\n}\n\nreturn items;"
+            },
+            "id": "parse-brief",
+            "name": "Parse_Brand_Brief",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1000,
+                250
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "create",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Content_Drafts",
+                "data": {
+                    "content_type": "brand_brief",
+                    "title": "Brand Brief: {{ $json.contact_name }}",
+                    "ai_draft": "={{ JSON.stringify($json.brand_brief) }}",
+                    "status": "draft",
+                    "agent_source": "CMO_Marketing_Lead",
+                    "created_at": "={{ new Date().toISOString() }}",
+                    "updated_at": "={{ new Date().toISOString() }}"
+                }
+            },
+            "id": "save-draft",
+            "name": "Save_To_Content_Drafts",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                1250,
+                250
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "update",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Lead_Intakes",
+                "documentId": "={{ $json.lead_id || $('Extract_Social_Links').first().json.lead_id }}",
+                "data": {
+                    "audit_status": "completed"
+                }
+            },
+            "id": "update-lead",
+            "name": "Update_Lead_Status",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                1500,
+                250
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Log skip reason for leads without social links\nconsole.log('Skipped lead - no social links:', items[0].json.reason);\nreturn items;"
+            },
+            "id": "log-skip",
+            "name": "Log_Skipped",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                750,
+                450
+            ]
+        }
+    ],
+    "connections": {
+        "Appwrite_Lead_Created": {
+            "main": [
+                [
+                    {
+                        "node": "Extract_Social_Links",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract_Social_Links": {
+            "main": [
+                [
+                    {
+                        "node": "Check_Has_Links",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Check_Has_Links": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Generate_Brand_Brief",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Log_Skipped",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Generate_Brand_Brief": {
+            "main": [
+                [
+                    {
+                        "node": "Parse_Brand_Brief",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse_Brand_Brief": {
+            "main": [
+                [
+                    {
+                        "node": "Save_To_Content_Drafts",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Save_To_Content_Drafts": {
+            "main": [
+                [
+                    {
+                        "node": "Update_Lead_Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "meta": {
+        "templateCredsSetupCompleted": true
+    },
+    "pinData": {},
+    "versionId": "1.0.0",
+    "triggerCount": 0,
+    "tags": [
+        {
+            "id": "cmo",
+            "name": "CMO"
+        },
+        {
+            "id": "marketing",
+            "name": "Marketing"
+        },
+        {
+            "id": "brand",
+            "name": "Brand"
+        }
+    ]
+}
