@@ -1,30 +1,197 @@
 {
     "name": "L2 - Head of Content",
+    "description": "Content operations manager - orchestrates drafting, editing, and publishing",
     "nodes": [
         {
-            "name": "Project Done",
-            "type": "n8n-nodes-base.webhook"
+            "name": "Content Request Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "content-request",
+                "httpMethod": "POST"
+            },
+            "position": [
+                100,
+                300
+            ]
         },
         {
-            "name": "Case Study Writer (Call Specialist)",
+            "name": "Determine Content Type",
+            "type": "n8n-nodes-base.switch",
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "case_study",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Case_Study"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "social",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Social"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "newsletter",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Newsletter"
+                        }
+                    ]
+                }
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "Case Study Writer (Specialist)",
             "type": "n8n-nodes-base.executeWorkflow",
             "parameters": {
                 "workflowId": "CASE_STUDY_ID"
-            }
+            },
+            "position": [
+                500,
+                150
+            ]
         },
         {
-            "name": "Social Poster (Call Specialist)",
+            "name": "Social Poster (Specialist)",
             "type": "n8n-nodes-base.executeWorkflow",
             "parameters": {
                 "workflowId": "SOCIAL_POSTER_ID"
-            }
+            },
+            "position": [
+                500,
+                300
+            ]
         },
         {
-            "name": "Newsletter Manager (Call Specialist)",
+            "name": "Newsletter Manager (Specialist)",
             "type": "n8n-nodes-base.executeWorkflow",
             "parameters": {
                 "workflowId": "NEWSLETTER_ID"
-            }
+            },
+            "position": [
+                500,
+                450
+            ]
+        },
+        {
+            "name": "Editor Agent (Refine with Brand Voice)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "EDITOR_AGENT_ID"
+            },
+            "position": [
+                700,
+                300
+            ],
+            "notes": "All content passes through Editor for brand voice consistency"
         }
-    ]
+    ],
+    "connections": {
+        "Content Request Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Determine Content Type",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Determine Content Type": {
+            "Case_Study": [
+                [
+                    {
+                        "node": "Case Study Writer (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Social": [
+                [
+                    {
+                        "node": "Social Poster (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Newsletter": [
+                [
+                    {
+                        "node": "Newsletter Manager (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Case Study Writer (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Editor Agent (Refine with Brand Voice)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Social Poster (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Editor Agent (Refine with Brand Voice)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Newsletter Manager (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Editor Agent (Refine with Brand Voice)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
 }

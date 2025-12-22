@@ -1,22 +1,24 @@
 {
     "name": "L1 - CEO Agent",
+    "description": "Central command router for Human-Centric C-Suite. Routes WhatsApp commands to appropriate executives.",
     "nodes": [
         {
             "parameters": {
-                "updates": [
-                    "messages"
-                ]
+                "httpMethod": "POST",
+                "path": "ceo-command",
+                "responseMode": "responseNode"
             },
-            "name": "WhatsApp Trigger",
-            "type": "n8n-nodes-base.whatsappTrigger",
+            "name": "WhatsApp Bridge Webhook",
+            "type": "n8n-nodes-base.webhook",
             "position": [
                 100,
                 300
-            ]
+            ],
+            "notes": "Receives from Appwrite whatsapp-bridge function"
         },
         {
             "parameters": {
-                "text": "Analyze command: {{$json.messages[0].text.body}}. Route to correct C-Suite Exec.",
+                "text": "Analyze this command and determine the best C-Suite executive to handle it.\n\nCommand: {{$json.message}}\nFrom: {{$json.from_phone}}\n\nRespond with ONE of: Finance, Product, Marketing, Operations, Governance\n\n- Finance = CFO (money, runway, expenses, tax, KRA)\n- Product = CTO (tech, code, deploy, systems)\n- Marketing = CMO (content, social, newsletter, branding, drafts)\n- Operations = CIO (data, knowledge, daily briefs)\n- Governance = CimpO (ESG, compliance, audits)",
                 "options": {}
             },
             "name": "Strategy Engine (Gemini)",
@@ -33,9 +35,7 @@
                         {
                             "conditions": {
                                 "options": {
-                                    "caseSensitive": true,
-                                    "leftValue": "",
-                                    "typeValidation": "strict"
+                                    "caseSensitive": false
                                 },
                                 "conditions": [
                                     {
@@ -55,9 +55,7 @@
                         {
                             "conditions": {
                                 "options": {
-                                    "caseSensitive": true,
-                                    "leftValue": "",
-                                    "typeValidation": "strict"
+                                    "caseSensitive": false
                                 },
                                 "conditions": [
                                     {
@@ -73,9 +71,70 @@
                             },
                             "renameOutput": true,
                             "outputKey": "To_CTO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.output}}",
+                                        "rightValue": "Marketing",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CMO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.output}}",
+                                        "rightValue": "Operations",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CIO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.output}}",
+                                        "rightValue": "Governance",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CimpO"
                         }
                     ]
-                }
+                },
+                "fallbackOutput": "To_CEO_Self"
             },
             "name": "C-Suite Router",
             "type": "n8n-nodes-base.switch",
@@ -83,6 +142,149 @@
                 500,
                 300
             ]
+        },
+        {
+            "name": "CFO Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CFO_AGENT_ID"
+            },
+            "position": [
+                700,
+                100
+            ]
+        },
+        {
+            "name": "CTO Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CTO_AGENT_ID"
+            },
+            "position": [
+                700,
+                200
+            ]
+        },
+        {
+            "name": "CMO Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CMO_AGENT_ID"
+            },
+            "position": [
+                700,
+                300
+            ]
+        },
+        {
+            "name": "CIO Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CIO_AGENT_ID"
+            },
+            "position": [
+                700,
+                400
+            ]
+        },
+        {
+            "name": "CimpO Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "CIMPO_AGENT_ID"
+            },
+            "position": [
+                700,
+                500
+            ]
+        },
+        {
+            "name": "Update Communications Status",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "parameters": {
+                "operation": "updateDocument",
+                "databaseId": "693703ef001133c62d78",
+                "collectionId": "Communications",
+                "documentId": "={{$json.communication_id}}",
+                "data": {
+                    "status": "processed"
+                }
+            },
+            "position": [
+                900,
+                300
+            ]
         }
-    ]
+    ],
+    "connections": {
+        "WhatsApp Bridge Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Strategy Engine (Gemini)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Strategy Engine (Gemini)": {
+            "main": [
+                [
+                    {
+                        "node": "C-Suite Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "C-Suite Router": {
+            "To_CFO": [
+                [
+                    {
+                        "node": "CFO Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CTO": [
+                [
+                    {
+                        "node": "CTO Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CMO": [
+                [
+                    {
+                        "node": "CMO Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CIO": [
+                [
+                    {
+                        "node": "CIO Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CimpO": [
+                [
+                    {
+                        "node": "CimpO Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
 }

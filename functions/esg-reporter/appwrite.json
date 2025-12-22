@@ -1,0 +1,11 @@
+{
+    "name": "esg-reporter",
+    "runtime": "python-3.9",
+    "entrypoint": "main.py",
+    "permissions": [
+        "any"
+    ],
+    "events": [],
+    "schedule": "0 6 1 * *",
+    "timeout": 60
+}

@@ -1,0 +1,116 @@
+{
+    "name": "Skill: Google Sheets Ledger",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "skill-ledger",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "trigger",
+            "name": "Ledger_Skill_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "append",
+                "documentId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_SHEETS_LEDGER_ID }}"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "mode": "name",
+                    "value": "Transactions"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "Date": "={{ new Date().toISOString() }}",
+                        "Amount": "={{ $json.amount || 0 }}",
+                        "Category": "={{ $json.category || 'Uncategorized' }}",
+                        "Description": "={{ $json.description || '' }}",
+                        "Type": "={{ $json.type || 'Expense' }}",
+                        "Source": "={{ $json.source || 'Agent' }}",
+                        "Reference": "={{ $json.reference || '' }}"
+                    }
+                },
+                "options": {}
+            },
+            "id": "append-sheet",
+            "name": "Ledger_Append_Row",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "google-sheets-creds",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, message: 'Transaction logged to ledger', amount: $json.amount, category: $json.category, skill: 'google-sheets-ledger' }) }}",
+                "options": {}
+            },
+            "id": "response",
+            "name": "Ledger_Skill_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Ledger_Skill_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Ledger_Append_Row",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Ledger_Append_Row": {
+            "main": [
+                [
+                    {
+                        "node": "Ledger_Skill_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "skill"
+        },
+        {
+            "name": "L3"
+        },
+        {
+            "name": "finance"
+        }
+    ]
+}

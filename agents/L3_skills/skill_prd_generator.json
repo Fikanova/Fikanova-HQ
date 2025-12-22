@@ -1,0 +1,94 @@
+{
+    "name": "Skill: PRD Generator",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "skill-prd-generator",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "trigger",
+            "name": "PRD_Skill_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are a senior product manager at Fikanova, specialized in creating clear, actionable PRDs.\n\n## Your Task\nGenerate a comprehensive Product Requirement Document based on the user's brief.\n\n## Input:\n{{ $json.brief || $json.message || $json.data?.fields?.description || 'No brief provided' }}\n\n## PRD Structure\n1. **Executive Summary** (2-3 sentences)\n2. **Problem Statement** (What pain are we solving?)\n3. **Target Users** (Who benefits?)\n4. **Goals & Success Metrics** (How do we measure success?)\n5. **User Stories** (As a [user], I want to [action], so that [benefit])\n6. **Functional Requirements** (Must-have features)\n7. **Non-Functional Requirements** (Performance, security, scale)\n8. **Out of Scope** (What we're NOT building)\n9. **Dependencies & Assumptions**\n10. **Timeline Estimate** (T-shirt sizing: S/M/L/XL)\n\n## Style Guide\n- Be specific, not vague\n- Use bullet points for clarity\n- Include acceptance criteria for each feature\n- Prioritize features as P0 (critical), P1 (important), P2 (nice-to-have)\n- Write for developers, not executives\n\n## Output\nReturn a clean, well-formatted Markdown PRD document.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "generate-prd",
+            "name": "PRD_Generate_Gemini",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, prd: $json.text || $json.response, skill: 'prd-generator' }) }}",
+                "options": {}
+            },
+            "id": "response",
+            "name": "PRD_Skill_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "PRD_Skill_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "PRD_Generate_Gemini",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "PRD_Generate_Gemini": {
+            "main": [
+                [
+                    {
+                        "node": "PRD_Skill_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "skill"
+        },
+        {
+            "name": "L3"
+        }
+    ]
+}

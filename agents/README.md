@@ -1,35 +1,87 @@
-# Fikanova v10.0 Digital Workforce 🤖
+# Fikanova OS v3.0 - Agentic C-Suite
 
-AI-powered agency with hierarchical agent architecture.
+Production-ready n8n workflow system implementing a 3-layer AI agency.
 
-## 📁 Structure
+## 📁 Architecture
 
-### L1: C-Suite (Strategic Orchestrators)
-| Agent | Role | Delegates To |
-|-------|------|--------------|
-| CEO | Command routing via WhatsApp + Gemini | CFO/CTO |
-| CFO | Finance operations | Head of Accounts |
-| CTO | Tech operations | Head of Product |
-| CMO | Growth operations | Head of Content |
-| CIO | Daily operations (7AM trigger) | Head of Ops |
-| CimpO | Governance/Audit | Head of ESG |
+```
+fikanova_master_orchestrator.json    ← Central Nervous System
+├── L1: CEO Router (Gemini 2.0)
+├── L2: C-Suite Managers (CMO/CFO/CTO/CIO/CimpO)
+└── L3: Skills & Specialists
+```
 
-### L2: Functional Leads (Managers)
-| Manager | Specialists |
-|---------|-------------|
-| Head of Product | Recon Bot, Quote Gen |
-| Head of Accounts | KRA Bot, Expense Tracker, Runway Calc, ClampO |
-| Head of Content | Case Study Writer, Social Poster, Newsletter Bot |
-| Head of Ops | Morning Briefer, Meeting Prep |
-| Head of ESG | Partner Sync, ESG Reporter |
+## 🚀 Quick Start
 
-### L3: Specialists (Doers)
-12 specialist agents handling specific tasks via n8n workflows.
+1. **Import to n8n** (Railway):
+   ```bash
+   # Import in this order:
+   1. L3_skills/*.json (PRD Generator, Sheng NLP, Ledger)
+   2. fikanova_master_orchestrator.json
+   ```
 
-## 🚀 Deployment
-1. Import JSONs into n8n: **L3 → L2 → L1** order
-2. Configure credentials for each service
-3. Update workflow IDs in parent agents
+2. **Configure credentials**:
+   - Google Gemini API
+   - Appwrite API
+   - HubSpot API
+   - Google Sheets OAuth2
+   - HumanLayer (HITL)
+
+3. **Set environment variables** (see `.env.n8n.example`)
+
+4. **Activate workflows**
+
+## 📂 File Structure
+
+```
+agents/
+├── fikanova_master_orchestrator.json   # Main 3-layer workflow
+├── .env.n8n.example                    # Environment template
+├── L1_c_suite/
+│   ├── ceo/orchestrator.json           # CEO router (legacy, use master)
+│   └── cimpo/cimp_engine.json          # CIMP learning engine
+├── L2_functional/
+│   └── head_of_content/manager.json    # Content pipeline
+├── L3_skills/                          # Modular skills (new)
+│   ├── skill_prd_generator.json        # Tally → PRD Markdown
+│   ├── skill_sheng_nlp.json            # Sheng → formal intent
+│   └── skill_google_sheets_ledger.json # Transaction logging
+└── L3_specialists/                     # Domain specialists
+    ├── editor_agent.json               # Brand voice refinement
+    ├── kra_bot.json                    # eTIMS invoicing
+    ├── expense_tracker.json            # Expense logging
+    ├── runway_calc.json                # Burn rate calculator
+    ├── case_study_writer.json          # Case study drafts
+    ├── social_poster.json              # LinkedIn/X posts
+    ├── newsletter_bot.json             # Email campaigns
+    └── morning_briefer.json            # Daily digest
+```
+
+## 🔌 Integrations
+
+| Service | Purpose |
+|---------|---------|
+| Gemini 2.0 Flash | Intent classification, content generation |
+| Appwrite | Database, articles, agent_logs |
+| HubSpot | CRM, email campaigns, blog |
+| Google Sheets | Central Ledger |
+| M-Pesa Daraja | STK Push payments |
+| HumanLayer.dev | WhatsApp HITL approvals |
+
+## 🛡️ Human-in-the-Loop (HITL)
+
+All state-changing actions require approval:
+- Publishing content
+- Sending emails
+- M-Pesa transactions
+- External API calls
+
+Approvals route via HumanLayer → WhatsApp.
+
+## 📊 Learning & ESG
+
+- **CIMP Engine**: Logs edit diffs to improve agent prompts
+- **ESG Reporter**: Monthly compliance reports for fundraising
 
 ## 📅 Updated
-2024-12-13 (v10.0)
+2024-12-22 (v3.0)

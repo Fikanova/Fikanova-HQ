@@ -1,0 +1,202 @@
+{
+    "name": "L1 - CimpO CIMP Engine",
+    "description": "Continuous Improvement & Metric Performance engine - learns from human edits and tracks ESG metrics",
+    "nodes": [
+        {
+            "name": "Content Approved Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "cimp-learn",
+                "httpMethod": "POST"
+            },
+            "position": [
+                100,
+                300
+            ],
+            "notes": "Triggered when Content_Draft status changes to 'approved'"
+        },
+        {
+            "name": "Load Draft with Edits",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "parameters": {
+                "operation": "getDocument",
+                "databaseId": "693703ef001133c62d78",
+                "collectionId": "Content_Drafts",
+                "documentId": "={{$json.draft_id}}"
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "Check if Human Edited",
+            "type": "n8n-nodes-base.if",
+            "parameters": {
+                "conditions": {
+                    "conditions": [
+                        {
+                            "leftValue": "={{$json.human_edit}}",
+                            "rightValue": "={{$json.ai_draft}}",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEquals"
+                            }
+                        }
+                    ]
+                }
+            },
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "name": "Gemini (Analyze Diff)",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "parameters": {
+                "text": "You are a learning analyst for Fikanova's AI agents.\n\nCompare these two versions of content and identify what the human changed and why.\n\n## AI Original:\n{{$json.ai_draft}}\n\n## Human Edit:\n{{$json.human_edit}}\n\n## Content Type:\n{{$json.content_type}}\n\n## Feedback Notes (if any):\n{{$json.feedback_notes || 'None provided'}}\n\nProvide a structured analysis:\n1. OBSERVATION: What specific changes were made? (sentence structure, tone, word choice, length)\n2. PATTERN: What does this suggest about the user's preferences?\n3. ACTION: What should the Editor Agent change in its approach?\n\nBe specific and actionable. This will update the agent's behavior.",
+                "options": {
+                    "model": "gemini-1.5-flash"
+                }
+            },
+            "position": [
+                700,
+                200
+            ]
+        },
+        {
+            "name": "Log to Learning_Traces",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "parameters": {
+                "operation": "createDocument",
+                "databaseId": "693703ef001133c62d78",
+                "collectionId": "Learning_Traces",
+                "data": {
+                    "agent_name": "Editor",
+                    "observation": "={{$json.output.split('OBSERVATION:')[1]?.split('PATTERN:')[0] || $json.output}}",
+                    "action_taken": "={{$json.output.split('ACTION:')[1] || 'Logged for review'}}",
+                    "diff_summary": "={{$json.output}}",
+                    "logged_at": "={{new Date().toISOString()}}"
+                }
+            },
+            "position": [
+                900,
+                200
+            ]
+        },
+        {
+            "name": "Calculate Time Saved",
+            "type": "n8n-nodes-base.code",
+            "parameters": {
+                "jsCode": "// Estimate time saved based on content length\nconst contentLength = items[0].json.ai_draft?.length || 0;\n// Assume 1 min per 100 chars for manual writing\nconst minutesSaved = Math.round(contentLength / 100);\nconst hoursSaved = minutesSaved / 60;\n\nitems[0].json.hours_saved = hoursSaved;\nitems[0].json.content_length = contentLength;\nreturn items;"
+            },
+            "position": [
+                500,
+                450
+            ]
+        },
+        {
+            "name": "Log ESG Metric - Time Saved",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "parameters": {
+                "operation": "createDocument",
+                "databaseId": "693703ef001133c62d78",
+                "collectionId": "ESG_Metrics",
+                "data": {
+                    "metric_type": "hours_saved",
+                    "value": "={{$json.hours_saved}}",
+                    "unit": "hours",
+                    "context": "={{$json.content_type}} content generation",
+                    "period": "={{new Date().toISOString().slice(0,7)}}",
+                    "logged_at": "={{new Date().toISOString()}}"
+                }
+            },
+            "position": [
+                700,
+                450
+            ]
+        },
+        {
+            "name": "Skip Learning (No Edit)",
+            "type": "n8n-nodes-base.noOp",
+            "parameters": {},
+            "position": [
+                700,
+                350
+            ],
+            "notes": "Human approved without edits - no learning needed"
+        }
+    ],
+    "connections": {
+        "Content Approved Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Load Draft with Edits",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Load Draft with Edits": {
+            "main": [
+                [
+                    {
+                        "node": "Check if Human Edited",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Calculate Time Saved",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Check if Human Edited": {
+            "true": [
+                [
+                    {
+                        "node": "Gemini (Analyze Diff)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "false": [
+                [
+                    {
+                        "node": "Skip Learning (No Edit)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gemini (Analyze Diff)": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Learning_Traces",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Calculate Time Saved": {
+            "main": [
+                [
+                    {
+                        "node": "Log ESG Metric - Time Saved",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

@@ -1,0 +1,503 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// SSR: Check for auth
+const sessionCookie = Astro.cookies.get('session');
+if (!sessionCookie?.value) {
+    return Astro.redirect('/');
+}
+---
+
+<Layout title="Editor's Desk">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <nav class="dashboard-nav">
+            <div class="dashboard-logo">
+                <a href="/dashboard"><img src="/assets/logos/fikanova-logo1.png" alt="Fikanova"></a>
+            </div>
+            <div class="dashboard-tabs">
+                <a href="/dashboard" class="tab-link">Overview</a>
+                <a href="/editor" class="tab-link active">Editor's Desk</a>
+            </div>
+            <div class="dashboard-user">
+                <span id="userEmail"></span>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Editor Main Content -->
+    <main class="editor-main">
+        <div class="container">
+            <div class="editor-header">
+                <h1><i class="fas fa-pen-fancy"></i> Editor's Desk</h1>
+                <p>Review, edit, and approve AI-generated content</p>
+            </div>
+
+            <!-- Draft Queue -->
+            <section class="drafts-section">
+                <div class="section-header">
+                    <h2>Pending Review</h2>
+                    <button id="refreshDrafts" class="btn-icon"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                
+                <div id="draftsQueue" class="drafts-queue">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Loading drafts...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Editor Panel (hidden by default) -->
+            <section id="editorPanel" class="editor-panel" style="display: none;">
+                <div class="editor-toolbar">
+                    <div class="draft-info">
+                        <span id="draftType" class="draft-badge">Newsletter</span>
+                        <h3 id="draftTitle">Draft Title</h3>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button id="closeEditor" class="btn-icon"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="editor-content">
+                    <!-- AI Draft (Read-only) -->
+                    <div class="editor-column ai-column">
+                        <div class="column-header">
+                            <i class="fas fa-robot"></i> AI Draft
+                        </div>
+                        <div id="aiDraft" class="draft-preview"></div>
+                    </div>
+
+                    <!-- Human Edit (Editable) -->
+                    <div class="editor-column human-column">
+                        <div class="column-header">
+                            <i class="fas fa-user-edit"></i> Your Edit
+                        </div>
+                        <textarea id="humanEdit" class="draft-editor" placeholder="Edit the content here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="editor-actions">
+                    <div class="feedback-section">
+                        <input type="text" id="feedbackNotes" placeholder="Feedback notes (optional - for learning)">
+                    </div>
+                    <div class="action-buttons">
+                        <button id="rejectDraft" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Reject & Regenerate
+                        </button>
+                        <button id="saveDraft" class="btn btn-secondary">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button id="approveDraft" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Approve & Publish
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <style>
+        .dashboard-header {
+            background: var(--dark-card);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .dashboard-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dashboard-logo img { height: 32px; }
+        .dashboard-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .tab-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .tab-link:hover { background: rgba(255,255,255,0.05); }
+        .tab-link.active {
+            background: var(--primary);
+            color: var(--dark-bg);
+            font-weight: 600;
+        }
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        #userEmail { color: var(--text-secondary); font-size: 14px; }
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.25); }
+
+        .editor-main {
+            padding: 48px 24px;
+            min-height: calc(100vh - 80px);
+        }
+        .editor-header { margin-bottom: 32px; }
+        .editor-header h1 { margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+        .editor-header p { color: var(--text-secondary); }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-icon:hover { background: var(--dark-card); }
+
+        .drafts-queue {
+            display: grid;
+            gap: 16px;
+        }
+        .draft-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .draft-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .draft-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .draft-badge {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .draft-title { font-weight: 600; margin-bottom: 8px; }
+        .draft-excerpt { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+        .draft-meta { 
+            display: flex; 
+            gap: 16px; 
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-secondary);
+        }
+        .loading-state i { margin-right: 8px; }
+
+        .editor-panel {
+            background: var(--dark-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            margin-top: 32px;
+            overflow: hidden;
+        }
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .draft-info { display: flex; align-items: center; gap: 16px; }
+        .draft-info h3 { margin: 0; }
+
+        .editor-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+        }
+        .editor-column {
+            background: var(--dark-surface);
+            min-height: 400px;
+        }
+        .column-header {
+            padding: 12px 20px;
+            background: var(--dark-card);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-column .column-header { color: var(--primary); }
+        .human-column .column-header { color: var(--accent-green); }
+        .draft-preview {
+            padding: 20px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+        }
+        .draft-editor {
+            width: 100%;
+            height: calc(100% - 44px);
+            min-height: 356px;
+            padding: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.7;
+            resize: none;
+        }
+        .draft-editor:focus { outline: none; }
+
+        .editor-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--dark-card);
+        }
+        .feedback-section { flex: 1; margin-right: 24px; }
+        .feedback-section input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+        .action-buttons { display: flex; gap: 12px; }
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: var(--dark-bg); }
+        .btn-secondary { background: var(--dark-surface); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .btn-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px;
+            color: var(--text-secondary);
+        }
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+
+        @media (max-width: 900px) {
+            .editor-content { grid-template-columns: 1fr; }
+            .editor-actions { flex-direction: column; gap: 16px; }
+            .feedback-section { margin-right: 0; width: 100%; }
+            .action-buttons { width: 100%; justify-content: flex-end; }
+        }
+    </style>
+
+    <script is:inline>
+        const { Client, Account, Databases, Query } = Appwrite;
+        const client = new Client()
+            .setEndpoint('https://fra.cloud.appwrite.io/v1')
+            .setProject('6936df5800371a655e8e');
+        const account = new Account(client);
+        const databases = new Databases(client);
+        
+        const DATABASE_ID = '693703ef001133c62d78';
+        const DRAFTS_COLLECTION = 'Content_Drafts';
+
+        let currentDraftId = null;
+
+        // Load user
+        async function loadUser() {
+            try {
+                const user = await account.get();
+                document.getElementById('userEmail').textContent = user.email;
+            } catch (error) {
+                document.cookie = 'session=; path=/; max-age=0';
+                window.location.href = '/';
+            }
+        }
+
+        // Load drafts
+        async function loadDrafts() {
+            const queue = document.getElementById('draftsQueue');
+            queue.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i><span>Loading drafts...</span></div>';
+            
+            try {
+                const response = await databases.listDocuments(DATABASE_ID, DRAFTS_COLLECTION, [
+                    Query.equal('status', 'review'),
+                    Query.orderDesc('$createdAt'),
+                    Query.limit(20)
+                ]);
+                
+                if (response.documents.length === 0) {
+                    queue.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No drafts pending review</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                queue.innerHTML = response.documents.map(draft => `
+                    <div class="draft-card" data-id="${draft.$id}">
+                        <div class="draft-card-header">
+                            <span class="draft-badge">${draft.content_type}</span>
+                            <span class="draft-meta">${draft.agent_source}</span>
+                        </div>
+                        <div class="draft-title">${draft.title}</div>
+                        <div class="draft-excerpt">${(draft.ai_draft || '').substring(0, 150)}...</div>
+                        <div class="draft-meta">
+                            <span><i class="fas fa-clock"></i> ${new Date(draft.$createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add click handlers
+                document.querySelectorAll('.draft-card').forEach(card => {
+                    card.addEventListener('click', () => openDraft(card.dataset.id));
+                });
+            } catch (error) {
+                console.error('Error loading drafts:', error);
+                queue.innerHTML = '<div class="empty-state"><p>Error loading drafts</p></div>';
+            }
+        }
+
+        // Open draft in editor
+        async function openDraft(draftId) {
+            try {
+                const draft = await databases.getDocument(DATABASE_ID, DRAFTS_COLLECTION, draftId);
+                currentDraftId = draftId;
+                
+                document.getElementById('draftType').textContent = draft.content_type;
+                document.getElementById('draftTitle').textContent = draft.title;
+                document.getElementById('aiDraft').textContent = draft.ai_draft;
+                document.getElementById('humanEdit').value = draft.human_edit || draft.ai_draft;
+                document.getElementById('feedbackNotes').value = draft.feedback_notes || '';
+                
+                document.getElementById('editorPanel').style.display = 'block';
+                document.getElementById('editorPanel').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error opening draft:', error);
+            }
+        }
+
+        // Save draft
+        async function saveDraft() {
+            if (!currentDraftId) return;
+            
+            try {
+                await databases.updateDocument(DATABASE_ID, DRAFTS_COLLECTION, currentDraftId, {
+                    human_edit: document.getElementById('humanEdit').value,
+                    feedback_notes: document.getElementById('feedbackNotes').value,
+                    updated_at: new Date().toISOString()
+                });
+                alert('Draft saved!');
+            } catch (error) {
+                console.error('Error saving:', error);
+                alert('Error saving draft');
+            }
+        }
+
+        // Approve draft
+        async function approveDraft() {
+            if (!currentDraftId) return;
+            
+            try {
+                await databases.updateDocument(DATABASE_ID, DRAFTS_COLLECTION, currentDraftId, {
+                    human_edit: document.getElementById('humanEdit').value,
+                    feedback_notes: document.getElementById('feedbackNotes').value,
+                    status: 'approved',
+                    updated_at: new Date().toISOString()
+                });
+                alert('Draft approved! It will be published shortly.');
+                closeEditor();
+                loadDrafts();
+            } catch (error) {
+                console.error('Error approving:', error);
+                alert('Error approving draft');
+            }
+        }
+
+        // Reject draft
+        async function rejectDraft() {
+            if (!currentDraftId) return;
+            const feedback = document.getElementById('feedbackNotes').value;
+            
+            if (!feedback) {
+                alert('Please provide feedback for the AI to improve');
+                return;
+            }
+            
+            try {
+                await databases.updateDocument(DATABASE_ID, DRAFTS_COLLECTION, currentDraftId, {
+                    feedback_notes: feedback,
+                    status: 'draft',
+                    updated_at: new Date().toISOString()
+                });
+                alert('Draft rejected. The Editor Agent will regenerate with your feedback.');
+                closeEditor();
+                loadDrafts();
+            } catch (error) {
+                console.error('Error rejecting:', error);
+                alert('Error rejecting draft');
+            }
+        }
+
+        // Close editor
+        function closeEditor() {
+            currentDraftId = null;
+            document.getElementById('editorPanel').style.display = 'none';
+        }
+
+        // Event listeners
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try { await account.deleteSession('current'); } catch (e) {}
+            document.cookie = 'session=; path=/; max-age=0';
+            window.location.href = '/';
+        });
+        document.getElementById('refreshDrafts').addEventListener('click', loadDrafts);
+        document.getElementById('closeEditor').addEventListener('click', closeEditor);
+        document.getElementById('saveDraft').addEventListener('click', saveDraft);
+        document.getElementById('approveDraft').addEventListener('click', approveDraft);
+        document.getElementById('rejectDraft').addEventListener('click', rejectDraft);
+
+        // Init
+        loadUser();
+        loadDrafts();
+    </script>
+</Layout>

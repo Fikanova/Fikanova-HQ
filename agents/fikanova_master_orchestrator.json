@@ -1,0 +1,1381 @@
+{
+    "name": "Fikanova Master Orchestrator v3.0",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "fikanova-inbound",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "webhook-main",
+            "name": "CEO_Inbound_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                400
+            ],
+            "webhookId": "fikanova-ceo-inbound"
+        },
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "tally-intake",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "webhook-tally",
+            "name": "CEO_Tally_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                600
+            ],
+            "webhookId": "fikanova-tally-intake"
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "={{ JSON.stringify({ source: $json.source || 'whatsapp', message: $json.message || $json.Body || $json.data?.fields?.message || '', phone: $json.from || $json.From || '', payload: $json }) }}",
+                "options": {}
+            },
+            "id": "normalize-input",
+            "name": "CEO_Normalize_Input",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                300,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CEO Agent of Fikanova's AI workforce. Classify the user's intent and route to the correct C-Suite manager.\n\n## Input:\nSource: {{ $json.source }}\nMessage: {{ $json.message }}\n\n## Available Managers:\n- CMO: Marketing, content, social media, newsletters, branding, growth\n- CFO: Finance, money, expenses, revenue, M-Pesa, KRA, invoices, ledger\n- CTO: Tech, code, deploy, API, build, security, uptime\n- CIO: Knowledge, documentation, articles, data, reports\n- CimpO: Governance, compliance, audits, errors, monitoring\n\n## Response Format (JSON only):\n{\n  \"manager\": \"CMO|CFO|CTO|CIO|CimpO\",\n  \"intent\": \"brief description of what user wants\",\n  \"priority\": \"high|medium|low\",\n  \"sub_agent\": \"suggested specialist if known\"\n}\n\nRespond with valid JSON only.",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "id": "ceo-classify",
+            "name": "CEO_Intent_Classifier_Gemini",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                500,
+                500
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  const parsed = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n  items[0].json.routing = parsed;\n} catch (e) {\n  items[0].json.routing = { manager: 'CimpO', intent: 'parse_error', priority: 'high' };\n}\nreturn items;"
+            },
+            "id": "parse-classification",
+            "name": "CEO_Parse_Classification",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.routing.manager }}",
+                                        "rightValue": "CMO",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CMO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.routing.manager }}",
+                                        "rightValue": "CFO",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CFO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.routing.manager }}",
+                                        "rightValue": "CTO",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CTO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.routing.manager }}",
+                                        "rightValue": "CIO",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CIO"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.routing.manager }}",
+                                        "rightValue": "CimpO",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "To_CimpO"
+                        }
+                    ]
+                },
+                "fallbackOutput": "none"
+            },
+            "id": "ceo-router",
+            "name": "CEO_C_Suite_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                900,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CMO (Chief Marketing Officer) Agent. Manage marketing, growth, and content operations.\n\n## Request:\nIntent: {{ $json.routing.intent }}\nOriginal Message: {{ $json.message }}\n\n## Your Sub-Agents:\n1. Marketing Lead Agent - Creates content drafts, campaigns\n2. Editor Agent - Refines tone, ensures brand voice\n\n## Available Tools:\n- HubSpot Marketing Hub (email campaigns, contacts)\n- YouTube Data API (video insights)\n- Appwrite (blog storage)\n\n## Response Format (JSON):\n{\n  \"action\": \"draft_content|edit_content|schedule_post|analyze_metrics|create_campaign\",\n  \"sub_agent\": \"marketing_lead|editor\",\n  \"requires_approval\": true|false,\n  \"content\": { ... action-specific data ... },\n  \"message_to_user\": \"brief status update\"\n}",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "cmo-manager",
+            "name": "CMO_Manager_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1150,
+                200
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.cmo_action = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.cmo_action = { action: 'error', message_to_user: 'Failed to parse CMO response' };\n}\nreturn items;"
+            },
+            "id": "cmo-parse",
+            "name": "CMO_Parse_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1350,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cmo_action.requires_approval }}",
+                                        "rightValue": true,
+                                        "operator": {
+                                            "type": "boolean",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Needs_Approval"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cmo_action.sub_agent }}",
+                                        "rightValue": "marketing_lead",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Marketing_Lead"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cmo_action.sub_agent }}",
+                                        "rightValue": "editor",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Editor"
+                        }
+                    ]
+                },
+                "fallbackOutput": "none"
+            },
+            "id": "cmo-router",
+            "name": "CMO_Sub_Agent_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                1550,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Marketing Lead Agent. Create content based on the request.\n\n## Request:\n{{ JSON.stringify($json.cmo_action.content) }}\n\n## Your specialty:\n- Blog posts, newsletters, social media posts\n- Campaign copy and CTAs\n- SEO-optimized content\n\n## Brand Voice:\n- Direct, not corporate\n- Reference the 3 Elements: Time, Wealth, Knowledge\n- Short sentences. Punchy.\n\n## Output Format (JSON):\n{\n  \"content_type\": \"blog|newsletter|social|campaign\",\n  \"title\": \"...\",\n  \"body\": \"...\",\n  \"cta\": \"...\",\n  \"target_platform\": \"hubspot|appwrite|twitter|linkedin\"\n}",
+                "options": {
+                    "temperature": 0.5
+                }
+            },
+            "id": "cmo-marketing-lead",
+            "name": "CMO_Marketing_Lead_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1800,
+                100
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Editor Agent. Refine content to match Fikanova's brand voice.\n\n## Content to Edit:\n{{ $json.cmo_action.content?.body || $json.message }}\n\n## Style Rules:\n- Short sentences. Punchy.\n- No corporate jargon (synergy, leverage, holistic)\n- Active voice only\n- Reference 3 Elements Theory when relevant\n- For Twitter: MAX 280 chars, no emojis unless essential\n\n## Output Format (JSON):\n{\n  \"edited_content\": \"...\",\n  \"changes_made\": [\"list of key edits\"],\n  \"tone_score\": 1-10,\n  \"ready_for_publish\": true|false\n}",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "cmo-editor",
+            "name": "CMO_Editor_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1800,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CFO (Chief Financial Officer) Agent. Manage finance, M-Pesa, and ledger operations.\n\n## Request:\nIntent: {{ $json.routing.intent }}\nOriginal Message: {{ $json.message }}\n\n## Your Sub-Agents:\n1. Accounts Agent - Ledgering, calculations, reconciliation\n\n## Available Tools:\n- Google Sheets (Central Ledger)\n- M-Pesa Daraja API (STK Push)\n- KRA eTIMS Bridge (invoice compliance)\n\n## Response Format (JSON):\n{\n  \"action\": \"record_expense|record_revenue|generate_invoice|check_runway|send_stk_push|update_ledger\",\n  \"sub_agent\": \"accounts\",\n  \"requires_approval\": true|false,\n  \"data\": { \"amount\": 0, \"category\": \"\", \"description\": \"\", \"phone\": \"\" },\n  \"message_to_user\": \"brief status\"\n}",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "id": "cfo-manager",
+            "name": "CFO_Manager_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1150,
+                400
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.cfo_action = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.cfo_action = { action: 'error', message_to_user: 'Failed to parse CFO response' };\n}\nreturn items;"
+            },
+            "id": "cfo-parse",
+            "name": "CFO_Parse_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1350,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cfo_action.requires_approval }}",
+                                        "rightValue": true,
+                                        "operator": {
+                                            "type": "boolean",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Needs_Approval"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cfo_action.action }}",
+                                        "rightValue": "update_ledger",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Ledger_Update"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.cfo_action.action }}",
+                                        "rightValue": "stk_push",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "MPesa_STK"
+                        }
+                    ]
+                },
+                "fallbackOutput": "none"
+            },
+            "id": "cfo-router",
+            "name": "CFO_Action_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                1550,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CTO (Chief Technology Officer) Agent. Manage tech, deployments, and security.\n\n## Request:\nIntent: {{ $json.routing.intent }}\nOriginal Message: {{ $json.message }}\n\n## Your Sub-Agents:\n1. Dev Agent - Code execution, deployments, API management\n2. Security Agent - Trust audits, vulnerability checks\n\n## Available Tools:\n- Appwrite CLI/Functions\n- GitHub API\n- Uptime monitors\n\n## Response Format (JSON):\n{\n  \"action\": \"deploy_function|check_uptime|run_audit|create_api|review_code\",\n  \"sub_agent\": \"dev|security\",\n  \"requires_approval\": true|false,\n  \"tech_details\": { ... },\n  \"message_to_user\": \"brief status\"\n}",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cto-manager",
+            "name": "CTO_Manager_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1150,
+                600
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CIO (Chief Information Officer) Agent. Manage knowledge, documentation, and data.\n\n## Request:\nIntent: {{ $json.routing.intent }}\nOriginal Message: {{ $json.message }}\n\n## Your Sub-Agents:\n1. Librarian Agent - Documentation, article management\n\n## Available Tools:\n- Appwrite DB (articles, agent_logs collections)\n\n## Response Format (JSON):\n{\n  \"action\": \"create_article|search_knowledge|generate_report|log_event\",\n  \"sub_agent\": \"librarian\",\n  \"data\": { ... },\n  \"message_to_user\": \"brief status\"\n}",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cio-manager",
+            "name": "CIO_Manager_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1150,
+                800
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CimpO (Chief Improvement Officer) Agent. Handle governance, compliance, and error resolution.\n\n## Request:\nIntent: {{ $json.routing.intent }}\nOriginal Message: {{ $json.message }}\nError Context (if any): {{ $json.error || 'None' }}\n\n## Your Sub-Agents:\n1. Audit Agent - Compliance checks, change logs\n\n## Responsibilities:\n- Log all errors to agent_logs\n- Monitor system health\n- Track learning/improvement metrics\n- Ensure HITL compliance\n\n## Response Format (JSON):\n{\n  \"action\": \"log_error|run_audit|monitor_health|review_compliance\",\n  \"sub_agent\": \"audit\",\n  \"log_entry\": { \"severity\": \"info|warning|error\", \"message\": \"\", \"context\": {} },\n  \"message_to_user\": \"brief status\"\n}",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "id": "cimpo-manager",
+            "name": "CimpO_Manager_Agent",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1150,
+                1000
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.humanlayer.dev/v1/approvals",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.HUMANLAYER_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "channel",
+                            "value": "whatsapp"
+                        },
+                        {
+                            "name": "recipient",
+                            "value": "={{ $env.FOUNDER_PHONE }}"
+                        },
+                        {
+                            "name": "message",
+                            "value": "🔔 Approval Required\n\nAction: {{ $json.cmo_action?.action || $json.cfo_action?.action || 'Unknown' }}\nDetails: {{ $json.cmo_action?.content?.title || $json.cfo_action?.data?.description || 'See dashboard' }}\n\nReply APPROVE or REJECT"
+                        },
+                        {
+                            "name": "callback_url",
+                            "value": "={{ $env.N8N_WEBHOOK_URL }}/webhook/hitl-callback"
+                        },
+                        {
+                            "name": "metadata",
+                            "value": "={{ JSON.stringify({ original_request: $json }) }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "hitl-approval",
+            "name": "HITL_HumanLayer_Approval",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1800,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "hitl-callback",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "hitl-callback",
+            "name": "HITL_Callback_Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                2000,
+                500
+            ],
+            "webhookId": "hitl-callback"
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.status }}",
+                                        "rightValue": "APPROVED",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Approved"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.status }}",
+                                        "rightValue": "REJECTED",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Rejected"
+                        }
+                    ]
+                },
+                "fallbackOutput": "none"
+            },
+            "id": "hitl-router",
+            "name": "HITL_Decision_Router",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                2200,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.SKILL_PRD_GENERATOR_ID }}",
+                "options": {}
+            },
+            "id": "skill-prd",
+            "name": "L3_Skill_PRD_Generator",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                2400,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.SKILL_SHENG_NLP_ID }}",
+                "options": {}
+            },
+            "id": "skill-sheng",
+            "name": "L3_Skill_Sheng_NLP",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                2400,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "={{ $env.SKILL_LEDGER_ID }}",
+                "options": {}
+            },
+            "id": "skill-ledger",
+            "name": "L3_Skill_Google_Sheets_Ledger",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                2400,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "append",
+                "documentId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_SHEETS_LEDGER_ID }}"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "mode": "name",
+                    "value": "Transactions"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "Date": "={{ new Date().toISOString() }}",
+                        "Amount": "={{ $json.cfo_action?.data?.amount || 0 }}",
+                        "Category": "={{ $json.cfo_action?.data?.category || 'Uncategorized' }}",
+                        "Description": "={{ $json.cfo_action?.data?.description || '' }}",
+                        "Type": "={{ $json.cfo_action?.action?.includes('revenue') ? 'Revenue' : 'Expense' }}",
+                        "Source": "Agent"
+                    }
+                },
+                "options": {}
+            },
+            "id": "sheets-ledger",
+            "name": "CFO_Ledger_Update_Sheets",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                1800,
+                400
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "google-sheets-creds",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "resource": "contact",
+                "operation": "upsert",
+                "email": "={{ $json.email || $json.cmo_action?.content?.email || '' }}",
+                "additionalFields": {
+                    "firstName": "={{ $json.cmo_action?.content?.first_name || '' }}",
+                    "lastName": "={{ $json.cmo_action?.content?.last_name || '' }}"
+                }
+            },
+            "id": "hubspot-contact",
+            "name": "CMO_HubSpot_Contact",
+            "type": "n8n-nodes-base.hubspot",
+            "typeVersion": 2,
+            "position": [
+                2000,
+                100
+            ],
+            "credentials": {
+                "hubspotApi": {
+                    "id": "hubspot-creds",
+                    "name": "HubSpot API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "resource": "blogPost",
+                "operation": "create",
+                "name": "={{ $json.cmo_action?.content?.title || 'Untitled Post' }}",
+                "additionalFields": {
+                    "htmlContent": "={{ $json.cmo_action?.content?.body || '' }}"
+                }
+            },
+            "id": "hubspot-blog",
+            "name": "CMO_HubSpot_Blog",
+            "type": "n8n-nodes-base.hubspot",
+            "typeVersion": 2,
+            "position": [
+                2200,
+                100
+            ],
+            "credentials": {
+                "hubspotApi": {
+                    "id": "hubspot-creds",
+                    "name": "HubSpot API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "create",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Articles",
+                "data": {
+                    "title": "={{ $json.cmo_action?.content?.title || 'Untitled' }}",
+                    "slug": "={{ ($json.cmo_action?.content?.title || 'untitled').toLowerCase().replace(/[^a-z0-9]+/g, '-') }}",
+                    "content": "={{ $json.cmo_action?.content?.body || '' }}",
+                    "excerpt": "={{ ($json.cmo_action?.content?.body || '').substring(0, 200) }}",
+                    "published_at": "={{ new Date().toISOString() }}"
+                }
+            },
+            "id": "appwrite-article",
+            "name": "CMO_Appwrite_Blog",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                2200,
+                200
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "create",
+                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
+                "collectionId": "Agent_Logs",
+                "data": {
+                    "agent_name": "={{ $json.routing?.manager || 'Unknown' }}",
+                    "action": "={{ $json.error?.message || $json.cimpo_action?.log_entry?.message || 'Error logged' }}",
+                    "status": "error",
+                    "error_message": "={{ JSON.stringify($json.error || $json) }}",
+                    "logged_at": "={{ new Date().toISOString() }}"
+                }
+            },
+            "id": "error-logger",
+            "name": "CimpO_Error_Logger",
+            "type": "n8n-nodes-appwrite.appwrite",
+            "typeVersion": 1,
+            "position": [
+                1350,
+                1000
+            ],
+            "credentials": {
+                "appwriteApi": {
+                    "id": "appwrite-creds",
+                    "name": "Appwrite API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.MPESA_ACCESS_TOKEN }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "BusinessShortCode",
+                            "value": "={{ $env.MPESA_SHORTCODE }}"
+                        },
+                        {
+                            "name": "Password",
+                            "value": "={{ $env.MPESA_PASSWORD }}"
+                        },
+                        {
+                            "name": "Timestamp",
+                            "value": "={{ new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14) }}"
+                        },
+                        {
+                            "name": "TransactionType",
+                            "value": "CustomerPayBillOnline"
+                        },
+                        {
+                            "name": "Amount",
+                            "value": "={{ $json.cfo_action?.data?.amount || 0 }}"
+                        },
+                        {
+                            "name": "PartyA",
+                            "value": "={{ $json.cfo_action?.data?.phone || '' }}"
+                        },
+                        {
+                            "name": "PartyB",
+                            "value": "={{ $env.MPESA_SHORTCODE }}"
+                        },
+                        {
+                            "name": "PhoneNumber",
+                            "value": "={{ $json.cfo_action?.data?.phone || '' }}"
+                        },
+                        {
+                            "name": "CallBackURL",
+                            "value": "={{ $env.N8N_WEBHOOK_URL }}/webhook/mpesa-callback"
+                        },
+                        {
+                            "name": "AccountReference",
+                            "value": "Fikanova"
+                        },
+                        {
+                            "name": "TransactionDesc",
+                            "value": "={{ $json.cfo_action?.data?.description || 'Payment' }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "mpesa-stk",
+            "name": "CFO_MPesa_STK_Push",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1800,
+                600
+            ]
+        },
+        {
+            "parameters": {
+                "triggerOn": "deal",
+                "events": [
+                    "deal.propertyChange"
+                ],
+                "filterPropertyName": "dealstage",
+                "filterPropertyValue": "closedwon"
+            },
+            "id": "hubspot-deal-won",
+            "name": "HubSpot_Deal_Won_Trigger",
+            "type": "n8n-nodes-base.hubspotTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                800
+            ],
+            "credentials": {
+                "hubspotApi": {
+                    "id": "hubspot-creds",
+                    "name": "HubSpot API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Extract deal amount and trigger ledger update\nconst deal = items[0].json;\nitems[0].json = {\n  routing: { manager: 'CFO' },\n  cfo_action: {\n    action: 'record_revenue',\n    data: {\n      amount: deal.properties?.amount || 0,\n      category: 'Revenue',\n      description: `Deal Won: ${deal.properties?.dealname || 'Unknown'}`\n    },\n    requires_approval: false\n  }\n};\nreturn items;"
+            },
+            "id": "deal-transform",
+            "name": "CFO_Deal_To_Ledger_Transform",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                300,
+                800
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, message: $json.cmo_action?.message_to_user || $json.cfo_action?.message_to_user || 'Request processed' }) }}",
+                "options": {}
+            },
+            "id": "response-node",
+            "name": "CEO_Webhook_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                2600,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "CEO_Inbound_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Normalize_Input",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO_Tally_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Normalize_Input",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO_Normalize_Input": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Intent_Classifier_Gemini",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO_Intent_Classifier_Gemini": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Parse_Classification",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO_Parse_Classification": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_C_Suite_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO_C_Suite_Router": {
+            "To_CMO": [
+                [
+                    {
+                        "node": "CMO_Manager_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CFO": [
+                [
+                    {
+                        "node": "CFO_Manager_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CTO": [
+                [
+                    {
+                        "node": "CTO_Manager_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CIO": [
+                [
+                    {
+                        "node": "CIO_Manager_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "To_CimpO": [
+                [
+                    {
+                        "node": "CimpO_Manager_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Manager_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Parse_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Parse_Response": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Sub_Agent_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Sub_Agent_Router": {
+            "Needs_Approval": [
+                [
+                    {
+                        "node": "HITL_HumanLayer_Approval",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Marketing_Lead": [
+                [
+                    {
+                        "node": "CMO_Marketing_Lead_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Editor": [
+                [
+                    {
+                        "node": "CMO_Editor_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Marketing_Lead_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CMO_Editor_Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Editor_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "HITL_HumanLayer_Approval",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Manager_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Parse_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Parse_Response": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Action_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Action_Router": {
+            "Needs_Approval": [
+                [
+                    {
+                        "node": "HITL_HumanLayer_Approval",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Ledger_Update": [
+                [
+                    {
+                        "node": "CFO_Ledger_Update_Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "MPesa_STK": [
+                [
+                    {
+                        "node": "HITL_HumanLayer_Approval",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Ledger_Update_Sheets": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CTO_Manager_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO_Manager_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CimpO_Manager_Agent": {
+            "main": [
+                [
+                    {
+                        "node": "CimpO_Error_Logger",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CimpO_Error_Logger": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HITL_HumanLayer_Approval": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HITL_Callback_Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "HITL_Decision_Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HITL_Decision_Router": {
+            "Approved": [
+                [
+                    {
+                        "node": "CMO_HubSpot_Blog",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CMO_Appwrite_Blog",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CFO_MPesa_STK_Push",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Rejected": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_HubSpot_Blog": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO_Appwrite_Blog": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_MPesa_STK_Push": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Ledger_Update_Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HubSpot_Deal_Won_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Deal_To_Ledger_Transform",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO_Deal_To_Ledger_Transform": {
+            "main": [
+                [
+                    {
+                        "node": "CFO_Ledger_Update_Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "errorWorkflow": "",
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [
+        {
+            "name": "fikanova-core"
+        },
+        {
+            "name": "agentic"
+        },
+        {
+            "name": "production"
+        }
+    ],
+    "triggerCount": 3,
+    "pinData": {},
+    "versionId": "v3.0.0"
+}

@@ -1,0 +1,121 @@
+{
+    "name": "Skill: Sheng NLP",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "skill-sheng-nlp",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "trigger",
+            "name": "Sheng_Skill_Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are a Nairobi Sheng expert. Translate slang/informal text to formal business intent.\n\n## Sheng Input:\n{{ $json.message || $json.text || 'No input' }}\n\n## Your Task:\n1. Identify any Sheng, Swahili, or Kenyan slang\n2. Translate to clear, formal English\n3. Extract the underlying business intent\n\n## Common Sheng Examples:\n- \"Niaje\" = Hello/What's up\n- \"Pesa\" = Money\n- \"Fiti\" = Fine/OK/Good\n- \"Mtu wangu\" = My person/contact\n- \"Tuma\" = Send\n- \"Chapaa\" = Money (slang)\n- \"Kuja\" = Come\n- \"Sawa\" = OK/Agreed\n- \"Maze\" = Friend/Dude\n- \"Buda\" = Buddy/Dude\n\n## Response Format (JSON):\n{\n  \"original\": \"the original message\",\n  \"translated\": \"formal English translation\",\n  \"intent\": \"business intent classification\",\n  \"confidence\": 0.0-1.0,\n  \"slang_detected\": [\"list of slang words found\"]\n}",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "translate",
+            "name": "Sheng_Translate_Gemini",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.result = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.result = { translated: response, intent: 'unknown', confidence: 0.5 };\n}\nreturn items;"
+            },
+            "id": "parse",
+            "name": "Sheng_Parse_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, ...($json.result), skill: 'sheng-nlp' }) }}",
+                "options": {}
+            },
+            "id": "response",
+            "name": "Sheng_Skill_Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                700,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Sheng_Skill_Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Sheng_Translate_Gemini",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sheng_Translate_Gemini": {
+            "main": [
+                [
+                    {
+                        "node": "Sheng_Parse_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sheng_Parse_Response": {
+            "main": [
+                [
+                    {
+                        "node": "Sheng_Skill_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "skill"
+        },
+        {
+            "name": "L3"
+        },
+        {
+            "name": "nlp"
+        }
+    ]
+}

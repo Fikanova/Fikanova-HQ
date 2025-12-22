@@ -1,0 +1,11 @@
+{
+    "name": "whatsapp-bridge",
+    "runtime": "python-3.9",
+    "entrypoint": "main.py",
+    "permissions": [
+        "any"
+    ],
+    "events": [],
+    "schedule": "",
+    "timeout": 15
+}

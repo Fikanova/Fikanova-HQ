@@ -180,6 +180,72 @@ const collections = [
             { key: 'author', type: 'string', size: 128, required: false },
             { key: 'published_at', type: 'datetime', required: true }
         ]
+    },
+    // ============================================
+    // 🚀 HUMAN-CENTRIC C-SUITE COLLECTIONS
+    // ============================================
+    // 📱 Communications - Bidirectional WhatsApp bridge (CEO routing)
+    {
+        name: 'Communications', id: 'Communications', attributes: [
+            { key: 'direction', type: 'string', size: 16, required: true },      // 'inbound' | 'outbound'
+            { key: 'channel', type: 'string', size: 32, required: true },        // 'whatsapp' | 'dashboard'
+            { key: 'from_phone', type: 'string', size: 20, required: false },
+            { key: 'to_agent', type: 'string', size: 32, required: true },       // CEO, CMO, CFO, CTO, CIO, CimpO
+            { key: 'message', type: 'string', size: 2000, required: true },
+            { key: 'status', type: 'string', size: 32, required: true },         // 'pending' | 'processed' | 'failed'
+            { key: 'metadata', type: 'string', size: 5000, required: false },    // JSON blob for context
+            { key: 'created_at', type: 'datetime', required: true }
+        ]
+    },
+    // ✍️ Content Drafts - Human-in-the-loop editing workflow
+    {
+        name: 'Content_Drafts', id: 'Content_Drafts', attributes: [
+            { key: 'content_type', type: 'string', size: 32, required: true },   // newsletter, tweet, case_study
+            { key: 'title', type: 'string', size: 256, required: true },
+            { key: 'ai_draft', type: 'string', size: 50000, required: true },
+            { key: 'human_edit', type: 'string', size: 50000, required: false },
+            { key: 'status', type: 'string', size: 32, required: true },         // draft, review, approved, published
+            { key: 'agent_source', type: 'string', size: 32, required: true },   // Editor, Marketing
+            { key: 'feedback_notes', type: 'string', size: 2000, required: false },
+            { key: 'created_at', type: 'datetime', required: true },
+            { key: 'updated_at', type: 'datetime', required: true }
+        ]
+    },
+    // 🧠 CIMP Learning Traces - Continuous Improvement logs
+    {
+        name: 'Learning_Traces', id: 'Learning_Traces', attributes: [
+            { key: 'agent_name', type: 'string', size: 64, required: true },
+            { key: 'observation', type: 'string', size: 2000, required: true },
+            { key: 'action_taken', type: 'string', size: 1000, required: true },
+            { key: 'diff_summary', type: 'string', size: 5000, required: false }, // AI vs Human diff
+            { key: 'logged_at', type: 'datetime', required: true }
+        ]
+    },
+    // 🌍 ESG Metrics - Compliance & Fundraising documentation
+    {
+        name: 'ESG_Metrics', id: 'ESG_Metrics', attributes: [
+            { key: 'metric_type', type: 'string', size: 64, required: true },    // hours_saved, token_cost, carbon_offset
+            { key: 'value', type: 'float', required: true },
+            { key: 'unit', type: 'string', size: 32, required: true },
+            { key: 'context', type: 'string', size: 500, required: false },
+            { key: 'period', type: 'string', size: 10, required: true },         // YYYY-MM
+            { key: 'logged_at', type: 'datetime', required: true }
+        ]
+    },
+    // 🛒 Skills Marketplace - Public skill catalog
+    {
+        name: 'Skills', id: 'Skills', attributes: [
+            { key: 'name', type: 'string', size: 128, required: true },
+            { key: 'slug', type: 'string', size: 64, required: true },
+            { key: 'description', type: 'string', size: 500, required: true },
+            { key: 'version', type: 'string', size: 16, required: true },
+            { key: 'pricing', type: 'string', size: 16, required: true },        // 'free' | price in KES
+            { key: 'agent_type', type: 'string', size: 32, required: true },     // L3_specialist
+            { key: 'triggers', type: 'string', size: 128, required: true },      // JSON array: ["webhook", "whatsapp"]
+            { key: 'system_prompt_url', type: 'url', required: true },
+            { key: 'usage_count', type: 'integer', required: false },
+            { key: 'published_at', type: 'datetime', required: true }
+        ]
     }
 ];
 

@@ -1,0 +1,120 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Fikanova Skill Specification v1",
+    "description": "Standard format for publishable AI skills in the Fikanova marketplace",
+    "type": "object",
+    "required": [
+        "name",
+        "slug",
+        "version",
+        "description",
+        "agent_type",
+        "triggers",
+        "system_prompt"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Human-readable skill name",
+            "maxLength": 128
+        },
+        "slug": {
+            "type": "string",
+            "description": "URL-safe identifier",
+            "pattern": "^[a-z0-9-]+$",
+            "maxLength": 64
+        },
+        "version": {
+            "type": "string",
+            "description": "Semantic version",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "description": {
+            "type": "string",
+            "description": "Short description of what this skill does",
+            "maxLength": 500
+        },
+        "pricing": {
+            "type": "string",
+            "enum": [
+                "free",
+                "kadogo"
+            ],
+            "default": "free",
+            "description": "Pricing tier - 'free' for traction phase, 'kadogo' for future micropayments"
+        },
+        "agent_type": {
+            "type": "string",
+            "enum": [
+                "L3_specialist",
+                "L2_manager",
+                "tool"
+            ],
+            "description": "Type of agent this skill represents"
+        },
+        "triggers": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "webhook",
+                    "whatsapp",
+                    "schedule",
+                    "manual"
+                ]
+            },
+            "description": "How this skill can be invoked"
+        },
+        "system_prompt": {
+            "type": "string",
+            "description": "The AI system prompt that defines this skill's behavior"
+        },
+        "tools": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "External tools this skill can use (e.g., 'appwrite_docs', 'gemini', 'web_search')"
+        },
+        "examples": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string"
+                    },
+                    "output": {
+                        "type": "string"
+                    }
+                }
+            },
+            "description": "Example input/output pairs for training and documentation"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "usage_count": {
+                    "type": "integer",
+                    "default": 0
+                },
+                "rating": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 5
+                }
+            }
+        }
+    }
+}
