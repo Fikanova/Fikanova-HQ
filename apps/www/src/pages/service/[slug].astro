@@ -127,7 +127,7 @@ if (!service) {
     <!-- Service Content -->
     <main class="page-main">
         <div class="container">
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 60px;">
+            <div class="service-layout">
                 <div class="scroll-reveal">
                     <h2 style="margin-bottom: 24px;">About This Service</h2>
                     <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary);">
@@ -146,7 +146,7 @@ if (!service) {
                 </div>
 
                 <div class="scroll-reveal">
-                    <div style="background: var(--dark-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 32px; position: sticky; top: 100px;">
+                    <div class="pricing-sidebar">
                         <h3 style="margin-bottom: 16px;">Pricing</h3>
                         <p style="font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 24px;">
                             {service.price}
@@ -163,3 +163,31 @@ if (!service) {
         </div>
     </main>
 </Layout>
+
+<style>
+    .service-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 60px;
+    }
+    
+    .pricing-sidebar {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 32px;
+        position: sticky;
+        top: 100px;
+    }
+    
+    @media (max-width: 768px) {
+        .service-layout {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .pricing-sidebar {
+            position: static;
+        }
+    }
+</style>

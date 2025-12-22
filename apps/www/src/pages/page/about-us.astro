@@ -985,13 +985,49 @@ graph TD
             transform: rotate(90deg);
         }
 
+        /* Philosophy section - add breathing space */
+        .philosophy-section {
+            padding: 0 8px;
+        }
+        
+        .philosophy-section .section-header {
+            margin-bottom: 32px;
+        }
+        
+        .element-card {
+            padding: 24px 20px;
+        }
+
+        /* Comparison table - mobile friendly */
         .comparison-table {
             overflow-x: auto;
+            margin-left: -12px;
+            margin-right: -12px;
+            padding-left: 12px;
+            padding-right: 12px;
         }
 
         .comparison-header,
         .comparison-row {
-            min-width: 600px;
+            min-width: 500px;
+            font-size: 13px;
+        }
+        
+        .comparison-header {
+            grid-template-columns: 1fr 1.5fr 1.5fr;
+        }
+        
+        .comparison-row {
+            grid-template-columns: 1fr 1.5fr 1.5fr;
+            padding: 16px 20px;
+        }
+        
+        .comparison-feature {
+            font-size: 12px;
+        }
+        
+        .comparison-feature i {
+            display: none;
         }
     }
 </style>

@@ -276,8 +276,21 @@ export default function ImpactDashboard() {
           .ticker-divider {
             display: none;
           }
+          /* Regional table mobile - prevent right margin cutoff */
+          .regional-section {
+            margin-left: -12px;
+            margin-right: -12px;
+            border-radius: 0;
+            overflow-x: auto;
+          }
           .regional-table {
             font-size: 12px;
+            min-width: 450px;
+          }
+          .regional-table th,
+          .regional-table td {
+            padding: 10px 12px;
+            white-space: nowrap;
           }
         }
       `}</style>
