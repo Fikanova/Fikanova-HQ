@@ -1,5 +1,11 @@
 {
     "name": "impact-monitor",
     "runtime": "python-3.9",
-    "entrypoint": "main.py"
+    "entrypoint": "main.py",
+    "permissions": [
+        "any"
+    ],
+    "events": [],
+    "schedule": "0 6 1 * *",
+    "timeout": 60
 }

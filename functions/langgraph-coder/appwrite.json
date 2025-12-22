@@ -1,5 +1,0 @@
-{
-    "name": "langgraph-coder",
-    "runtime": "python-3.9",
-    "entrypoint": "main.py"
-}
