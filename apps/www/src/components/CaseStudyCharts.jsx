@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 function AnimatedCounter({ project }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(true);
-    const countRef = useRef(null);
     const [displayValue, setDisplayValue] = useState(0);
 
     const hasChartData = project.metrics.data && Array.isArray(project.metrics.data);
@@ -117,12 +116,12 @@ function AnimatedCounter({ project }) {
         <div style={{
             background: 'var(--dark-surface)',
             border: '1px solid var(--border-subtle)',
-            borderRadius: '16px',
-            padding: '24px',
+            borderRadius: '12px',
+            padding: '20px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            minHeight: '280px'
+            minHeight: '220px'
         }}>
             {/* Header */}
             <div style={{
@@ -588,118 +587,171 @@ function CaseStudyCard({ project, projectIndex, isSelected, hoveredPoint, onHove
 
 function ProjectDetailsPanel({ project, onClose }) {
     return (
-        <div style={{
+        <div className="details-panel" style={{
             background: 'var(--dark-card)',
             border: '1px solid var(--border-subtle)',
-            borderRadius: '20px',
-            padding: '32px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 320px',
-            gap: '40px'
+            borderRadius: '16px',
+            padding: '24px',
+            position: 'relative'
         }}>
-            {/* Left: Content */}
-            <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                        <span style={{ fontSize: '48px' }}>{project.icon}</span>
-                        <div>
-                            <span style={{
-                                fontSize: '11px',
-                                color: 'var(--primary)',
-                                fontWeight: 600,
+            {/* Close Button - Top Right */}
+            <button
+                onClick={onClose}
+                className="close-btn"
+                style={{
+                    position: 'absolute',
+                    top: '16px',
+                    right: '16px',
+                    background: 'var(--dark-surface)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-secondary)',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '18px',
+                    lineHeight: 1,
+                    transition: 'all 0.2s ease',
+                    zIndex: 10
+                }}
+                onMouseEnter={(e) => {
+                    e.target.style.background = 'var(--primary)';
+                    e.target.style.color = 'var(--dark-bg)';
+                    e.target.style.borderColor = 'var(--primary)';
+                }}
+                onMouseLeave={(e) => {
+                    e.target.style.background = 'var(--dark-surface)';
+                    e.target.style.color = 'var(--text-secondary)';
+                    e.target.style.borderColor = 'var(--border-subtle)';
+                }}
+            >×</button>
+
+            <div className="details-content" style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr',
+                gap: '24px'
+            }}>
+                {/* Header */}
+                <div style={{ display: 'flex', gap: '14px', alignItems: 'center', paddingRight: '40px' }}>
+                    <span style={{ fontSize: '40px' }}>{project.icon}</span>
+                    <div>
+                        <span style={{
+                            fontSize: '10px',
+                            color: 'var(--primary)',
+                            fontWeight: 600,
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px'
+                        }}>{project.industry}</span>
+                        <h3 style={{ color: 'var(--text-primary)', margin: '4px 0 0 0', fontSize: '20px', fontWeight: 700 }}>
+                            {project.client}
+                        </h3>
+                    </div>
+                </div>
+
+                {/* Main Grid - Responsive */}
+                <div className="details-grid">
+                    {/* Left Column: Text Content */}
+                    <div className="details-text">
+                        {/* Challenge */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <h4 style={{
+                                color: 'var(--text-tertiary)',
+                                fontSize: '10px',
                                 textTransform: 'uppercase',
-                                letterSpacing: '1px'
-                            }}>{project.industry}</span>
-                            <h3 style={{ color: 'var(--text-primary)', margin: '4px 0 0 0', fontSize: '24px', fontWeight: 700 }}>
-                                {project.client}
-                            </h3>
+                                letterSpacing: '1px',
+                                marginBottom: '6px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <span style={{ color: 'var(--primary)' }}>⚠</span> The Challenge
+                            </h4>
+                            <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6, fontSize: '14px' }}>{project.challenge}</p>
+                        </div>
+
+                        {/* Solution */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <h4 style={{
+                                color: 'var(--text-tertiary)',
+                                fontSize: '10px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                                marginBottom: '6px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <span style={{ color: 'var(--primary)' }}>💡</span> Our Solution
+                            </h4>
+                            <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6, fontSize: '14px' }}>{project.solution}</p>
+                        </div>
+
+                        {/* Results */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <h4 style={{
+                                color: 'var(--text-tertiary)',
+                                fontSize: '10px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                                marginBottom: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <span style={{ color: 'var(--accent-green)' }}>🏆</span> Results
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                {project.results.map((result, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                                        <span style={{ color: 'var(--accent-green)' }}>✓</span>
+                                        {result}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Tech Stack */}
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            {project.techStack.map(tech => (
+                                <span key={tech} style={{
+                                    background: 'var(--dark-surface)',
+                                    color: 'var(--primary)',
+                                    padding: '6px 12px',
+                                    borderRadius: '6px',
+                                    fontSize: '11px',
+                                    fontWeight: 500
+                                }}>{tech}</span>
+                            ))}
                         </div>
                     </div>
-                    <button onClick={onClose} style={{
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--text-tertiary)',
-                        fontSize: '28px',
-                        cursor: 'pointer',
-                        lineHeight: 1
-                    }}>×</button>
-                </div>
 
-                {/* Challenge */}
-                <div style={{ marginBottom: '20px' }}>
-                    <h4 style={{
-                        color: 'var(--text-tertiary)',
-                        fontSize: '11px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '1px',
-                        marginBottom: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                    }}>
-                        <span style={{ color: 'var(--primary)' }}>⚠</span> The Challenge
-                    </h4>
-                    <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.7 }}>{project.challenge}</p>
-                </div>
-
-                {/* Solution */}
-                <div style={{ marginBottom: '20px' }}>
-                    <h4 style={{
-                        color: 'var(--text-tertiary)',
-                        fontSize: '11px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '1px',
-                        marginBottom: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                    }}>
-                        <span style={{ color: 'var(--primary)' }}>💡</span> Our Solution
-                    </h4>
-                    <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.7 }}>{project.solution}</p>
-                </div>
-
-                {/* Results */}
-                <div style={{ marginBottom: '24px' }}>
-                    <h4 style={{
-                        color: 'var(--text-tertiary)',
-                        fontSize: '11px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '1px',
-                        marginBottom: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                    }}>
-                        <span style={{ color: 'var(--accent-green)' }}>🏆</span> Results
-                    </h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {project.results.map((result, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)' }}>
-                                <span style={{ color: 'var(--accent-green)' }}>✓</span>
-                                {result}
-                            </div>
-                        ))}
+                    {/* Right Column: Visualization */}
+                    <div className="details-visual">
+                        <AnimatedCounter project={project} />
                     </div>
-                </div>
-
-                {/* Tech Stack */}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {project.techStack.map(tech => (
-                        <span key={tech} style={{
-                            background: 'var(--dark-surface)',
-                            color: 'var(--primary)',
-                            padding: '8px 16px',
-                            borderRadius: '8px',
-                            fontSize: '12px',
-                            fontWeight: 500
-                        }}>{tech}</span>
-                    ))}
                 </div>
             </div>
 
-            {/* Right: Animated Counter Visualization */}
-            <AnimatedCounter project={project} />
+            <style>{`
+                .details-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 280px;
+                    gap: 24px;
+                }
+
+                @media (max-width: 768px) {
+                    .details-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .details-visual {
+                        order: -1;
+                    }
+                }
+            `}</style>
         </div>
     );
 }

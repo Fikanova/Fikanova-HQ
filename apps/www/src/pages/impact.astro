@@ -147,10 +147,63 @@ import ImpactDashboard from '../components/ImpactDashboard.jsx';
                 </div>
             </section>
 
+            <!-- ESG Commitment Section -->
+            <section class="esg-section scroll-reveal">
+                <div class="section-header-center">
+                    <span class="section-tag">ESG Commitment</span>
+                    <h2 class="section-title">Strategic Impact</h2>
+                    <p class="section-subtitle">Environmental, Social, and Governance goals driving our operations</p>
+                </div>
+
+                <div class="esg-grid">
+                    <!-- Environmental -->
+                    <div class="esg-card">
+                        <div class="esg-icon environmental">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Green Computing</h3>
+                        <p>Optimizing code to reduce server load and carbon footprint through efficient algorithms and edge deployment.</p>
+                        <ul class="esg-list">
+                            <li><i class="fas fa-check"></i> Optimized codebases</li>
+                            <li><i class="fas fa-check"></i> 100% remote operations</li>
+                            <li><i class="fas fa-check"></i> Minimal infrastructure</li>
+                        </ul>
+                    </div>
+
+                    <!-- Social -->
+                    <div class="esg-card">
+                        <div class="esg-icon social">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>Digital Inclusion</h3>
+                        <p>Providing enterprise-grade technology to NGOs and community groups at accessible rates.</p>
+                        <ul class="esg-list">
+                            <li><i class="fas fa-check"></i> NGO partnerships</li>
+                            <li><i class="fas fa-check"></i> Accessible pricing</li>
+                            <li><i class="fas fa-check"></i> Skills transfer</li>
+                        </ul>
+                    </div>
+
+                    <!-- Governance -->
+                    <div class="esg-card">
+                        <div class="esg-icon governance">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Governance</h3>
+                        <p>Automating tax and legal compliance for transparency and accountability in all operations.</p>
+                        <ul class="esg-list">
+                            <li><i class="fas fa-check"></i> Automated compliance</li>
+                            <li><i class="fas fa-check"></i> Transparent reporting</li>
+                            <li><i class="fas fa-check"></i> Ethical AI practices</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
             <!-- Call to Action -->
             <section class="cta-section scroll-reveal">
-                <h2>Ready to measure your impact?</h2>
-                <p>Let's build something that makes a difference together.</p>
+                <h2>Ready to build your digital workforce?</h2>
+                <p>Let's transform your operations with intelligent automation.</p>
                 <a href="/contact" class="btn-primary">Start a Project</a>
             </section>
         </div>
@@ -376,6 +429,106 @@ import ImpactDashboard from '../components/ImpactDashboard.jsx';
         box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
     }
 
+    /* ESG Section */
+    .esg-section {
+        margin-top: 64px;
+        margin-bottom: 64px;
+    }
+
+    .section-header-center {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .section-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .esg-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .esg-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 28px;
+        transition: all 0.3s ease;
+    }
+
+    .esg-card:hover {
+        border-color: var(--border-medium);
+        transform: translateY(-4px);
+    }
+
+    .esg-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .esg-icon.environmental {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+    }
+
+    .esg-icon.social {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .esg-icon.governance {
+        background: rgba(139, 92, 246, 0.15);
+        color: var(--primary);
+    }
+
+    .esg-card h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .esg-card > p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    .esg-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .esg-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+
+    .esg-list li i {
+        color: var(--accent-green);
+        font-size: 11px;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
         .stats-grid {
@@ -386,7 +539,8 @@ import ImpactDashboard from '../components/ImpactDashboard.jsx';
             font-size: 32px;
         }
 
-        .impact-grid {
+        .impact-grid,
+        .esg-grid {
             grid-template-columns: 1fr;
         }
     }

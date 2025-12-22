@@ -2,60 +2,1014 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="About Us">
-    <section class="hero">
+<Layout title="About Us | Fikanova">
+    <!-- Hero Section -->
+    <section class="about-hero">
         <div class="container">
-            <div class="hero-badge"><span class="badge-dot"></span>Who We Are</div>
+            <div class="hero-badge"><span class="badge-dot"></span>The AI Brain for Business & Impact</div>
             <h1>About <span class="gradient-text">Fikanova</span></h1>
-            <p>Bridging human creativity with artificial intelligence</p>
+            <p class="hero-tagline">Redefining how SMEs operate in the modern economy through intelligent automation</p>
+            
+            <!-- Quick Stats -->
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="stat-value">24/7</span>
+                    <span class="stat-label">AI Agents Active</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="stat-value">2025</span>
+                    <span class="stat-label">Founded</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="stat-value">Nairobi</span>
+                    <span class="stat-label">Headquarters</span>
+                </div>
+            </div>
         </div>
     </section>
 
     <main class="page-main">
         <div class="container">
-            <div class="scroll-reveal" style="max-width: 800px; margin: 0 auto;">
-                <h2 style="margin-bottom: 24px;">Our Mission</h2>
-                <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 40px;">
-                    Fikanova is a software development and digital marketing agency based in Nairobi, Kenya. 
-                    We specialize in building AI-enhanced solutions that help businesses streamline operations, 
-                    reach more customers, and scale effectively.
-                </p>
+            <!-- The Name "Fikanova" -->
+            <section class="name-section scroll-reveal">
+                <div class="name-card">
+                    <span class="section-tag">The Name</span>
+                    <h2>What is <span class="gradient-text">Fikanova</span>?</h2>
+                    <p class="name-explanation">Our name is a fusion of three powerful concepts:</p>
+                    <div class="name-grid">
+                        <div class="name-element">
+                            <span class="name-word">Fikra</span>
+                            <span class="name-meaning">🇰🇪 Swahili for "Idea"</span>
+                        </div>
+                        <div class="name-plus">+</div>
+                        <div class="name-element">
+                            <span class="name-word">Arcane</span>
+                            <span class="name-meaning">Mysterious Knowledge</span>
+                        </div>
+                        <div class="name-plus">+</div>
+                        <div class="name-element">
+                            <span class="name-word">Nova</span>
+                            <span class="name-meaning">A Star Reborn</span>
+                        </div>
+                    </div>
+                    <p class="name-tagline">Ideas illuminated by hidden knowledge, bursting into new life.</p>
+                </div>
+            </section>
 
-                <h2 style="margin-bottom: 24px;">What We Do</h2>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;">
-                    <div class="service-card">
-                        <i class="fas fa-code" style="font-size: 32px; color: var(--primary); margin-bottom: 16px;"></i>
-                        <h4>Development</h4>
-                        <p style="font-size: 14px;">Web, mobile, and custom software</p>
+            <!-- Vision & Mission -->
+            <section class="vision-mission scroll-reveal">
+                <div class="vm-grid">
+                    <div class="vm-card">
+                        <div class="vm-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Our Vision</h3>
+                        <p>A world where every business, regardless of size, can access enterprise-grade AI technology to compete and thrive in the digital economy.</p>
                     </div>
-                    <div class="service-card">
-                        <i class="fas fa-chart-line" style="font-size: 32px; color: var(--primary); margin-bottom: 16px;"></i>
-                        <h4>Marketing</h4>
-                        <p style="font-size: 14px;">SEO, social media, content</p>
-                    </div>
-                    <div class="service-card">
-                        <i class="fas fa-robot" style="font-size: 32px; color: var(--primary); margin-bottom: 16px;"></i>
-                        <h4>AI & Tech</h4>
-                        <p style="font-size: 14px;">Chatbots, automation, consulting</p>
+                    <div class="vm-card">
+                        <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
+                        <h3>Our Mission</h3>
+                        <p>To liberate businesses from manual drudgery by building intelligent digital workforces that work 24/7, enabling humans to focus on strategy and growth.</p>
                     </div>
                 </div>
+            </section>
 
-                <h2 style="margin-bottom: 24px;">Our Values</h2>
-                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px;">
-                    <li style="display: flex; align-items: center; gap: 12px;">
-                        <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                        <strong>Innovation</strong> — We embrace new technologies to solve problems
-                    </li>
-                    <li style="display: flex; align-items: center; gap: 12px;">
-                        <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                        <strong>Quality</strong> — We deliver excellence in every project
-                    </li>
-                    <li style="display: flex; align-items: center; gap: 12px;">
-                        <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                        <strong>Partnership</strong> — We grow together with our clients
-                    </li>
-                </ul>
-            </div>
+            <!-- Our Values -->
+            <section class="values-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">What Drives Us</span>
+                    <h2>Our Values</h2>
+                </div>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon innovation"><i class="fas fa-lightbulb"></i></div>
+                        <h3>Innovation</h3>
+                        <p>We embrace new technologies to solve problems and push the boundaries of what's possible.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon quality"><i class="fas fa-gem"></i></div>
+                        <h3>Quality</h3>
+                        <p>We deliver excellence in every project, treating each client's business as if it were our own.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon partnership"><i class="fas fa-handshake"></i></div>
+                        <h3>Partnership</h3>
+                        <p>We grow together with our clients, building long-term relationships based on trust and shared success.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Human-AI Loop Models -->
+            <section class="loop-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Our Approach</span>
+                    <h2>Human-AI Collaboration Models</h2>
+                    <p class="section-subtitle">Keeping humans involved ensures ethical judgment, accuracy, and accountability</p>
+                </div>
+                <div class="loop-grid">
+                    <div class="loop-card hitl">
+                        <div class="loop-badge">HITL</div>
+                        <h3>Human-in-the-Loop</h3>
+                        <p>The AI acts as an assistant while humans make final decisions. Ideal for complex scenarios (healthcare, legal, recruiting) where compassionate judgment is essential.</p>
+                        <div class="loop-flow">
+                            <span class="flow-item">🤖 AI Analyzes</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-item">📋 Recommends</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-item highlight">👤 Human Decides</span>
+                        </div>
+                    </div>
+                    <div class="loop-card hotl">
+                        <div class="loop-badge">HOTL</div>
+                        <h3>Human-on-the-Loop</h3>
+                        <p>The AI acts autonomously with human oversight. Effective for automation where humans monitor and intervene only when the system fails or needs guidance.</p>
+                        <div class="loop-flow">
+                            <span class="flow-item highlight">🤖 AI Acts</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-item">📊 Reports</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-item">👀 Human Monitors</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Architecture -->
+            <section class="team-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Our Team</span>
+                    <h2>The Fikanova Architecture</h2>
+                    <p class="section-subtitle">A human supervisor directing an AI-powered digital workforce</p>
+                </div>
+                <div class="architecture-diagram">
+                    <pre class="mermaid">
+graph TD
+    subgraph HUMAN["👤 HUMAN LAYER"]
+        F["🧑‍💼 Founder & Human Supervisor"]
+    end
+    
+    subgraph L1["🎯 L1: C-SUITE AGENTS"]
+        CEO["🤖 CEO Agent<br/>Strategy & Vision"]
+        CTO["⚙️ CTO Agent<br/>Tech Architecture"]
+        CFO["💰 CFO Agent<br/>Financial Ops"]
+        CMO["📢 CMO Agent<br/>Marketing & Growth"]
+        CIO["🔐 CIO Agent<br/>Knowledge & Security"]
+    end
+    
+    subgraph L2["📋 L2: FUNCTIONAL MANAGERS"]
+        HProd["📦 Head of Product"]
+        HEng["💻 Head of Engineering"]
+        HContent["✍️ Head of Content"]
+        HData["📊 Head of Data"]
+    end
+    
+    subgraph L3["⚡ L3: SPECIALIST AGENTS"]
+        Dev["Developer Bots"]
+        Writer["Content Writers"]
+        Analyst["Data Analysts"]
+        Support["Support Agents"]
+    end
+    
+    subgraph TOOLS["🛠️ TOOLS & INTEGRATIONS"]
+        T1["n8n Workflows"]
+        T2["LangChain"]
+        T3["Appwrite"]
+        T4["WhatsApp API"]
+    end
+    
+    F --> CEO
+    F --> CTO
+    F --> CFO
+    F --> CMO
+    F --> CIO
+    
+    CEO --> HProd
+    CTO --> HEng
+    CMO --> HContent
+    CIO --> HData
+    
+    HProd --> Dev
+    HEng --> Dev
+    HContent --> Writer
+    HData --> Analyst
+    CMO --> Support
+    
+    Dev --> T1
+    Dev --> T2
+    Writer --> T3
+    Support --> T4
+                    </pre>
+                </div>
+            </section>
+
+            <!-- 3 Elements Theory -->
+            <section class="philosophy-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Our Philosophy</span>
+                    <h2>The 3 Elements Theory</h2>
+                    <p class="philosophy-quote">"To increase Wealth, use Time and Knowledge to do so."</p>
+                </div>
+                
+                <div class="elements-grid">
+                    <div class="element-card">
+                        <div class="element-icon time">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Time</h3>
+                        <p>Reclaim your hours through intelligent automation that works while you sleep</p>
+                        <span class="element-action">→ Automate repetitive tasks</span>
+                    </div>
+                    <div class="element-card">
+                        <div class="element-icon knowledge">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Knowledge</h3>
+                        <p>Leverage data-driven systems that learn and improve continuously</p>
+                        <span class="element-action">→ Make smarter decisions</span>
+                    </div>
+                    <div class="element-card">
+                        <div class="element-icon wealth">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Wealth</h3>
+                        <p>Generate sustainable growth through efficient, scalable operations</p>
+                        <span class="element-action">→ Scale without limits</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Competencies -->
+            <section class="competencies-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">What We Do</span>
+                    <h2>Core Competencies</h2>
+                </div>
+
+                <div class="competencies-grid">
+                    <!-- AI & Automation -->
+                    <div class="competency-card primary">
+                        <div class="competency-badge">Primary Focus</div>
+                        <div class="competency-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI & Automation</h3>
+                        <p>We build "Digital Employees" that work 24/7</p>
+                        <ul class="competency-list">
+                            <li><i class="fas fa-check"></i> AI Agent Development (n8n workflows)</li>
+                            <li><i class="fas fa-check"></i> Chatbot Integration (WhatsApp/Web)</li>
+                            <li><i class="fas fa-check"></i> Tech Consultation & Roadmaps</li>
+                        </ul>
+                    </div>
+
+                    <!-- Development -->
+                    <div class="competency-card">
+                        <div class="competency-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Development Solutions</h3>
+                        <p>High-performance assets for speed and scale</p>
+                        <ul class="competency-list">
+                            <li><i class="fas fa-check"></i> Web Development (Next.js & Appwrite)</li>
+                            <li><i class="fas fa-check"></i> Mobile Apps (React Native)</li>
+                            <li><i class="fas fa-check"></i> Custom Software & SaaS</li>
+                        </ul>
+                    </div>
+
+                    <!-- Marketing -->
+                    <div class="competency-card">
+                        <div class="competency-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>Marketing & Growth</h3>
+                        <p>Data-driven visibility that converts</p>
+                        <ul class="competency-list">
+                            <li><i class="fas fa-check"></i> SEO & Technical Audits</li>
+                            <li><i class="fas fa-check"></i> Social Media Automation</li>
+                            <li><i class="fas fa-check"></i> Brand Storytelling</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fikanova Advantage -->
+            <section class="advantage-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Why Choose Us</span>
+                    <h2>The Fikanova Advantage</h2>
+                </div>
+
+                <div class="comparison-table">
+                    <div class="comparison-header">
+                        <div class="comparison-feature">Feature</div>
+                        <div class="comparison-traditional">Traditional Agency</div>
+                        <div class="comparison-fikanova">Fikanova (AI-First)</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-feature"><i class="fas fa-wallet"></i> Cost Model</div>
+                        <div class="comparison-traditional">High overhead (Office + Large Staff)</div>
+                        <div class="comparison-fikanova highlight">Lean & Efficient (Agents + Supervisor)</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-feature"><i class="fas fa-bolt"></i> Speed</div>
+                        <div class="comparison-traditional">Weeks for basic tasks</div>
+                        <div class="comparison-fikanova highlight">Hours/Minutes via Automation</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-feature"><i class="fas fa-clock"></i> Availability</div>
+                        <div class="comparison-traditional">8:00 AM - 5:00 PM</div>
+                        <div class="comparison-fikanova highlight">24/7/365 (Bots never sleep)</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-feature"><i class="fas fa-trophy"></i> Output</div>
+                        <div class="comparison-traditional">Deliverables</div>
+                        <div class="comparison-fikanova highlight">Value & Metrics</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <section class="cta-section scroll-reveal">
+                <h2>Ready to build your digital workforce?</h2>
+                <p>Let's transform your operations with intelligent automation</p>
+                <a href="/contact" class="btn btn-primary"><i class="fas fa-rocket"></i> Start a Conversation</a>
+            </section>
         </div>
     </main>
 </Layout>
+
+<style>
+    /* Hero */
+    .about-hero {
+        padding: 160px 24px 80px;
+        text-align: center;
+        background: linear-gradient(to bottom, rgba(10, 10, 15, 0.7) 0%, rgba(10, 10, 15, 0.9) 100%), 
+                    url('/assets/images/about-hero.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .hero-tagline {
+        font-size: 20px;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto 48px;
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 48px;
+        flex-wrap: wrap;
+    }
+
+    .hero-stat {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Executive Summary */
+    .executive-summary {
+        max-width: 800px;
+        margin: 0 auto 80px;
+        text-align: center;
+    }
+
+    .lead-text {
+        font-size: 20px;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+    }
+
+    .model-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 20px 28px;
+        text-align: left;
+    }
+
+    .model-icon {
+        font-size: 32px;
+    }
+
+    .model-badge strong {
+        display: block;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .model-badge span {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .section-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 36px;
+        margin-bottom: 16px;
+    }
+
+    /* Philosophy Section */
+    .philosophy-section {
+        margin-bottom: 80px;
+    }
+
+    .philosophy-quote {
+        font-size: 20px;
+        font-style: italic;
+        color: var(--text-secondary);
+        background: linear-gradient(90deg, var(--primary), var(--accent-green));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .elements-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .element-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 32px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .element-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+    }
+
+    .element-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 20px;
+    }
+
+    .element-icon.time {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .element-icon.knowledge {
+        background: rgba(139, 92, 246, 0.15);
+        color: var(--primary);
+    }
+
+    .element-icon.wealth {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+    }
+
+    .element-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .element-card p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+
+    .element-action {
+        font-size: 13px;
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    /* Competencies */
+    .competencies-section {
+        margin-bottom: 80px;
+    }
+
+    .competencies-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .competency-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 28px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .competency-card:hover {
+        border-color: var(--border-medium);
+    }
+
+    .competency-card.primary {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, var(--dark-card) 100%);
+    }
+
+    .competency-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: var(--primary);
+        color: var(--dark-bg);
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .competency-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(139, 92, 246, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .competency-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .competency-card > p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+    }
+
+    .competency-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .competency-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    .competency-list li i {
+        color: var(--accent-green);
+        font-size: 12px;
+    }
+
+    /* Advantage Section */
+    .advantage-section {
+        margin-bottom: 80px;
+    }
+
+    .comparison-table {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .comparison-header {
+        display: grid;
+        grid-template-columns: 1.5fr 2fr 2fr;
+        background: var(--dark-surface);
+        padding: 20px 24px;
+        font-weight: 600;
+        font-size: 14px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .comparison-row {
+        display: grid;
+        grid-template-columns: 1.5fr 2fr 2fr;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-subtle);
+        transition: background 0.2s;
+    }
+
+    .comparison-row:last-child {
+        border-bottom: none;
+    }
+
+    .comparison-row:hover {
+        background: rgba(139, 92, 246, 0.05);
+    }
+
+    .comparison-feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+    }
+
+    .comparison-feature i {
+        color: var(--primary);
+    }
+
+    .comparison-traditional {
+        color: var(--text-tertiary);
+    }
+
+    .comparison-fikanova.highlight {
+        color: var(--accent-green);
+        font-weight: 500;
+    }
+
+    /* CTA */
+    .cta-section {
+        text-align: center;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 24px;
+        padding: 60px 40px;
+    }
+
+    .cta-section h2 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        margin-bottom: 28px;
+    }
+
+    /* Name Section */
+    .name-section {
+        margin-bottom: 80px;
+    }
+
+    .name-card {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border: 1px solid var(--primary);
+        border-radius: 24px;
+        padding: 48px;
+        text-align: center;
+    }
+
+    .name-explanation {
+        font-size: 18px;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+    }
+
+    .name-grid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+    }
+
+    .name-element {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 24px 32px;
+        text-align: center;
+    }
+
+    .name-word {
+        display: block;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .name-meaning {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    .name-plus {
+        font-size: 32px;
+        font-weight: 200;
+        color: var(--text-tertiary);
+    }
+
+    .name-tagline {
+        font-size: 18px;
+        font-style: italic;
+        color: var(--accent-green);
+    }
+
+    /* Vision & Mission */
+    .vision-mission {
+        margin-bottom: 80px;
+    }
+
+    .vm-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .vm-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 36px;
+        text-align: center;
+    }
+
+    .vm-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(139, 92, 246, 0.15);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 24px;
+        margin: 0 auto 20px;
+    }
+
+    .vm-card h3 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .vm-card p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+
+    /* Values */
+    .values-section {
+        margin-bottom: 80px;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .value-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 32px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .value-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+    }
+
+    .value-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        margin: 0 auto 20px;
+    }
+
+    .value-icon.innovation {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+    }
+
+    .value-icon.quality {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+    }
+
+    .value-icon.partnership {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .value-card h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .value-card p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Loop Section */
+    .loop-section {
+        margin-bottom: 80px;
+    }
+
+    .section-subtitle {
+        color: var(--text-secondary);
+        margin-top: 8px;
+    }
+
+    .loop-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .loop-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 32px;
+        position: relative;
+    }
+
+    .loop-card.hitl {
+        border-color: var(--accent-blue);
+    }
+
+    .loop-card.hotl {
+        border-color: var(--accent-green);
+    }
+
+    .loop-badge {
+        position: absolute;
+        top: -12px;
+        left: 24px;
+        background: var(--primary);
+        color: var(--dark-bg);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 14px;
+        border-radius: 20px;
+        letter-spacing: 1px;
+    }
+
+    .loop-card h3 {
+        font-size: 18px;
+        margin: 8px 0 12px;
+    }
+
+    .loop-card > p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .loop-flow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 16px;
+        background: var(--dark-surface);
+        border-radius: 12px;
+    }
+
+    .flow-item {
+        font-size: 13px;
+        padding: 6px 12px;
+        background: var(--dark-bg);
+        border-radius: 8px;
+        color: var(--text-secondary);
+    }
+
+    .flow-item.highlight {
+        background: rgba(139, 92, 246, 0.2);
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .flow-arrow {
+        color: var(--text-tertiary);
+    }
+
+    /* Team Architecture */
+    .team-section {
+        margin-bottom: 80px;
+    }
+
+    .architecture-diagram {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 32px;
+        overflow-x: auto;
+    }
+
+    .architecture-diagram .mermaid {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-stats {
+            gap: 32px;
+        }
+
+        .elements-grid,
+        .competencies-grid,
+        .values-grid,
+        .vm-grid,
+        .loop-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .name-grid {
+            flex-direction: column;
+        }
+
+        .name-plus {
+            transform: rotate(90deg);
+        }
+
+        .comparison-table {
+            overflow-x: auto;
+        }
+
+        .comparison-header,
+        .comparison-row {
+            min-width: 600px;
+        }
+    }
+</style>
+
+<!-- Mermaid JS for diagrams -->
+<script is:inline>
+    // Load Mermaid from CDN
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+    script.onload = () => {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#8b5cf6',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#6d28d9',
+                lineColor: '#4b5563',
+                secondaryColor: '#1f2937',
+                tertiaryColor: '#111827',
+                background: '#0a0a0f',
+                mainBkg: '#1a1a2e',
+                nodeBorder: '#374151',
+                clusterBkg: '#111827',
+                clusterBorder: '#374151',
+                titleColor: '#fff',
+                edgeLabelBackground: '#1f2937'
+            }
+        });
+    };
+    document.head.appendChild(script);
+</script>

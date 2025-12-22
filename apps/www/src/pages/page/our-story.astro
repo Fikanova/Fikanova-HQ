@@ -2,48 +2,542 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Our Story">
-    <section class="hero">
+<Layout title="Our Story | Fikanova">
+    <!-- Hero Section -->
+    <section class="story-hero">
         <div class="container">
-            <div class="hero-badge"><span class="badge-dot"></span>Our Journey</div>
+            <div class="hero-badge"><span class="badge-dot"></span>From Idea to Impact</div>
             <h1>Our <span class="gradient-text">Story</span></h1>
-            <p>From idea to impact — the Fikanova journey</p>
+            <p class="hero-tagline">Born from the need to escape the "Manual Trap"</p>
         </div>
     </section>
 
     <main class="page-main">
         <div class="container">
-            <div class="scroll-reveal" style="max-width: 800px; margin: 0 auto;">
-                <h2 style="margin-bottom: 24px;">The Beginning</h2>
-                <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 40px;">
-                    Fikanova was founded in 2025 with a simple mission: to help SMEs in Kenya and across Africa 
-                    leverage technology to grow their businesses. We saw too many businesses struggling with 
-                    manual processes and outdated systems, and we knew we could help.
-                </p>
-
-                <h2 style="margin-bottom: 24px;">Our Evolution</h2>
-                <div style="border-left: 3px solid var(--primary); padding-left: 24px; display: flex; flex-direction: column; gap: 32px; margin-bottom: 40px;">
-                    <div>
-                        <span style="color: var(--primary); font-weight: 600;">2025 — Launch</span>
-                        <p style="color: var(--text-secondary); margin-top: 8px;">Started with web development for local businesses</p>
+            <!-- Origin Story -->
+            <section class="origin-section scroll-reveal">
+                <div class="story-block">
+                    <div class="story-visual">
+                        <div class="visual-card">
+                            <div class="trap-icon">⛓️</div>
+                            <span>The Manual Trap</span>
+                        </div>
                     </div>
-                    <div>
-                        <span style="color: var(--primary); font-weight: 600;">2025 — AI Integration</span>
-                        <p style="color: var(--text-secondary); margin-top: 8px;">Added chatbot and automation services</p>
-                    </div>
-                    <div>
-                        <span style="color: var(--primary); font-weight: 600;">2025 — Digital Workforce</span>
-                        <p style="color: var(--text-secondary); margin-top: 8px;">Launched autonomous AI agent platform</p>
+                    <div class="story-content">
+                        <span class="story-tag">The Beginning</span>
+                        <h2>Breaking Free from Manual Work</h2>
+                        <p>
+                            Fikanova was born from a simple but powerful insight: <strong>human potential is wasted on repetitive tasks</strong>.
+                        </p>
+                        <p>
+                            Our founder spent years in high-volume operational roles, witnessing firsthand how talented 
+                            professionals were trapped in cycles of manual data entry, administrative drudgery, and 
+                            processes that machines could handle better.
+                        </p>
+                        <p>
+                            The question wasn't "can we automate this?" — it was "why haven't we already?"
+                        </p>
                     </div>
                 </div>
+            </section>
 
-                <h2 style="margin-bottom: 24px;">Looking Forward</h2>
-                <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary);">
-                    We're building towards a future where every business, regardless of size, can access 
-                    enterprise-grade technology. Our AI agents work around the clock so you can focus on 
-                    what matters most — growing your business.
-                </p>
-            </div>
+            <!-- The Pivot -->
+            <section class="pivot-section scroll-reveal">
+                <div class="story-block reverse">
+                    <div class="story-visual">
+                        <div class="visual-card light">
+                            <div class="pivot-icon">🚀</div>
+                            <span>Self-Driving Operations</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <span class="story-tag">The Pivot</span>
+                        <h2>Building the "Self-Driving" Infrastructure</h2>
+                        <p>
+                            We pivoted from manual work to building intelligent systems that work autonomously. 
+                            Our approach combines cutting-edge AI with practical automation frameworks.
+                        </p>
+                        <div class="model-showcase">
+                            <div class="model-title">
+                                <span class="model-icon">🤖</span>
+                                <strong>The Human-AI Supervisor Model</strong>
+                            </div>
+                            <p>
+                                One human supervisor directing a fleet of intelligent software agents. 
+                                The agents handle operations, coding, and marketing — delivering enterprise-grade 
+                                results at startup speed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Partners -->
+            <section class="partners-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Our Impact</span>
+                    <h2>Partnering for Growth</h2>
+                    <p>We apply this architecture to our partners, helping them scale impact without swelling costs</p>
+                </div>
+
+                <div class="partners-grid">
+                    <div class="partner-card">
+                        <div class="partner-icon">🧱</div>
+                        <h3>Jenga365</h3>
+                        <span class="partner-industry">Mentorship Platform</span>
+                        <p>Revolutionized their online presence with blazing-fast performance and modern UX</p>
+                        <div class="partner-result">
+                            <span class="result-value">74%</span>
+                            <span class="result-label">Faster Load Times</span>
+                        </div>
+                    </div>
+
+                    <div class="partner-card">
+                        <div class="partner-icon">🏉</div>
+                        <h3>Nondescripts RFC</h3>
+                        <span class="partner-industry">Sports & E-commerce</span>
+                        <p>Built complete digital ecosystem for Kenya's premier rugby club</p>
+                        <div class="partner-result">
+                            <span class="result-value">240%</span>
+                            <span class="result-label">Revenue Growth</span>
+                        </div>
+                    </div>
+
+                    <div class="partner-card">
+                        <div class="partner-icon">🌍</div>
+                        <h3>ETCO Kenya</h3>
+                        <span class="partner-industry">NGO / Education</span>
+                        <p>Amplified their mission reach through strategic digital presence and automation</p>
+                        <div class="partner-result">
+                            <span class="result-value">900%</span>
+                            <span class="result-label">Follower Growth</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timeline -->
+            <section class="timeline-section scroll-reveal">
+                <div class="section-header">
+                    <span class="section-tag">Our Journey</span>
+                    <h2>2025 Milestones</h2>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">July 25, 2025</span>
+                            <h4>Launch Day</h4>
+                            <p>Fikanova officially founded in Nairobi, Kenya with a mission to democratize AI for SMEs</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">August 2025</span>
+                            <h4>First AI Agents Deployed</h4>
+                            <p>Launched autonomous chatbot and workflow automation services for early partners</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Q4 2025</span>
+                            <h4>Digital Workforce Platform</h4>
+                            <p>Scaled the Human-AI Supervisor model to serve multiple clients simultaneously</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item future">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2026 & Beyond</span>
+                            <h4>Regional Expansion</h4>
+                            <p>Bringing enterprise-grade AI to every business across East Africa</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vision -->
+            <section class="vision-section scroll-reveal">
+                <div class="vision-card">
+                    <h2>Looking Forward</h2>
+                    <p class="vision-text">
+                        We're building towards a future where every business, regardless of size, 
+                        can access enterprise-grade technology. Our AI agents work around the clock 
+                        so you can focus on what matters most — <strong>growing your business</strong>.
+                    </p>
+                    <div class="vision-cta">
+                        <a href="/page/case-studies" class="btn btn-secondary">
+                            <i class="fas fa-chart-line"></i> View Case Studies
+                        </a>
+                        <a href="/contact" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> Join Our Journey
+                        </a>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 </Layout>
+
+<style>
+    /* Hero */
+    .story-hero {
+        padding: 160px 24px 80px;
+        text-align: center;
+        background: linear-gradient(to bottom, rgba(10, 10, 15, 0.7) 0%, rgba(10, 10, 15, 0.9) 100%), 
+                    url('/assets/images/story-hero.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .hero-tagline {
+        font-size: 20px;
+        color: var(--text-secondary);
+    }
+
+    /* Story Blocks */
+    .story-block {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 60px;
+        align-items: center;
+        margin-bottom: 80px;
+    }
+
+    .story-block.reverse {
+        grid-template-columns: 1.5fr 1fr;
+    }
+
+    .story-block.reverse .story-visual {
+        order: 2;
+    }
+
+    .story-visual {
+        display: flex;
+        justify-content: center;
+    }
+
+    .visual-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 24px;
+        padding: 48px;
+        text-align: center;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .visual-card.light {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+        border-color: var(--primary);
+    }
+
+    .trap-icon, .pivot-icon {
+        font-size: 64px;
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    .visual-card span {
+        font-size: 14px;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .story-content {
+        max-width: 560px;
+    }
+
+    .story-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .story-content h2 {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    .story-content p {
+        font-size: 17px;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+    }
+
+    .model-showcase {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 24px;
+        margin-top: 24px;
+    }
+
+    .model-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .model-icon {
+        font-size: 24px;
+    }
+
+    .model-showcase p {
+        margin: 0;
+        font-size: 15px;
+    }
+
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .section-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .section-header p {
+        color: var(--text-secondary);
+    }
+
+    /* Partners */
+    .partners-section {
+        margin-bottom: 80px;
+    }
+
+    .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .partner-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 28px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .partner-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+    }
+
+    .partner-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+    }
+
+    .partner-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .partner-industry {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .partner-card p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin: 16px 0;
+    }
+
+    .partner-result {
+        background: var(--dark-surface);
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 16px;
+    }
+
+    .result-value {
+        display: block;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--accent-green);
+    }
+
+    .result-label {
+        font-size: 12px;
+        color: var(--text-tertiary);
+    }
+
+    /* Timeline */
+    .timeline-section {
+        margin-bottom: 80px;
+    }
+
+    .timeline {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto;
+        padding-left: 32px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--primary), var(--accent-green));
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 40px;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: -25px;
+        top: 4px;
+        width: 16px;
+        height: 16px;
+        background: var(--primary);
+        border-radius: 50%;
+        border: 3px solid var(--dark-bg);
+    }
+
+    .timeline-item.future .timeline-dot {
+        background: var(--dark-surface);
+        border-color: var(--primary);
+    }
+
+    .timeline-content {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 24px;
+    }
+
+    .timeline-date {
+        font-size: 12px;
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .timeline-content h4 {
+        font-size: 18px;
+        margin: 8px 0 12px;
+    }
+
+    .timeline-content p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .timeline-item.future .timeline-content {
+        border-style: dashed;
+        opacity: 0.7;
+    }
+
+    /* Vision */
+    .vision-section {
+        margin-bottom: 40px;
+    }
+
+    .vision-card {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+        border: 1px solid var(--primary);
+        border-radius: 24px;
+        padding: 60px;
+        text-align: center;
+    }
+
+    .vision-card h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .vision-text {
+        font-size: 20px;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto 32px;
+    }
+
+    .vision-cta {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--border-medium);
+        color: var(--text-primary);
+        padding: 14px 28px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .story-block,
+        .story-block.reverse {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .story-block.reverse .story-visual {
+            order: 0;
+        }
+
+        .partners-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .vision-card {
+            padding: 40px 24px;
+        }
+    }
+</style>

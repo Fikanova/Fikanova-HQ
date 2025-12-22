@@ -2,175 +2,438 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Contact Us">
-    <!-- Contact Section -->
-    <section class="contact-page">
+<Layout title="Contact Us | Fikanova">
+    <!-- Hero Section -->
+    <section class="contact-hero">
         <div class="container">
-            <div class="section-header scroll-reveal">
-                <h1>Contact Us</h1>
-                <p>Get in touch with our team</p>
-            </div>
+            <div class="hero-badge"><span class="badge-dot"></span>Let's Connect</div>
+            <h1>Contact <span class="gradient-text">Us</span></h1>
+            <p class="hero-tagline">Ready to build your digital workforce?</p>
+        </div>
+    </section>
 
+    <main class="page-main">
+        <div class="container">
             <div class="contact-grid">
                 <!-- Contact Info -->
                 <div class="contact-info scroll-reveal">
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                        <div>
-                            <h3>Email</h3>
-                            <p><a href="mailto:info@fikanova.co.ke">info@fikanova.co.ke</a></p>
+                    <div class="info-header">
+                        <span class="info-tag">Get in Touch</span>
+                        <h2>We'd love to hear from you</h2>
+                        <p>Reach out and let's discuss how we can help automate your operations.</p>
+                    </div>
+
+                    <div class="contact-items">
+                        <a href="mailto:info@fikanova.co.ke" class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3>Email</h3>
+                                <span>info@fikanova.co.ke</span>
+                            </div>
+                            <i class="fas fa-arrow-right item-arrow"></i>
+                        </a>
+
+                        <a href="https://www.fikanova.co.ke" target="_blank" class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div>
+                                <h3>Website</h3>
+                                <span>www.fikanova.co.ke</span>
+                            </div>
+                            <i class="fas fa-arrow-right item-arrow"></i>
+                        </a>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3>Location</h3>
+                                <span>Nairobi, Kenya</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h3>AI Agents</h3>
+                                <span>Available 24/7/365</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                        <div>
-                            <h3>Phone</h3>
-                            <p><a href="tel:+254700000000">+254 700 000 000</a></p>
+
+                    <!-- Company Badge -->
+                    <div class="company-badge">
+                        <div class="badge-content">
+                            <span class="badge-label">Founded</span>
+                            <span class="badge-value">July 25, 2025</span>
                         </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <div>
-                            <h3>Location</h3>
-                            <p>Nairobi, Kenya</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                        <div>
-                            <h3>Business Hours</h3>
-                            <p>Mon - Fri: 9am - 6pm EAT</p>
+                        <div class="badge-divider"></div>
+                        <div class="badge-content">
+                            <span class="badge-label">Model</span>
+                            <span class="badge-value">Human-AI Supervisor</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Contact Form -->
                 <div class="contact-form-card scroll-reveal">
-                    <h3>Send us a message</h3>
+                    <div class="form-header">
+                        <h3>Send us a message</h3>
+                        <p>Tell us about your project and we'll get back to you within 24 hours.</p>
+                    </div>
+
                     <form id="contactForm">
-                        <div class="form-group">
-                            <label class="form-label">Name</label>
-                            <input type="text" id="name" class="form-input" placeholder="Your name" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" id="name" class="form-input" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                            </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                            <label class="form-label">What can we help with?</label>
+                            <select id="service" class="form-input">
+                                <option value="">Select a service...</option>
+                                <option value="ai-automation">AI & Automation</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="mobile-app">Mobile App Development</option>
+                                <option value="chatbot">Chatbot Integration</option>
+                                <option value="seo">SEO & Marketing</option>
+                                <option value="consultation">Tech Consultation</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Subject</label>
-                            <input type="text" id="subject" class="form-input" placeholder="How can we help?">
-                        </div>
+
                         <div class="form-group">
                             <label class="form-label">Message</label>
-                            <textarea id="message" class="form-input" rows="5" placeholder="Tell us about your project..." required></textarea>
+                            <textarea id="message" class="form-input" rows="5" placeholder="Tell us about your project, challenges, and goals..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+
+                        <button type="submit" class="btn btn-primary submit-btn">
                             <i class="fas fa-paper-plane"></i> Send Message
                         </button>
                     </form>
                 </div>
             </div>
+
+            <!-- Quick Stats -->
+            <div class="trust-section scroll-reveal">
+                <div class="trust-item">
+                    <span class="trust-value">📧</span>
+                    <span class="trust-label">24hr Response</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-value">🤖</span>
+                    <span class="trust-label">AI-Powered</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-value">🇰🇪</span>
+                    <span class="trust-label">Made in Kenya</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-value">⚡</span>
+                    <span class="trust-label">Fast Delivery</span>
+                </div>
+            </div>
         </div>
-    </section>
+    </main>
+</Layout>
 
-    <style>
-        .contact-page {
-            padding: 120px 24px 80px;
-        }
+<style>
+    /* Hero */
+    .contact-hero {
+        padding: 160px 24px 60px;
+        text-align: center;
+        background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    }
+
+    .hero-tagline {
+        font-size: 20px;
+        color: var(--text-secondary);
+    }
+
+    /* Grid Layout */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 48px;
+        margin-bottom: 60px;
+    }
+
+    /* Contact Info */
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .info-header {
+        margin-bottom: 8px;
+    }
+
+    .info-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .info-header h2 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .info-header p {
+        color: var(--text-secondary);
+        font-size: 15px;
+    }
+
+    .contact-items {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+    }
+
+    a.contact-item:hover {
+        border-color: var(--primary);
+        transform: translateX(4px);
+    }
+
+    .contact-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(139, 92, 246, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .contact-item h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .contact-item span {
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .item-arrow {
+        margin-left: auto;
+        color: var(--text-tertiary);
+        transition: all 0.3s ease;
+    }
+
+    a.contact-item:hover .item-arrow {
+        color: var(--primary);
+        transform: translateX(4px);
+    }
+
+    /* Company Badge */
+    .company-badge {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border: 1px solid var(--primary);
+        border-radius: 16px;
+        padding: 20px 24px;
+    }
+
+    .badge-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .badge-label {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .badge-divider {
+        width: 1px;
+        height: 36px;
+        background: var(--border-subtle);
+    }
+
+    /* Form Card */
+    .contact-form-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 24px;
+        padding: 36px;
+    }
+
+    .form-header {
+        margin-bottom: 28px;
+    }
+
+    .form-header h3 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+
+    .form-header p {
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 14px 16px;
+        background: var(--dark-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 15px;
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    select.form-input {
+        cursor: pointer;
+    }
+
+    textarea.form-input {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Trust Section */
+    .trust-section {
+        display: flex;
+        justify-content: center;
+        gap: 48px;
+        padding: 32px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        margin-bottom: 40px;
+    }
+
+    .trust-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .trust-value {
+        font-size: 28px;
+    }
+
+    .trust-label {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
         .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            max-width: 1000px;
-            margin: 48px auto 0;
+            grid-template-columns: 1fr;
         }
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-        .contact-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            padding: 24px;
-            background: var(--dark-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-        }
-        .contact-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(139, 92, 246, 0.15);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 20px;
-        }
-        .contact-item h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .contact-item p, .contact-item a {
-            color: var(--text-secondary);
-        }
-        .contact-item a:hover {
-            color: var(--primary);
-        }
-        .contact-form-card {
-            background: var(--dark-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 32px;
-        }
-        .contact-form-card h3 {
-            margin-bottom: 24px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .form-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--dark-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        textarea.form-input {
-            resize: vertical;
-        }
-        @media (max-width: 768px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 
-    <script is:inline>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // Open email client with pre-filled content
-            const mailtoLink = `mailto:info@fikanova.co.ke?subject=${encodeURIComponent(subject || 'Website Inquiry')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
-            window.location.href = mailtoLink;
-        });
-    </script>
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .trust-section {
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .company-badge {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<script is:inline>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const service = document.getElementById('service').value;
+        const message = document.getElementById('message').value;
+        
+        const subject = service ? `Inquiry: ${service}` : 'Website Inquiry';
+        const body = `Name: ${name}\nEmail: ${email}\nService: ${service || 'Not specified'}\n\n${message}`;
+        
+        // Open email client with pre-filled content
+        const mailtoLink = `mailto:info@fikanova.co.ke?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoLink;
+    });
+</script>
 </Layout>
