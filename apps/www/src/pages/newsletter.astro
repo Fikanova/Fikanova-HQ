@@ -282,13 +282,14 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
     .hero-container {
         position: relative;
         z-index: 1;
-        padding: 60px 0;
+        padding: 80px 24px;
     }
 
     .hero-content {
         max-width: 700px;
         margin: 0 auto;
         text-align: center;
+        padding: 0 16px;
     }
 
     .hero-label {
@@ -305,7 +306,8 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
         font-size: clamp(2rem, 5vw, 3rem);
         font-weight: 700;
         line-height: 1.15;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0 8px;
         color: var(--text-primary);
     }
 
@@ -314,6 +316,7 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
         color: var(--text-secondary);
         line-height: 1.75;
         margin-bottom: 2rem;
+        padding: 0 24px;
     }
 
     .hero-description a {
@@ -663,11 +666,30 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
 
     @media (max-width: 768px) {
         .hero-section {
-            min-height: 70vh;
+            min-height: auto;
+            padding: 80px 16px 40px;
         }
 
         .hero-container {
-            padding: 100px 0 60px;
+            padding: 20px 0;
+        }
+        
+        .hero-content {
+            padding: 0 8px;
+        }
+        
+        .hero-section h1 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-description {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .hero-cta {
+            margin-top: 1.5rem;
         }
 
         .category-nav {
