@@ -72,21 +72,39 @@ def main(context):
         # === META WEBHOOK VERIFICATION (GET request) ===
         # Meta sends: GET /?hub.mode=subscribe&hub.verify_token=XXX&hub.challenge=YYY
         if req.method == 'GET':
-            # Get query parameters
-            query = req.query if hasattr(req, 'query') else {}
+            # Get query parameters - Appwrite uses different accessor
+            query_string = req.query_string if hasattr(req, 'query_string') else ''
+            query = {}
+            
+            # Parse query string manually if needed
+            if hasattr(req, 'query') and req.query:
+                query = req.query
+            elif query_string:
+                from urllib.parse import parse_qs
+                parsed = parse_qs(query_string)
+                query = {k: v[0] for k, v in parsed.items()}
             
             hub_mode = query.get('hub.mode', '')
             hub_verify_token = query.get('hub.verify_token', '')
             hub_challenge = query.get('hub.challenge', '')
             
-            context.log(f"Webhook verification: mode={hub_mode}, challenge={hub_challenge}")
+            context.log(f"Webhook verification request received")
+            context.log(f"  mode: {hub_mode}")
+            context.log(f"  challenge: {hub_challenge}")
+            context.log(f"  token received: {hub_verify_token[:10]}..." if hub_verify_token else "  token received: (empty)")
+            context.log(f"  expected token: {WHATSAPP_WEBHOOK_VERIFY_TOKEN[:10]}..." if WHATSAPP_WEBHOOK_VERIFY_TOKEN else "  expected token: (NOT SET)")
+            
+            # Validate
+            if not WHATSAPP_WEBHOOK_VERIFY_TOKEN:
+                context.log("ERROR: WHATSAPP_WEBHOOK_VERIFY_TOKEN environment variable not set!")
+                return context.res.json({'error': 'Server not configured'}, 500)
             
             if hub_mode == 'subscribe' and hub_verify_token == WHATSAPP_WEBHOOK_VERIFY_TOKEN:
                 context.log("Webhook verified successfully!")
-                # Return the challenge as plain text
-                return context.res.send(hub_challenge, 200, {'Content-Type': 'text/plain'})
+                # Meta requires the challenge returned as plain text body
+                return context.res.text(hub_challenge)
             else:
-                context.log(f"Verification failed: token mismatch or invalid mode")
+                context.log(f"Verification FAILED: mode={hub_mode}, token_match={hub_verify_token == WHATSAPP_WEBHOOK_VERIFY_TOKEN}")
                 return context.res.json({'error': 'Verification failed'}, 403)
         
         # === POST REQUESTS (Inbound/Outbound messages) ===
