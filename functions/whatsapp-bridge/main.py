@@ -7,9 +7,9 @@ import json
 import hmac
 import hashlib
 from datetime import datetime
-from appwrite.client import Client
-from appwrite.services.databases import Databases
-from appwrite.id import ID
+
+# Defer Appwrite imports until needed (POST requests only)
+# This allows GET webhook verification to work even if SDK has issues
 
 # Environment
 APPWRITE_ENDPOINT = os.environ.get('APPWRITE_ENDPOINT', 'https://fra.cloud.appwrite.io/v1')
@@ -108,6 +108,11 @@ def main(context):
                 return context.res.json({'error': 'Verification failed'}, 403)
         
         # === POST REQUESTS (Inbound/Outbound messages) ===
+        # Import Appwrite SDK here (deferred to avoid import errors on GET requests)
+        from appwrite.client import Client
+        from appwrite.services.databases import Databases
+        from appwrite.id import ID
+        
         # Initialize Appwrite
         client = Client()
         client.set_endpoint(APPWRITE_ENDPOINT)
