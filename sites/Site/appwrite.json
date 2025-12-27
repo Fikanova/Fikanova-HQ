@@ -1,0 +1,9 @@
+{
+    "name": "Site",
+    "framework": "astro",
+    "adapter": "static",
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "outputDirectory": "./dist",
+    "buildRuntime": "node-22"
+}

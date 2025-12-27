@@ -1,0 +1,9 @@
+{
+    "name": "Dashboard",
+    "framework": "astro",
+    "adapter": "ssr",
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "outputDirectory": "./dist",
+    "buildRuntime": "node-22"
+}
