@@ -8,8 +8,7 @@ if (document.readyState === 'loading') {
 function initScript() {
     'use strict';
     // =============================================================================
-    // THEME TOGGLE
-
+    // THEME TOGGLE (Dark mode is default, toggle to light)
     // =============================================================================
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
@@ -30,7 +29,7 @@ function initScript() {
         if (navigator.vibrate) navigator.vibrate(10);
     }
 
-    // Load saved theme
+    // Load saved theme (dark is default)
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
         body.classList.add('theme-light');

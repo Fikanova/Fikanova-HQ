@@ -84,6 +84,43 @@ const INTEGRATIONS = {
             baseUrl: 'https://api.github.com',
             requiredEnv: ['GITHUB_TOKEN']
         }
+    },
+
+    // === Notion (Has official MCP) ===
+    notion: {
+        name: 'Notion',
+        mcpServer: 'notion-mcp', // npm: @anthropic/mcp-server-notion or @notionhq/mcp
+        mcpConfig: {
+            apiKey: process.env.NOTION_API_KEY
+        },
+        directApi: {
+            baseUrl: 'https://api.notion.com/v1',
+            headers: {
+                'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
+                'Notion-Version': '2022-06-28'
+            },
+            requiredEnv: ['NOTION_API_KEY']
+        }
+    },
+
+    // === Zoho Mail (No MCP - use direct API) ===
+    zohoMail: {
+        name: 'Zoho Mail',
+        mcpServer: null,
+        directApi: {
+            baseUrl: 'https://mail.zoho.com/api',
+            requiredEnv: ['ZOHO_MAIL_CLIENT_ID', 'ZOHO_MAIL_CLIENT_SECRET', 'ZOHO_MAIL_REFRESH_TOKEN']
+        }
+    },
+
+    // === Gmail (Has official MCP) ===
+    gmail: {
+        name: 'Gmail',
+        mcpServer: 'gmail-mcp', // Part of Google workspace MCP
+        directApi: {
+            baseUrl: 'https://gmail.googleapis.com/gmail/v1',
+            requiredEnv: [] // OAuth handled by n8n credentials
+        }
     }
 };
 
@@ -389,6 +426,63 @@ async function sozuriApi(operation, params) {
     }
 }
 
+// === NOTION API ===
+async function notionApi(operation, params) {
+    const headers = {
+        'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json'
+    };
+
+    switch (operation) {
+        case 'create_page': {
+            const response = await fetch('https://api.notion.com/v1/pages', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    parent: { database_id: params.databaseId },
+                    properties: params.properties,
+                    children: params.children || []
+                })
+            });
+            return await response.json();
+        }
+
+        case 'query_database': {
+            const response = await fetch(`https://api.notion.com/v1/databases/${params.databaseId}/query`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    filter: params.filter || undefined,
+                    sorts: params.sorts || undefined
+                })
+            });
+            return await response.json();
+        }
+
+        case 'get_page': {
+            const response = await fetch(`https://api.notion.com/v1/pages/${params.pageId}`, {
+                headers
+            });
+            return await response.json();
+        }
+
+        case 'update_page': {
+            const response = await fetch(`https://api.notion.com/v1/pages/${params.pageId}`, {
+                method: 'PATCH',
+                headers,
+                body: JSON.stringify({
+                    properties: params.properties
+                })
+            });
+            return await response.json();
+        }
+
+        default:
+            throw new Error(`Unknown Notion operation: ${operation}`);
+    }
+}
+
 // === Exports ===
 module.exports = {
     INTEGRATIONS,
@@ -399,5 +493,6 @@ module.exports = {
     darajaApi,
     appwriteApi,
     whatsappApi,
-    sozuriApi
+    sozuriApi,
+    notionApi
 };

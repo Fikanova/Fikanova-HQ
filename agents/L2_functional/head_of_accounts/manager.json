@@ -1,37 +1,288 @@
 {
     "name": "L2 - Head of Accounts",
+    "description": "Financial operations manager - handles invoices, expenses, runway, and KRA compliance",
     "nodes": [
         {
-            "name": "Invoice Request",
-            "type": "n8n-nodes-base.webhook"
+            "name": "Accounts Request Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "accounts-request",
+                "httpMethod": "POST",
+                "responseMode": "responseNode"
+            },
+            "position": [
+                100,
+                300
+            ]
         },
         {
-            "name": "KRA Tax Bot (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Determine Request Type",
+            "type": "n8n-nodes-base.switch",
             "parameters": {
-                "workflowId": "KRA_BOT_ID"
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "invoice",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Invoice"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "expense",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Expense"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "runway",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Runway"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "tax",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Tax"
+                        }
+                    ]
+                }
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "KRA Tax Bot (Specialist)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the KRA Tax Specialist at Fikanova. Process this tax-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- eTIMS invoice generation\n- Tax compliance checks\n- KRA filing reminders\n\nProvide guidance on the tax matter.",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "position": [
+                500,
+                100
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "Expense Tracker (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Expense Tracker (Specialist)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "parameters": {
-                "workflowId": "EXPENSE_TRACKER_ID"
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Expense Tracker at Fikanova. Log and categorize this expense:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Amount (KES)\n- Category (infrastructure, marketing, operations, payroll, other)\n- Description\n- Date\n\nRespond in JSON format.",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "position": [
+                500,
+                250
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "Runway Calculator (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Runway Calculator (Specialist)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "parameters": {
-                "workflowId": "RUNWAY_CALC_ID"
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Runway Calculator at Fikanova. Calculate financial runway:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Current cash position estimate\n- Monthly burn rate\n- Runway in months\n- Recommendations",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "position": [
+                500,
+                400
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "ClampO (Governance Check)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Log to Google Sheets",
+            "type": "n8n-nodes-base.googleSheets",
             "parameters": {
-                "workflowId": "CLAMPO_ID"
-            }
+                "operation": "append",
+                "sheetId": "={{ $env.GOOGLE_SHEETS_LEDGER_ID }}",
+                "range": "Ledger!A:F"
+            },
+            "position": [
+                700,
+                300
+            ],
+            "notes": "Logs all financial entries to central ledger"
+        },
+        {
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Head of Accounts', result: $json }) }}"
+            },
+            "position": [
+                900,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Accounts Request Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Determine Request Type",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Determine Request Type": {
+            "Invoice": [
+                [
+                    {
+                        "node": "KRA Tax Bot (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Tax": [
+                [
+                    {
+                        "node": "KRA Tax Bot (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Expense": [
+                [
+                    {
+                        "node": "Expense Tracker (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Runway": [
+                [
+                    {
+                        "node": "Runway Calculator (Specialist)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "KRA Tax Bot (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Google Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Expense Tracker (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Google Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Runway Calculator (Specialist)": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Google Sheets",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Log to Google Sheets": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CFO"
+        },
+        {
+            "name": "Finance"
         }
     ]
 }

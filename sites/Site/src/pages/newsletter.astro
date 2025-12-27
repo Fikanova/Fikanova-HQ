@@ -1,16 +1,16 @@
 ---
 /**
  * The Termite Stack - Newsletter & Dispatches
- * Boagworld-inspired design with category tabs and pagination
+ * CIO.com HOMEPAGE-inspired design with featured hero, article grid,
+ * and category sections
  */
 import Layout from '../layouts/Layout.astro';
-// NewsletterSignup is in Footer.astro
 import { Client, Databases, Query } from 'appwrite';
 
 // Initialize Appwrite client
 const client = new Client()
-    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
-    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1')
+    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '6936df5800371a655e8e');
 
 const databases = new Databases(client);
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
@@ -19,58 +19,6 @@ const ARTICLES_COLLECTION_ID = 'Articles';
 // Fetch articles from Appwrite
 let articles: any[] = [];
 let fetchError = false;
-
-// Sample articles to show when Appwrite is unavailable
-const sampleArticles = [
-    {
-        slug: 'building-ai-agents-that-work',
-        title: 'Building AI Agents That Actually Work',
-        excerpt: 'Most AI agent projects fail. Here\'s the architectural pattern that separates succeeding teams from struggling ones.',
-        published_at: '2024-12-20',
-        author: 'Nyaenya Moseti',
-        tags: 'AI, Agents, Automation'
-    },
-    {
-        slug: 'mcp-protocol-explained',
-        title: 'The Model Context Protocol (MCP) Explained',
-        excerpt: 'Anthropic\'s new standard for connecting AI assistants to external tools and data. What it means for your stack.',
-        published_at: '2024-12-18',
-        author: 'Nyaenya Moseti',
-        tags: 'Anthropic, MCP, Open Source'
-    },
-    {
-        slug: 'n8n-vs-make-vs-zapier',
-        title: 'n8n vs Make vs Zapier: The Honest Comparison',
-        excerpt: 'After building 100+ automations, here\'s which tool wins for different use cases - and why self-hosting matters.',
-        published_at: '2024-12-15',
-        author: 'Nyaenya Moseti',
-        tags: 'Automation, Tools, Open Source'
-    },
-    {
-        slug: 'why-smes-need-ai-now',
-        title: 'Why SMEs Can\'t Wait on AI Adoption',
-        excerpt: 'The competitive window is closing. Here\'s the minimum viable AI stack every small business needs in 2025.',
-        published_at: '2024-12-12',
-        author: 'Nyaenya Moseti',
-        tags: 'AI, Business, Strategy'
-    },
-    {
-        slug: 'gemini-flash-for-production',
-        title: 'Using Gemini 2.0 Flash in Production',
-        excerpt: 'Google\'s new model is fast and cheap. Here\'s how we\'re using it for real-time customer support automation.',
-        published_at: '2024-12-10',
-        author: 'Nyaenya Moseti',
-        tags: 'AI, Gemini, Automation'
-    },
-    {
-        slug: 'autonomous-content-pipeline',
-        title: 'Building an Autonomous Content Pipeline',
-        excerpt: 'How we use AI agents to research, draft, and publish content with human-in-the-loop quality control.',
-        published_at: '2024-12-08',
-        author: 'Nyaenya Moseti',
-        tags: 'Agents, Content, Automation'
-    }
-];
 
 try {
     const response = await databases.listDocuments(
@@ -82,156 +30,167 @@ try {
         ]
     );
     articles = response.documents;
-} catch (error) {
-    console.error('Error fetching articles:', error);
-    // Use sample articles instead of showing error
-    articles = sampleArticles;
-    fetchError = false; // Don't show error, show sample content
+    console.log(`Fetched ${articles.length} articles from Appwrite`);
+} catch (error: any) {
+    console.error('Error fetching articles from Appwrite:', error?.message || error);
+    fetchError = true;
 }
 
 // Helper to format date
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
     });
 }
 
-// Helper to truncate excerpt
-function truncateExcerpt(text: string, maxLength: number = 140): string {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength).trim() + '...';
+// Helper to calculate read time
+function calculateReadTime(content: string): number {
+    const words = content?.split(/\s+/).length || 0;
+    return Math.max(1, Math.ceil(words / 200));
 }
 
-// Generate placeholder image URL based on tags
+// Helper to get category label
+function getCategoryLabel(tags: string): string {
+    const tagList = tags?.toLowerCase() || '';
+    if (tagList.includes('agent')) return 'AGENTS';
+    if (tagList.includes('automation')) return 'AUTOMATION';
+    if (tagList.includes('strategy') || tagList.includes('business')) return 'STRATEGY';
+    if (tagList.includes('open source')) return 'OPEN SOURCE';
+    if (tagList.includes('tools')) return 'TOOLS';
+    return 'AI INSIGHTS';
+}
+
+// Generate placeholder image based on tags
 function getArticleImage(article: any): string {
     const tags = article.tags?.toLowerCase() || '';
-    if (tags.includes('anthropic') || tags.includes('github') || tags.includes('mcp')) {
-        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80';
-    } else if (tags.includes('ai') || tags.includes('gemini')) {
-        return 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80';
+    if (tags.includes('anthropic') || tags.includes('mcp')) {
+        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80';
+    } else if (tags.includes('gemini') || tags.includes('google')) {
+        return 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80';
     } else if (tags.includes('agent')) {
-        return 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80';
+        return 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80';
+    } else if (tags.includes('automation') || tags.includes('n8n')) {
+        return 'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=800&q=80';
     }
-    return 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80';
+    return 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80';
 }
 
-// Get unique categories from articles
-const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(',').map((t: string) => t.trim()) || []))];
+// Featured article is the first one
+const featuredArticle = articles[0];
+const gridArticles = articles.slice(1, 7); // Next 6 for main grid
+const moreArticles = articles.slice(7); // Rest for "More" section
 ---
 
-<Layout title="The Termite Stack - Newsletter">
-    <!-- Hero Section - Boagworld Style -->
-    <section class="hero-section">
-        <div class="hero-background">
-            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80" alt="" class="hero-bg-image" />
-            <div class="hero-overlay"></div>
-        </div>
-        <div class="container hero-container">
-            <div class="hero-content">
-                <span class="hero-label">AI Insights & Automation Strategy</span>
-                <h1>Your AI Strategy Deserves Better, As Do You.</h1>
-                <p class="hero-description">
-                    I'm Nyaenya Moseti, curator of <a href="/newsletter">The Termite Stack</a>. 
-                    I help you cut through hype, misinformation, and stalled AI projects 
-                    to build autonomous systems that actually work.
-                </p>
-                <div class="hero-cta">
-                    <a href="#footer-newsletter-email" class="btn-primary" onclick="event.preventDefault(); document.getElementById('footer-newsletter-email').scrollIntoView({behavior: 'smooth', block: 'center'}); setTimeout(() => document.getElementById('footer-newsletter-email').focus(), 500);">
-                        <i class="fas fa-chevron-down"></i>
-                        Subscribe
-                    </a>
-                    <a href="#dispatches" class="btn-secondary">
-                        <i class="fas fa-chevron-right"></i>
-                        Read Dispatches
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Category Header with Tabs & Search -->
-    <section class="category-header" id="dispatches">
+<Layout title="The Termite Stack - AI Newsletter">
+    <!-- Page Header -->
+    <section class="newsletter-header">
         <div class="container">
-            <div class="category-nav">
-                <div class="category-tabs" id="categoryTabs">
-                    <button class="tab-btn active" data-category="all">All</button>
-                    <button class="tab-btn" data-category="ai">AI</button>
-                    <button class="tab-btn" data-category="agents">Agents</button>
-                    <button class="tab-btn" data-category="automation">Automation</button>
-                    <button class="tab-btn" data-category="open-source">Open Source</button>
-                </div>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search dispatches..." />
-                    <button class="search-btn" aria-label="Search">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+            <div class="header-content">
+                <span class="section-badge">THE TERMITE STACK</span>
+                <h1>AI Strategy <span class="accent">Newsletter</span></h1>
+                <p>Weekly insights on AI agents, automation, and building systems that work.</p>
             </div>
         </div>
     </section>
 
-    <!-- Dispatches Grid -->
-    <main class="dispatches-main">
+    <!-- Main Content -->
+    <main class="newsletter-main">
         <div class="container">
             {fetchError ? (
                 <div class="empty-state">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Unable to Load Dispatches</h3>
-                    <p>Please check back later.</p>
+                    <h3>Unable to Load Articles</h3>
+                    <p>We're having trouble connecting. Please check back later.</p>
                 </div>
             ) : articles.length === 0 ? (
                 <div class="empty-state">
-                    <i class="fas fa-satellite"></i>
-                    <h3>Dispatches Incoming</h3>
-                    <p>Subscribe below to be notified when we publish.</p>
+                    <i class="fas fa-newspaper"></i>
+                    <h3>Coming Soon</h3>
+                    <p>We're preparing our first dispatches. Subscribe below to be notified.</p>
                 </div>
             ) : (
                 <>
-                    <div class="dispatches-grid" id="dispatchesGrid">
-                        {articles.slice(0, 9).map((article) => (
-                            <article class="dispatch-card" data-tags={article.tags?.toLowerCase() || ''}>
-                                <a href={`/newsletter/${article.slug}`} class="card-link">
-                                    <div class="card-image">
-                                        <img src={getArticleImage(article)} alt={article.title} loading="lazy" />
+                    <!-- Hero Featured Article (CIO-style) -->
+                    {featuredArticle && (
+                        <section class="hero-featured">
+                            <a href={`/newsletter/${featuredArticle.slug}`} class="hero-link">
+                                <div class="hero-image">
+                                    <img src={getArticleImage(featuredArticle)} alt={featuredArticle.title} loading="eager" />
+                                    <span class="hero-category">{getCategoryLabel(featuredArticle.tags)}</span>
+                                </div>
+                                <div class="hero-content">
+                                    <h2>{featuredArticle.title}</h2>
+                                    <p class="hero-excerpt">{featuredArticle.excerpt}</p>
+                                    <div class="hero-meta">
+                                        <span class="author">{featuredArticle.author || 'Nyaenya Moseti'}</span>
+                                        <span class="separator">•</span>
+                                        <time datetime={featuredArticle.published_at}>
+                                            {formatDate(featuredArticle.published_at)}
+                                        </time>
+                                        <span class="separator">•</span>
+                                        <span class="read-time">{calculateReadTime(featuredArticle.content)} min read</span>
                                     </div>
-                                    <div class="card-content">
-                                        <div class="article-meta">
-                                            <time datetime={article.published_at}>
-                                                {formatDate(article.published_at)}
-                                            </time>
-                                            {article.author && (
-                                                <span class="author">• {article.author}</span>
-                                            )}
-                                        </div>
-                                        <h3>{article.title}</h3>
-                                        <p class="excerpt">{truncateExcerpt(article.excerpt)}</p>
-                                        <span class="read-link">
-                                            Read dispatch <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </div>
-                                </a>
-                            </article>
-                        ))}
-                    </div>
-
-                    {articles.length > 9 && (
-                        <div class="pagination">
-                            <button class="page-btn active" data-page="1">1</button>
-                            <button class="page-btn" data-page="2">2</button>
-                            {articles.length > 18 && (
-                                <button class="page-btn" data-page="3">3</button>
-                            )}
-                        </div>
+                                </div>
+                            </a>
+                        </section>
                     )}
 
-                    <div class="no-results" id="noResults" style="display: none;">
-                        <i class="fas fa-search"></i>
-                        <h3>No dispatches found</h3>
-                        <p>Try a different search term or category.</p>
-                    </div>
+                    <!-- Article Grid (CIO 3-column style) -->
+                    {gridArticles.length > 0 && (
+                        <section class="article-grid-section">
+                            <h3 class="section-title">Latest Dispatches</h3>
+                            <div class="article-grid">
+                                {gridArticles.map((article) => (
+                                    <article class="article-card">
+                                        <a href={`/newsletter/${article.slug}`} class="card-link">
+                                            <div class="card-image">
+                                                <img src={getArticleImage(article)} alt={article.title} loading="lazy" />
+                                                <span class="card-category">{getCategoryLabel(article.tags)}</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <h4>{article.title}</h4>
+                                                <p class="card-excerpt">{article.excerpt}</p>
+                                                <div class="card-meta">
+                                                    <span class="author">{article.author || 'Nyaenya Moseti'}</span>
+                                                    <span class="separator">•</span>
+                                                    <time datetime={article.published_at}>
+                                                        {formatDate(article.published_at)}
+                                                    </time>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </article>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    <!-- More Articles List -->
+                    {moreArticles.length > 0 && (
+                        <section class="more-articles-section">
+                            <h3 class="section-title">More Articles</h3>
+                            <div class="more-articles-list">
+                                {moreArticles.map((article) => (
+                                    <article class="list-article">
+                                        <a href={`/newsletter/${article.slug}`} class="list-link">
+                                            <span class="list-category">{getCategoryLabel(article.tags)}</span>
+                                            <h4>{article.title}</h4>
+                                            <div class="list-meta">
+                                                <time datetime={article.published_at}>
+                                                    {formatDate(article.published_at)}
+                                                </time>
+                                                <span class="separator">•</span>
+                                                <span>{calculateReadTime(article.content)} min</span>
+                                            </div>
+                                        </a>
+                                    </article>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </>
             )}
         </div>
@@ -239,249 +198,229 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
 </Layout>
 
 <style>
-    /* Hero Section - Consistent with other pages */
-    .hero-section {
-        position: relative;
-        min-height: 60vh;
-        display: flex;
+    /* Newsletter Header */
+    .newsletter-header {
+        background: var(--dark-surface);
+        padding: 120px 24px 60px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-content {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .section-badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+    }
+
+    .newsletter-header h1 {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.1;
+        margin-bottom: 16px;
+    }
+
+    .newsletter-header h1 .accent {
+        color: var(--primary);
+    }
+
+    .newsletter-header p {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    /* Light mode header styling */
+    :global(body.theme-light) .section-badge {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .newsletter-header h1 .accent {
+        color: #1a365d;
+    }
+
+    /* Main Content */
+    .newsletter-main {
+        padding: 60px 24px 80px;
+        background: var(--dark-bg);
+    }
+
+    .newsletter-main .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 100px 40px;
+        background: var(--dark-surface);
+        border-radius: 12px;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--text-tertiary);
+        margin-bottom: 24px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+    }
+
+    /* Hero Featured Article */
+    .hero-featured {
+        margin-bottom: 60px;
+    }
+
+    .hero-link {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 40px;
+        text-decoration: none;
+        color: inherit;
         align-items: center;
+    }
+
+    .hero-image {
+        position: relative;
+        border-radius: 12px;
         overflow: hidden;
-        padding: 120px 0 80px;
+        aspect-ratio: 16/10;
     }
 
-    .hero-background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 0;
-    }
-
-    .hero-bg-image {
+    .hero-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: brightness(0.4) saturate(0.8);
+        transition: transform 0.4s ease;
     }
 
-    .hero-overlay {
+    .hero-link:hover .hero-image img {
+        transform: scale(1.03);
+    }
+
+    .hero-category {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-            135deg,
-            rgba(10, 10, 15, 0.95) 0%,
-            rgba(10, 10, 15, 0.7) 50%,
-            rgba(10, 10, 15, 0.4) 100%
-        );
+        top: 16px;
+        left: 16px;
+        background: var(--primary);
+        color: var(--dark-bg);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 6px 12px;
+        border-radius: 4px;
     }
 
-    .hero-container {
-        position: relative;
-        z-index: 1;
-        padding: 80px 24px;
+    :global(body.theme-light) .hero-category {
+        background: #1a365d;
+        color: #ffffff;
     }
 
-    .hero-content {
-        max-width: 700px;
-        margin: 0 auto;
-        text-align: center;
-        padding: 0 16px;
+    .hero-content h2 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.2;
+        margin-bottom: 16px;
+        transition: color 0.2s;
     }
 
-    .hero-label {
-        display: inline-block;
-        font-size: 0.8125rem;
+    .hero-link:hover .hero-content h2 {
+        color: var(--primary);
+    }
+
+    .hero-excerpt {
+        font-size: 1.0625rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: var(--text-tertiary);
+    }
+
+    .hero-meta .author {
         font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .separator {
+        color: var(--border-medium);
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
         color: var(--text-tertiary);
         text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 1.5rem;
+        letter-spacing: 1.5px;
+        padding-bottom: 16px;
+        margin-bottom: 32px;
+        border-bottom: 2px solid var(--primary);
+        display: inline-block;
     }
 
-    .hero-section h1 {
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 700;
-        line-height: 1.15;
-        margin-bottom: 2rem;
-        padding: 0 8px;
-        color: var(--text-primary);
+    :global(body.theme-light) .section-title {
+        border-bottom-color: #1a365d;
     }
 
-    .hero-description {
-        font-size: 1.125rem;
-        color: var(--text-secondary);
-        line-height: 1.75;
-        margin-bottom: 2rem;
-        padding: 0 24px;
+    /* Article Grid */
+    .article-grid-section {
+        margin-bottom: 60px;
     }
 
-    .hero-description a {
-        color: var(--primary);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-    }
-
-    .hero-cta {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.875rem 1.5rem;
-        background: #ffffff;
-        border-radius: 50px;
-        color: #000000;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background: #000000;
-        color: #ffffff;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.875rem 1.5rem;
-        background: transparent;
-        border: 2px solid #ffffff;
-        border-radius: 50px;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-        background: #ffffff;
-        color: #000000;
-        transform: translateY(-2px);
-    }
-
-    /* Category Header */
-    .category-header {
-        background: var(--dark-surface);
-        border-bottom: 1px solid var(--border-subtle);
-        padding: 1.5rem 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .category-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
-        flex-wrap: wrap;
-    }
-
-    .category-tabs {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .tab-btn {
-        padding: 0.625rem 1.25rem;
-        background: transparent;
-        border: 1px solid var(--border-subtle);
-        border-radius: 2rem;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .tab-btn:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-
-    .tab-btn.active {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: var(--dark-bg);
-    }
-
-    .search-box {
-        display: flex;
-        align-items: center;
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 0.5rem;
-        overflow: hidden;
-    }
-
-    .search-box input {
-        padding: 0.625rem 1rem;
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        font-size: 0.875rem;
-        width: 200px;
-        outline: none;
-    }
-
-    .search-box input::placeholder {
-        color: var(--text-tertiary);
-    }
-
-    .search-btn {
-        padding: 0.625rem 1rem;
-        background: transparent;
-        border: none;
-        color: var(--text-tertiary);
-        cursor: pointer;
-        transition: color 0.2s ease;
-    }
-
-    .search-btn:hover {
-        color: var(--primary);
-    }
-
-    /* Dispatches Grid */
-    .dispatches-main {
-        padding: 4rem 0;
-        background: var(--dark-bg);
-        min-height: 50vh;
-    }
-
-    .dispatches-grid {
+    .article-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+        gap: 32px;
     }
 
-    .dispatch-card {
+    .article-card {
         background: var(--dark-card);
         border: 1px solid var(--border-subtle);
-        border-radius: 0.75rem;
+        border-radius: 12px;
         overflow: hidden;
         transition: all 0.3s ease;
     }
 
-    .dispatch-card:hover {
+    .article-card:hover {
         border-color: var(--primary);
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--shadow);
+    }
+
+    :global(body.theme-light) .article-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    :global(body.theme-light) .article-card:hover {
+        border-color: #1a365d;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .card-link {
@@ -491,7 +430,8 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
     }
 
     .card-image {
-        height: 180px;
+        position: relative;
+        aspect-ratio: 16/9;
         overflow: hidden;
     }
 
@@ -499,281 +439,161 @@ const allCategories = ['All', ...new Set(articles.flatMap(a => a.tags?.split(','
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 0.4s ease;
     }
 
-    .dispatch-card:hover .card-image img {
+    .card-link:hover .card-image img {
         transform: scale(1.05);
     }
 
-    .card-content {
-        padding: 1.5rem;
+    .card-category {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--primary);
+        color: var(--dark-bg);
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 4px 8px;
+        border-radius: 3px;
     }
 
-    .article-meta {
+    :global(body.theme-light) .card-category {
+        background: #1a365d;
+        color: #ffffff;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card-content h4 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.3;
+        margin-bottom: 10px;
+        transition: color 0.2s;
+    }
+
+    .card-link:hover .card-content h4 {
+        color: var(--primary);
+    }
+
+    .card-excerpt {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-meta {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
+        gap: 6px;
         font-size: 0.8125rem;
         color: var(--text-tertiary);
     }
 
-    .card-content h3 {
+    .card-meta .author {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    /* More Articles Section */
+    .more-articles-section {
+        padding-top: 40px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .more-articles-list {
+        display: grid;
+        gap: 24px;
+    }
+
+    .list-article {
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .list-article:last-child {
+        border-bottom: none;
+    }
+
+    .list-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .list-link:hover h4 {
+        color: var(--primary);
+    }
+
+    .list-category {
+        display: inline-block;
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    :global(body.theme-light) .list-category {
+        color: #1a365d;
+    }
+
+    .list-article h4 {
         font-size: 1.125rem;
         font-weight: 600;
-        line-height: 1.4;
-        margin-bottom: 0.75rem;
         color: var(--text-primary);
+        line-height: 1.4;
+        margin-bottom: 8px;
+        transition: color 0.2s;
     }
 
-    .card-content .excerpt {
-        font-size: 0.9375rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin-bottom: 1rem;
-    }
-
-    .read-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--primary);
-        font-weight: 600;
-        font-size: 0.875rem;
-        transition: gap 0.2s ease;
-    }
-
-    .dispatch-card:hover .read-link {
-        gap: 0.75rem;
-    }
-
-    .read-link i {
-        font-size: 0.75rem;
-    }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 3rem;
-    }
-
-    .page-btn {
-        width: 40px;
-        height: 40px;
+    .list-meta {
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 0.5rem;
-        color: var(--text-secondary);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .page-btn:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-
-    .page-btn.active {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-    }
-
-    /* No Results */
-    .no-results {
-        text-align: center;
-        padding: 4rem 2rem;
-    }
-
-    .no-results i {
-        font-size: 2.5rem;
+        gap: 6px;
+        font-size: 0.8125rem;
         color: var(--text-tertiary);
-        margin-bottom: 1rem;
-    }
-
-    .no-results h3 {
-        margin-bottom: 0.5rem;
-    }
-
-    .no-results p {
-        color: var(--text-secondary);
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: var(--dark-card);
-        border: 1px dashed var(--border-medium);
-        border-radius: 1rem;
-    }
-
-    .empty-state i {
-        font-size: 2.5rem;
-        color: var(--primary);
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-
-    .empty-state h3 {
-        margin-bottom: 0.5rem;
-    }
-
-    .empty-state p {
-        color: var(--text-secondary);
-    }
-
-    /* Subscribe Section */
-    .subscribe-section {
-        padding: 5rem 0;
-        background: var(--dark-surface);
-    }
-
-    .subscribe-wrapper {
-        max-width: 700px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .subscribe-text {
-        margin-bottom: 2rem;
-    }
-
-    .subscribe-text h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-    }
-
-    .subscribe-text p {
-        color: var(--text-secondary);
-        font-size: 1.0625rem;
     }
 
     /* Responsive */
     @media (max-width: 1024px) {
-        .dispatches-grid {
+        .hero-link {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .article-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (max-width: 768px) {
-        .hero-section {
-            min-height: auto;
-            padding: 80px 16px 40px;
+        .newsletter-header {
+            padding: 100px 16px 40px;
         }
 
-        .hero-container {
-            padding: 20px 0;
-        }
-        
-        .hero-content {
-            padding: 0 8px;
-        }
-        
-        .hero-section h1 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero-description {
-            font-size: 1rem;
-            line-height: 1.7;
-        }
-        
-        .hero-cta {
-            margin-top: 1.5rem;
+        .newsletter-main {
+            padding: 40px 16px 60px;
         }
 
-        .category-nav {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .search-box {
-            width: 100%;
-        }
-
-        .search-box input {
-            width: 100%;
-        }
-
-        .dispatches-grid {
+        .article-grid {
             grid-template-columns: 1fr;
+        }
+
+        .hero-featured {
+            margin-bottom: 40px;
         }
     }
 </style>
-
-<script is:inline>
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('searchInput');
-    const categoryTabs = document.querySelectorAll('.tab-btn');
-    const dispatchCards = document.querySelectorAll('.dispatch-card');
-    const noResults = document.getElementById('noResults');
-    const dispatchesGrid = document.getElementById('dispatchesGrid');
-
-    // Search functionality
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            filterCards(query, getActiveCategory());
-        });
-    }
-
-    // Category tab functionality
-    categoryTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            categoryTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            filterCards(searchInput?.value.toLowerCase() || '', tab.dataset.category);
-        });
-    });
-
-    function getActiveCategory() {
-        const activeTab = document.querySelector('.tab-btn.active');
-        return activeTab?.dataset.category || 'all';
-    }
-
-    function filterCards(query, category) {
-        let visibleCount = 0;
-        
-        dispatchCards.forEach(card => {
-            const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
-            const excerpt = card.querySelector('.excerpt')?.textContent.toLowerCase() || '';
-            const tags = card.dataset.tags || '';
-            
-            const matchesSearch = title.includes(query) || excerpt.includes(query);
-            const matchesCategory = category === 'all' || tags.includes(category);
-            
-            if (matchesSearch && matchesCategory) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        if (noResults) {
-            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-        }
-    }
-
-    // Pagination (client-side for now)
-    const pageButtons = document.querySelectorAll('.page-btn');
-    pageButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            pageButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            // For static site, would need to implement actual pagination
-            // Currently showing all on page 1
-        });
-    });
-});
-</script>

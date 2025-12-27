@@ -1,5 +1,5 @@
 {
-    "name": "Fikanova Master Orchestrator v4.0",
+    "name": "Fikanova Master Orchestrator v4.1",
     "nodes": [
         {
             "parameters": {
@@ -53,7 +53,7 @@
         {
             "parameters": {
                 "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CEO Agent of Fikanova's AI workforce. Classify the user's intent and route to the correct C-Suite manager.\n\n## Input:\nSource: {{ $json.source }}\nMessage: {{ $json.message }}\n\n## Available Managers:\n- CMO: Marketing, content, social media, newsletters, branding, growth\n- CFO: Finance, money, expenses, revenue, M-Pesa, KRA, invoices, ledger\n- CTO: Tech, code, deploy, API, build, security, uptime\n- CIO: Knowledge, documentation, articles, data, reports\n- CimpO: Governance, compliance, audits, errors, monitoring\n\n## Response Format (JSON only):\n{\n  \"manager\": \"CMO|CFO|CTO|CIO|CimpO\",\n  \"intent\": \"brief description of what user wants\",\n  \"priority\": \"high|medium|low\",\n  \"sub_agent\": \"suggested specialist if known\"\n}\n\nRespond with valid JSON only.",
+                "prompt": "You are the CEO Agent of Fikanova's AI workforce. Classify the user's intent and route to the correct C-Suite manager.\n\n## Input:\nSource: {{ $json.source }}\nMessage: {{ $json.message }}\n\n## Available Managers:\n- CMO: Marketing, content, social media, newsletters, branding, growth\n- CFO: Finance, money, expenses, revenue, M-Pesa, KRA, invoices, ledger\n- CTO: Tech, code, deploy, API, build, security, uptime\n- CIO: Knowledge, documentation, articles, data, reports\n- CimpO: Governance, compliance, audits, errors, monitoring\n\n## Email Accounts (for email tasks):\n- info@fikanova.co.ke: Marketing, newsletters, lead responses\n- moseti@fikanova.co.ke: Invoices, quotations, client comms\n- moseti@etco-kenya.org: ETCO NGO, volunteer, SDG impact\n- obadiahnyaenya@my.uopeople.edu: Academic, professors, coursework\n- nya.onmoseti@gmail.com: Personal, friends, family\n\n## Response Format (JSON only):\n{\n  \"manager\": \"CMO|CFO|CTO|CIO|CimpO\",\n  \"intent\": \"brief description of what user wants\",\n  \"priority\": \"high|medium|low\",\n  \"sub_agent\": \"suggested specialist if known\",\n  \"email_task\": true|false,\n  \"suggested_email\": \"email address if email_task is true\",\n  \"email_context\": \"business|ngo|academic|personal if email_task\"\n}\n\nIf the user wants to send an email, set email_task:true and suggest the most appropriate email based on context.\n\nRespond with valid JSON only.",
                 "options": {
                     "temperature": 0.1
                 }
@@ -1096,6 +1096,121 @@
             "position": [
                 300,
                 600
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "// Email Router - Suggests and routes to correct email account\nconst routing = items[0].json.routing || {};\n\nif (routing.email_task) {\n  items[0].json.email_config = {\n    suggested_from: routing.suggested_email,\n    context: routing.email_context,\n    accounts: {\n      'business_info': 'info@fikanova.co.ke',\n      'business_moseti': 'moseti@fikanova.co.ke',\n      'ngo': 'moseti@etco-kenya.org',\n      'academic': 'obadiahnyaenya@my.uopeople.edu',\n      'personal': 'nya.onmoseti@gmail.com'\n    },\n    confirmation_message: `📧 Suggest sending from: ${routing.suggested_email} (${routing.email_context})\\nReply SEND to confirm or provide edits.`\n  };\n}\n\nreturn items;"
+            },
+            "id": "email-router",
+            "name": "CEO_Email_Router",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                900,
+                800
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Email_Drafts/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"from_email\": \"{{ $json.email_config?.suggested_from || '' }}\",\n    \"to_email\": \"{{ $json.routing?.email_to || '' }}\",\n    \"subject\": \"{{ $json.routing?.email_subject || '' }}\",\n    \"body\": \"{{ $json.llm_response?.text || '' }}\",\n    \"status\": \"draft\",\n    \"context\": \"{{ $json.email_config?.context || 'business' }}\",\n    \"created_at\": \"{{ new Date().toISOString() }}\"\n  }\n}"
+            },
+            "id": "email-draft-save",
+            "name": "CEO_Save_Email_Draft",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1100,
+                800
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.notion.com/v1/pages",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.NOTION_API_KEY }}"
+                        },
+                        {
+                            "name": "Notion-Version",
+                            "value": "2022-06-28"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"parent\": { \"database_id\": \"{{ $env.NOTION_DATABASE_RESOURCES }}\" },\n  \"properties\": {\n    \"Title\": { \"title\": [{ \"text\": { \"content\": \"{{ $json.prd_title || $json.cto_action?.content?.title || 'PRD Document' }}\" }}] },\n    \"Type\": { \"select\": { \"name\": \"PRD\" }},\n    \"Agent\": { \"select\": { \"name\": \"CTO\" }},\n    \"Status\": { \"select\": { \"name\": \"Published\" }}\n  },\n  \"children\": [\n    {\n      \"object\": \"block\",\n      \"type\": \"paragraph\",\n      \"paragraph\": { \"rich_text\": [{ \"text\": { \"content\": \"{{ ($json.llm_response?.text || '').substring(0, 2000) }}\" }}] }\n    }\n  ]\n}"
+            },
+            "id": "notion-publish-prd",
+            "name": "CTO_Notion_Publish_PRD",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                2000,
+                800
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.notion.com/v1/pages",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.NOTION_API_KEY }}"
+                        },
+                        {
+                            "name": "Notion-Version",
+                            "value": "2022-06-28"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"parent\": { \"database_id\": \"{{ $env.NOTION_DATABASE_CALENDAR }}\" },\n  \"properties\": {\n    \"Name\": { \"title\": [{ \"text\": { \"content\": \"{{ $json.event_title || 'Scheduled Event' }}\" }}] },\n    \"Date\": { \"date\": { \"start\": \"{{ $json.event_date || new Date().toISOString() }}\" }},\n    \"Type\": { \"select\": { \"name\": \"{{ $json.event_type || 'Task' }}\" }},\n    \"Agent\": { \"select\": { \"name\": \"{{ $json.routing?.manager || 'CEO' }}\" }}\n  }\n}"
+            },
+            "id": "notion-add-calendar",
+            "name": "CEO_Notion_Add_Calendar",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1300,
+                900
             ]
         }
     ],

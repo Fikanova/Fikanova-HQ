@@ -215,4 +215,30 @@
     padding-left: 12px;
     font-weight: 600;
 }
+
+/* Light mode: Dark blue dropdowns with gold/white text */
+:global(body.theme-light) .mega-menu,
+:global(body.theme-light) .dropdown-menu {
+    background: #1a365d;
+    border-color: rgba(201, 169, 98, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+:global(body.theme-light) .mega-menu-group h4 {
+    color: #e0c478; /* Light gold for category headings */
+}
+
+:global(body.theme-light) .mega-menu-group a,
+:global(body.theme-light) .dropdown-menu a {
+    color: #ffffff; /* White links */
+}
+
+:global(body.theme-light) .mega-menu-group a:hover,
+:global(body.theme-light) .dropdown-menu a:hover {
+    color: #c9a962; /* Gold on hover */
+}
+
+:global(body.theme-light) .mobile-category-label {
+    color: #e0c478; /* Light gold for mobile category labels */
+}
 </style>

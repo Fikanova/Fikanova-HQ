@@ -1,23 +1,239 @@
 {
     "name": "L2 - Head of ESG",
+    "description": "ESG & Impact manager - handles sustainability reports, partner sync, and impact metrics",
     "nodes": [
         {
-            "name": "Audit Request",
-            "type": "n8n-nodes-base.webhook"
+            "name": "ESG Request Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "esg-request",
+                "httpMethod": "POST",
+                "responseMode": "responseNode"
+            },
+            "position": [
+                100,
+                300
+            ]
         },
         {
-            "name": "Partner Sync (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Determine ESG Task",
+            "type": "n8n-nodes-base.switch",
             "parameters": {
-                "workflowId": "PARTNER_SYNC_ID"
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "report",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Report"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "partner",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Partner"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "impact",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Impact"
+                        }
+                    ]
+                }
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "ESG Report Generator",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the ESG Report Specialist at Fikanova. Generate an ESG/sustainability report:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCover:\n- Environmental impact (carbon footprint, digital sustainability)\n- Social impact (community projects, education initiatives)\n- Governance (transparency, ethics, compliance)\n\nFormat as a professional report.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                150
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "ESG Reporter (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Partner Sync Manager",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "parameters": {
-                "workflowId": "ESG_REPORTER_ID"
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Partner Sync Specialist at Fikanova. Handle this partner-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Update partner status\n- Sync partner data with NGO networks\n- Generate partner collaboration reports\n\nProvide actionable next steps.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
+        },
+        {
+            "name": "Impact Metrics Calculator",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Impact Metrics Specialist at Fikanova. Analyze and report on impact:\n\n{{ $json.message || JSON.stringify($json) }}\n\nMetrics to consider:\n- SDG alignment (which goals we're contributing to)\n- Community reach\n- Educational hours delivered\n- Jobs created/supported\n\nProvide quantitative and qualitative insights.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                450
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Head of ESG', result: $json }) }}"
+            },
+            "position": [
+                700,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "ESG Request Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Determine ESG Task",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Determine ESG Task": {
+            "Report": [
+                [
+                    {
+                        "node": "ESG Report Generator",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Partner": [
+                [
+                    {
+                        "node": "Partner Sync Manager",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Impact": [
+                [
+                    {
+                        "node": "Impact Metrics Calculator",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "ESG Report Generator": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Partner Sync Manager": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Impact Metrics Calculator": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CimpO"
+        },
+        {
+            "name": "ESG"
         }
     ]
 }

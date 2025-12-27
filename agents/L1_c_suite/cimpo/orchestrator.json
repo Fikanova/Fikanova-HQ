@@ -1,19 +1,340 @@
 {
-    "name": "L1 - CimpO Agent",
+    "name": "L1 - CimpO Agent (Governance)",
+    "description": "Chief Impact Officer - Governance, compliance, ESG, and audit oversight",
     "nodes": [
         {
-            "name": "Audit Trigger",
+            "name": "CimpO Trigger",
             "type": "n8n-nodes-base.webhook",
             "parameters": {
-                "path": "cimpo-audit"
-            }
+                "path": "cimpo-command",
+                "httpMethod": "POST",
+                "responseMode": "responseNode"
+            },
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "name": "Governance Router",
+            "type": "n8n-nodes-base.switch",
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.intent || $json.type}}",
+                                        "rightValue": "audit",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Audit"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.intent || $json.type}}",
+                                        "rightValue": "esg",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "ESG"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.intent || $json.type}}",
+                                        "rightValue": "compliance",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Compliance"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": false
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.intent || $json.type}}",
+                                        "rightValue": "report",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "contains"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Report"
+                        }
+                    ]
+                },
+                "fallbackOutput": "General"
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "Audit Agent (Delegate)",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "parameters": {
+                "workflowId": "={{ $env.AUDIT_AGENT_WORKFLOW_ID || 'audit-agent' }}"
+            },
+            "position": [
+                500,
+                100
+            ]
         },
         {
             "name": "Head of ESG (Delegate)",
             "type": "n8n-nodes-base.executeWorkflow",
             "parameters": {
-                "workflowId": "HEAD_OF_ESG_ID"
+                "workflowId": "={{ $env.HEAD_OF_ESG_WORKFLOW_ID || 'head-of-esg' }}"
+            },
+            "position": [
+                500,
+                250
+            ]
+        },
+        {
+            "name": "Compliance Checker",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CimpO (Chief Impact Officer) Compliance Checker at Fikanova. Review this compliance matter:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Data protection compliance (GDPR/Kenya DPA)\n- Financial regulations\n- Content guidelines\n- Brand safety\n- Ethical AI usage\n\nProvide a compliance assessment with recommendations.",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "position": [
+                500,
+                400
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
+        },
+        {
+            "name": "Governance Report Generator",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the CimpO Governance Report Generator at Fikanova. Generate a governance/impact report:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Agent activity summary\n- Compliance status\n- Risk assessment\n- ESG metrics\n- Recommendations\n\nFormat as a professional executive summary.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                550
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "name": "Log Governance Action",
+            "type": "n8n-nodes-base.httpRequest",
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/client_audits/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"action_type\": \"governance_review\",\n    \"agent\": \"CimpO\",\n    \"summary\": {{ JSON.stringify($json.text || $json.message || 'Governance action logged') }},\n    \"timestamp\": \"{{ new Date().toISOString() }}\"\n  }\n}"
+            },
+            "position": [
+                700,
+                300
+            ]
+        },
+        {
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'CimpO', governance: $json }) }}"
+            },
+            "position": [
+                900,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "CimpO Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Governance Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Governance Router": {
+            "Audit": [
+                [
+                    {
+                        "node": "Audit Agent (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "ESG": [
+                [
+                    {
+                        "node": "Head of ESG (Delegate)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Compliance": [
+                [
+                    {
+                        "node": "Compliance Checker",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Report": [
+                [
+                    {
+                        "node": "Governance Report Generator",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "General": [
+                [
+                    {
+                        "node": "Compliance Checker",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Audit Agent (Delegate)": {
+            "main": [
+                [
+                    {
+                        "node": "Log Governance Action",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Head of ESG (Delegate)": {
+            "main": [
+                [
+                    {
+                        "node": "Log Governance Action",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Compliance Checker": {
+            "main": [
+                [
+                    {
+                        "node": "Log Governance Action",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Governance Report Generator": {
+            "main": [
+                [
+                    {
+                        "node": "Log Governance Action",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Log Governance Action": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L1"
+        },
+        {
+            "name": "CimpO"
+        },
+        {
+            "name": "Governance"
         }
     ]
 }

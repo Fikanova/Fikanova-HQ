@@ -12,21 +12,32 @@
       "name": "CTO_Inbound_Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [100, 300]
+      "position": [
+        100,
+        300
+      ]
     },
     {
       "parameters": {
         "model": "models/gemini-2.0-flash",
         "prompt": "You are the CTO of Fikanova. Analyze this tech/dev request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. code_deploy - Deploy code to production\n2. code_review - Review PR or code changes\n3. security_audit - Run security trust audit\n4. uptime_check - Check site/API uptime\n5. function_deploy - Deploy Appwrite function\n6. bug_fix - Address a bug report\n7. feature_build - Build new feature\n\n## Tools Available:\n- Appwrite CLI/Functions\n- GitHub API\n- Site Uptime Monitors (Railway, Vercel)\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"dev_agent\" | \"security_agent\",\n  \"priority\": \"critical\" | \"high\" | \"medium\" | \"low\",\n  \"repo\": \"repository name if applicable\",\n  \"description\": \"Brief description\"\n}",
-        "options": { "temperature": 0.2 }
+        "options": {
+          "temperature": 0.2
+        }
       },
       "id": "cto-classify",
       "name": "CTO_Intent_Classifier",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
-      "position": [300, 300],
+      "position": [
+        300,
+        300
+      ],
       "credentials": {
-        "googleGeminiApi": { "id": "gemini-creds", "name": "Google Gemini API" }
+        "googleGeminiApi": {
+          "id": "gemini-creds",
+          "name": "Google Gemini API"
+        }
       }
     },
     {
@@ -37,14 +48,35 @@
       "name": "CTO_Parse_Decision",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 300]
+      "position": [
+        500,
+        300
+      ]
     },
     {
       "parameters": {
         "rules": {
           "values": [
-            { "conditions": { "options": { "leftValue": "={{ $json.decision.delegate_to }}", "operation": "equals", "rightValue": "dev_agent" } }, "output": 0 },
-            { "conditions": { "options": { "leftValue": "={{ $json.decision.delegate_to }}", "operation": "equals", "rightValue": "security_agent" } }, "output": 1 }
+            {
+              "conditions": {
+                "options": {
+                  "leftValue": "={{ $json.decision.delegate_to }}",
+                  "operation": "equals",
+                  "rightValue": "dev_agent"
+                }
+              },
+              "output": 0
+            },
+            {
+              "conditions": {
+                "options": {
+                  "leftValue": "={{ $json.decision.delegate_to }}",
+                  "operation": "equals",
+                  "rightValue": "security_agent"
+                }
+              },
+              "output": 1
+            }
           ]
         },
         "fallbackOutput": 0
@@ -53,7 +85,10 @@
       "name": "CTO_Sub_Agent_Router",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
-      "position": [700, 300]
+      "position": [
+        700,
+        300
+      ]
     },
     {
       "parameters": {
@@ -65,7 +100,10 @@
       "name": "CTO_Delegate_Dev_Agent",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
-      "position": [900, 200]
+      "position": [
+        900,
+        200
+      ]
     },
     {
       "parameters": {
@@ -77,7 +115,10 @@
       "name": "CTO_Delegate_Security_Agent",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
-      "position": [900, 400]
+      "position": [
+        900,
+        400
+      ]
     },
     {
       "parameters": {
@@ -89,22 +130,88 @@
       "name": "CTO_Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1100, 300]
+      "position": [
+        1100,
+        300
+      ]
     }
   ],
   "connections": {
-    "CTO_Inbound_Webhook": { "main": [[{ "node": "CTO_Intent_Classifier", "type": "main", "index": 0 }]] },
-    "CTO_Intent_Classifier": { "main": [[{ "node": "CTO_Parse_Decision", "type": "main", "index": 0 }]] },
-    "CTO_Parse_Decision": { "main": [[{ "node": "CTO_Sub_Agent_Router", "type": "main", "index": 0 }]] },
-    "CTO_Sub_Agent_Router": {
+    "CTO_Inbound_Webhook": {
       "main": [
-        [{ "node": "CTO_Delegate_Dev_Agent", "type": "main", "index": 0 }],
-        [{ "node": "CTO_Delegate_Security_Agent", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "CTO_Intent_Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "CTO_Delegate_Dev_Agent": { "main": [[{ "node": "CTO_Response", "type": "main", "index": 0 }]] },
-    "CTO_Delegate_Security_Agent": { "main": [[{ "node": "CTO_Response", "type": "main", "index": 0 }]] }
+    "CTO_Intent_Classifier": {
+      "main": [
+        [
+          {
+            "node": "CTO_Parse_Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO_Parse_Decision": {
+      "main": [
+        [
+          {
+            "node": "CTO_Sub_Agent_Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO_Sub_Agent_Router": {
+      "main": [
+        [
+          {
+            "node": "CTO_Delegate_Dev_Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CTO_Delegate_Security_Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO_Delegate_Dev_Agent": {
+      "main": [
+        [
+          {
+            "node": "CTO_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO_Delegate_Security_Agent": {
+      "main": [
+        [
+          {
+            "node": "CTO_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" },
-  "tags": [{ "name": "L1" }, { "name": "c-suite" }, { "name": "builder" }]
+  "settings": {
+    "executionOrder": "v1"
+  }
 }

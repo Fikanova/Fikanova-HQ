@@ -1,23 +1,239 @@
 {
     "name": "L2 - Head of Ops",
+    "description": "Operations manager - handles daily briefs, meeting prep, and operational efficiency",
     "nodes": [
         {
-            "name": "Daily Brief Request",
-            "type": "n8n-nodes-base.webhook"
+            "name": "Ops Request Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "ops-request",
+                "httpMethod": "POST",
+                "responseMode": "responseNode"
+            },
+            "position": [
+                100,
+                300
+            ]
         },
         {
-            "name": "Morning Briefer (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Determine Ops Task",
+            "type": "n8n-nodes-base.switch",
             "parameters": {
-                "workflowId": "MORNING_BRIEFER_ID"
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "brief",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Brief"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "meeting",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Meeting"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "schedule",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Schedule"
+                        }
+                    ]
+                }
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "Morning Briefer",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Morning Briefer at Fikanova. Generate a daily executive brief:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Priority tasks for today\n- Key meetings scheduled\n- Pending approvals\n- Important deadlines\n- Quick wins to focus on\n\nKeep it concise and actionable.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                150
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "Meeting Prep (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Meeting Prep Assistant",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "parameters": {
-                "workflowId": "MEETING_PREP_ID"
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Meeting Prep Specialist at Fikanova. Prepare for this meeting:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Agenda suggestions\n- Key talking points\n- Background context\n- Questions to ask\n- Action items to propose",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
+        },
+        {
+            "name": "Schedule Manager",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Schedule Manager at Fikanova. Handle this scheduling request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Find optimal meeting times\n- Check calendar conflicts\n- Suggest time blocks for focused work\n- Manage recurring events\n\nProvide scheduling recommendations.",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "position": [
+                500,
+                450
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Head of Ops', result: $json }) }}"
+            },
+            "position": [
+                700,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Ops Request Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Determine Ops Task",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Determine Ops Task": {
+            "Brief": [
+                [
+                    {
+                        "node": "Morning Briefer",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Meeting": [
+                [
+                    {
+                        "node": "Meeting Prep Assistant",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Schedule": [
+                [
+                    {
+                        "node": "Schedule Manager",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Morning Briefer": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Meeting Prep Assistant": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Manager": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CIO"
+        },
+        {
+            "name": "Operations"
         }
     ]
 }

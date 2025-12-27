@@ -1,27 +1,263 @@
 {
     "name": "L2 - Head of Product",
+    "description": "Product operations manager - handles Tally leads, recon, quotes, and HubSpot CRM",
     "nodes": [
         {
-            "name": "Tally Inbound",
-            "type": "n8n-nodes-base.webhook"
+            "name": "Product Request Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "product-request",
+                "httpMethod": "POST",
+                "responseMode": "responseNode"
+            },
+            "position": [
+                100,
+                300
+            ]
         },
         {
-            "name": "Recon Bot (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Determine Product Task",
+            "type": "n8n-nodes-base.switch",
             "parameters": {
-                "workflowId": "RECON_BOT_ID"
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "lead",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Lead"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "recon",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Recon"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "quote",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "outputKey": "Quote"
+                        }
+                    ]
+                }
+            },
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "name": "Lead Processor",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Lead Processor at Fikanova. Process this incoming lead:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Contact name\n- Company/Project\n- Service interest\n- Budget range\n- Timeline\n- Priority level (hot/warm/cold)\n\nRespond in JSON format for CRM entry.",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "position": [
+                500,
+                150
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "Quote Gen (Call Specialist)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Recon Bot",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "parameters": {
-                "workflowId": "QUOTE_GEN_ID"
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Recon Bot at Fikanova. Research this potential client/project:\n\n{{ $json.message || JSON.stringify($json) }}\n\nGather:\n- Company background\n- Social media presence\n- Potential pain points\n- Competition analysis\n- Recommended approach\n\nProvide actionable intelligence.",
+                "options": {
+                    "temperature": 0.4
+                }
+            },
+            "position": [
+                500,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
             }
         },
         {
-            "name": "HubSpot CRM",
-            "type": "n8n-nodes-base.hubspot"
+            "name": "Quote Generator",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "prompt": "You are the Quote Generator at Fikanova. Generate a project quote:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Service breakdown\n- Estimated hours\n- Price range (KES)\n- Timeline\n- Deliverables\n- Terms and conditions summary\n\nMake it professional and competitive.",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "position": [
+                500,
+                450
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "name": "HubSpot CRM Update",
+            "type": "n8n-nodes-base.hubspot",
+            "parameters": {
+                "operation": "create",
+                "resource": "contact"
+            },
+            "position": [
+                700,
+                150
+            ],
+            "notes": "Sync leads with HubSpot CRM"
+        },
+        {
+            "name": "Response",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ JSON.stringify({ success: true, agent: 'Head of Product', result: $json }) }}"
+            },
+            "position": [
+                900,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Product Request Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Determine Product Task",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Determine Product Task": {
+            "Lead": [
+                [
+                    {
+                        "node": "Lead Processor",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Recon": [
+                [
+                    {
+                        "node": "Recon Bot",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Quote": [
+                [
+                    {
+                        "node": "Quote Generator",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Lead Processor": {
+            "main": [
+                [
+                    {
+                        "node": "HubSpot CRM Update",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Recon Bot": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Quote Generator": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HubSpot CRM Update": {
+            "main": [
+                [
+                    {
+                        "node": "Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "L2"
+        },
+        {
+            "name": "CTO"
+        },
+        {
+            "name": "Product"
         }
     ]
 }

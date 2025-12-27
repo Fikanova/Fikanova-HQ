@@ -1,7 +1,7 @@
 ---
 /**
- * Dynamic Dispatch Route under /newsletter
- * Renders individual article pages with markdown content
+ * Individual Article Page - CIO-inspired editorial design
+ * Renders article with sidebar, breadcrumbs, and professional typography
  */
 import Layout from '../../layouts/Layout.astro';
 import { Client, Databases, Query } from 'appwrite';
@@ -9,8 +9,8 @@ import { marked } from 'marked';
 
 // Initialize Appwrite client
 const client = new Client()
-    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
-    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1')
+    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '6936df5800371a655e8e');
 
 const databases = new Databases(client);
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
@@ -24,8 +24,8 @@ marked.setOptions({
 
 export async function getStaticPaths() {
     const client = new Client()
-        .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
-        .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '');
+        .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1')
+        .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID || '6936df5800371a655e8e');
     
     const databases = new Databases(client);
     const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '693703ef001133c62d78';
@@ -45,6 +45,19 @@ export async function getStaticPaths() {
         console.error('Error fetching articles for static paths:', error);
         return [];
     }
+}
+
+// Fetch related articles
+let relatedArticles: any[] = [];
+try {
+    const response = await databases.listDocuments(
+        DATABASE_ID,
+        ARTICLES_COLLECTION_ID,
+        [Query.orderDesc('published_at'), Query.limit(4)]
+    );
+    relatedArticles = response.documents;
+} catch (error) {
+    console.log('Could not fetch related articles');
 }
 
 interface Props {
@@ -69,223 +82,445 @@ const htmlContent = marked.parse(article.content || '');
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
     });
 }
 
-// Calculate read time (average 200 words per minute)
+// Calculate read time
 function calculateReadTime(content: string): number {
-    const words = content.split(/\s+/).length;
+    const words = content?.split(/\s+/).length || 0;
     return Math.max(1, Math.ceil(words / 200));
 }
 
+// Get category label
+function getCategoryLabel(tags: string): string {
+    const tagList = tags?.toLowerCase() || '';
+    if (tagList.includes('agent')) return 'AGENTS';
+    if (tagList.includes('automation')) return 'AUTOMATION';
+    if (tagList.includes('strategy') || tagList.includes('business')) return 'STRATEGY';
+    if (tagList.includes('open source')) return 'OPEN SOURCE';
+    return 'AI INSIGHTS';
+}
+
 const readTime = calculateReadTime(article.content || '');
+const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).slice(0, 3);
 ---
 
 <Layout title={`${article.title} | The Termite Stack`}>
-    <article class="dispatch-article">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
         <div class="container">
-            <!-- Back Link -->
-            <a href="/newsletter" class="back-link">
-                <i class="fas fa-arrow-left"></i>
-                Back to The Termite Stack
-            </a>
-
-            <!-- Article Header -->
-            <header class="article-header">
-                <div class="article-meta">
-                    <time datetime={article.published_at}>
-                        <i class="fas fa-calendar-alt"></i>
-                        {formatDate(article.published_at)}
-                    </time>
-                    <span class="read-time">
-                        <i class="fas fa-clock"></i>
-                        {readTime} min read
-                    </span>
-                    {article.author && (
-                        <span class="author">
-                            <i class="fas fa-user"></i>
-                            {article.author}
-                        </span>
-                    )}
-                </div>
-
-                <h1>{article.title}</h1>
-
-                {article.tags && (
-                    <div class="article-tags">
-                        {article.tags.split(',').map((tag: string) => (
-                            <span class="tag">{tag.trim()}</span>
-                        ))}
-                    </div>
-                )}
-            </header>
-
-            <!-- Article Content -->
-            <div class="article-content prose" set:html={htmlContent} />
-
-            <!-- Article Footer -->
-            <footer class="article-footer">
-                <div class="share-section">
-                    <span>Share this dispatch:</span>
-                    <div class="share-buttons">
-                        <a 
-                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="share-btn twitter"
-                            title="Share on Twitter"
-                        >
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a 
-                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="share-btn linkedin"
-                            title="Share on LinkedIn"
-                        >
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <button 
-                            class="share-btn copy"
-                            title="Copy link"
-                            onclick="copyLink()"
-                        >
-                            <i class="fas fa-link"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <a href="/newsletter" class="back-link-footer">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to The Termite Stack
-                </a>
-            </footer>
+            <a href="/">Home</a>
+            <span class="separator">›</span>
+            <a href="/newsletter">Newsletter</a>
+            <span class="separator">›</span>
+            <span class="current">{article.title.substring(0, 40)}...</span>
         </div>
-    </article>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Article Column -->
+                <article class="article-column">
+                    <!-- Article Header -->
+                    <header class="article-header">
+                        <span class="category-label">{getCategoryLabel(article.tags)}</span>
+                        <h1>{article.title}</h1>
+                        <p class="article-deck">{article.excerpt}</p>
+                        
+                        <div class="article-meta">
+                            <div class="author-section">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="author-details">
+                                    <span class="author-name">{article.author || 'Nyaenya Moseti'}</span>
+                                    <span class="author-title">Founder, Fikanova</span>
+                                </div>
+                            </div>
+                            <div class="meta-section">
+                                <time datetime={article.published_at}>
+                                    <i class="fas fa-calendar"></i>
+                                    {formatDate(article.published_at)}
+                                </time>
+                                <span class="read-time">
+                                    <i class="fas fa-clock"></i>
+                                    {readTime} min read
+                                </span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Social Share Bar -->
+                    <div class="share-bar">
+                        <span class="share-label">Share:</span>
+                        <div class="share-buttons">
+                            <a 
+                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="share-btn"
+                                title="Share on Twitter"
+                            >
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a 
+                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="share-btn"
+                                title="Share on LinkedIn"
+                            >
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <button 
+                                class="share-btn copy-btn"
+                                title="Copy link"
+                                onclick="copyLink()"
+                            >
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Article Content -->
+                    <div class="article-content prose" set:html={htmlContent} />
+
+                    <!-- Tags -->
+                    {article.tags && (
+                        <div class="article-tags">
+                            {article.tags.split(',').map((tag: string) => (
+                                <a href={`/newsletter?topic=${tag.trim().toLowerCase()}`} class="tag">
+                                    {tag.trim()}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+
+                    <!-- Article Footer -->
+                    <footer class="article-footer">
+                        <a href="/newsletter" class="back-link">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Newsletter
+                        </a>
+                    </footer>
+                </article>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <!-- Newsletter Signup -->
+                    <div class="sidebar-card newsletter-card">
+                        <span class="card-label">SUBSCRIBE</span>
+                        <h3 class="card-title">From our desk straight to your inbox</h3>
+                        <p class="card-description">
+                            Weekly AI insights. No spam. Unsubscribe anytime.
+                        </p>
+                        <form class="newsletter-form" action="#" method="POST">
+                            <input 
+                                type="email" 
+                                name="email" 
+                                placeholder="your@email.com" 
+                                required 
+                                class="newsletter-input"
+                            />
+                            <button type="submit" class="newsletter-btn">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Related Articles -->
+                    {filteredRelated.length > 0 && (
+                        <div class="sidebar-card related-card">
+                            <span class="card-label">RELATED ARTICLES</span>
+                            <div class="related-list">
+                                {filteredRelated.map((related) => (
+                                    <a href={`/newsletter/${related.slug}`} class="related-item">
+                                        <span class="related-category">{getCategoryLabel(related.tags)}</span>
+                                        <h4>{related.title}</h4>
+                                        <span class="related-meta">
+                                            {formatDate(related.published_at)}
+                                        </span>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <!-- Author Card -->
+                    <div class="sidebar-card author-card">
+                        <span class="card-label">ABOUT THE AUTHOR</span>
+                        <div class="author-content">
+                            <div class="author-avatar-large">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4>{article.author || 'Nyaenya Moseti'}</h4>
+                            <p>
+                                Building AI-powered systems for African SMEs. 
+                                Former dev, current founder, perpetual learner.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://twitter.com/nyaenyamoseti" target="_blank" rel="noopener">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/nyaenyamoseti" target="_blank" rel="noopener">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
 </Layout>
 
 <style>
-    .dispatch-article {
-        padding: 120px 0 80px;
+    /* Article Page Variables - Dark Blue + Gold Theme */
+    :root {
+        --accent-blue: #1a365d;
+        --accent-blue-hover: #0f2440;
+        --accent-gold: #c9a962;
+        --text-dark: #0C0C0C;
+        --text-medium: #444444;
+        --text-light: #666666;
+        --bg-cream: #FAF8F5;
+        --bg-white: #FFFFFF;
+        --border-light: #E5E5E5;
+        --font-serif: 'Georgia', 'Times New Roman', serif;
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    .container {
-        max-width: 800px;
+    /* Breadcrumb */
+    .breadcrumb {
+        padding: 100px 24px 16px;
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-light);
     }
 
-    /* Back Link */
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-secondary);
+    .breadcrumb .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        font-size: 0.8125rem;
+        color: var(--text-light);
+    }
+
+    .breadcrumb a {
+        color: var(--text-light);
         text-decoration: none;
-        font-size: 0.9375rem;
-        font-weight: 500;
-        margin-bottom: 2rem;
-        transition: all 0.2s ease;
+        transition: color 0.2s;
     }
 
-    .back-link:hover {
-        color: var(--primary);
-        gap: 0.75rem;
+    .breadcrumb a:hover {
+        color: var(--accent-blue);
     }
 
-    .back-link i {
-        transition: transform 0.2s ease;
+    .breadcrumb .separator {
+        margin: 0 8px;
+        color: var(--border-light);
     }
 
-    .back-link:hover i {
-        transform: translateX(-4px);
+    .breadcrumb .current {
+        color: var(--text-medium);
+    }
+
+    /* Page Wrapper */
+    .page-wrapper {
+        background: var(--bg-white);
+        padding: 40px 24px 80px;
+        min-height: 100vh;
+    }
+
+    .page-wrapper .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Content Grid */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 60px;
+    }
+
+    /* Article Column */
+    .article-column {
+        min-width: 0;
     }
 
     /* Article Header */
     .article-header {
-        margin-bottom: 3rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .category-label {
+        display: inline-block;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 16px;
+    }
+
+    .article-header h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(2rem, 5vw, 2.75rem);
+        font-weight: 700;
+        color: var(--text-dark);
+        line-height: 1.15;
+        margin-bottom: 20px;
+    }
+
+    .article-deck {
+        font-family: var(--font-sans);
+        font-size: 1.25rem;
+        color: var(--text-medium);
+        line-height: 1.6;
+        margin-bottom: 24px;
     }
 
     .article-meta {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 1.5rem;
         flex-wrap: wrap;
-        margin-bottom: 1.5rem;
+        gap: 20px;
     }
 
-    .article-meta time,
-    .article-meta .read-time,
-    .article-meta .author {
+    .author-section {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        color: var(--text-tertiary);
+        gap: 12px;
     }
 
-    .article-header h1 {
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 800;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        margin-bottom: 1.5rem;
-    }
-
-    .article-tags {
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+        background: var(--bg-cream);
+        border-radius: 50%;
         display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        font-size: 1.25rem;
     }
 
-    .tag {
-        padding: 0.375rem 1rem;
-        background: rgba(102, 126, 234, 0.15);
-        border: 1px solid rgba(102, 126, 234, 0.3);
-        border-radius: 2rem;
+    .author-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .author-name {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.9375rem;
+    }
+
+    .author-title {
         font-size: 0.8125rem;
-        color: var(--primary);
+        color: var(--text-light);
+    }
+
+    .meta-section {
+        display: flex;
+        gap: 20px;
+        font-size: 0.875rem;
+        color: var(--text-light);
+    }
+
+    .meta-section time,
+    .meta-section .read-time {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Share Bar */
+    .share-bar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 0;
+        margin-bottom: 32px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .share-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-light);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    /* Article Content - Prose Styling */
+    .share-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .share-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-cream);
+        border: none;
+        border-radius: 50%;
+        color: var(--text-light);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .share-btn:hover {
+        background: var(--accent-blue);
+        color: white;
+    }
+
+    /* Article Content - Prose */
     .article-content {
+        font-family: var(--font-sans);
         font-size: 1.125rem;
         line-height: 1.8;
-        color: var(--text-secondary);
+        color: var(--text-medium);
     }
 
     .article-content :global(h2) {
+        font-family: var(--font-serif);
         font-size: 1.75rem;
         font-weight: 700;
-        color: var(--text-primary);
-        margin-top: 2.5rem;
-        margin-bottom: 1rem;
-        letter-spacing: -0.02em;
+        color: var(--text-dark);
+        margin-top: 48px;
+        margin-bottom: 20px;
+        line-height: 1.25;
     }
 
     .article-content :global(h3) {
+        font-family: var(--font-serif);
         font-size: 1.375rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-top: 2rem;
-        margin-bottom: 0.75rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-top: 36px;
+        margin-bottom: 16px;
     }
 
     .article-content :global(p) {
-        margin-bottom: 1.5rem;
+        margin-bottom: 24px;
     }
 
     .article-content :global(a) {
-        color: var(--primary);
+        color: var(--accent-blue);
         text-decoration: underline;
         text-underline-offset: 3px;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.2s;
     }
 
     .article-content :global(a:hover) {
@@ -294,140 +529,343 @@ const readTime = calculateReadTime(article.content || '');
 
     .article-content :global(ul),
     .article-content :global(ol) {
-        margin-bottom: 1.5rem;
-        padding-left: 1.5rem;
+        margin-bottom: 24px;
+        padding-left: 24px;
     }
 
     .article-content :global(li) {
-        margin-bottom: 0.5rem;
+        margin-bottom: 8px;
     }
 
     .article-content :global(blockquote) {
-        border-left: 4px solid var(--primary);
-        padding-left: 1.5rem;
-        margin: 2rem 0;
+        border-left: 4px solid var(--accent-blue);
+        padding-left: 24px;
+        margin: 32px 0;
         font-style: italic;
-        color: var(--text-tertiary);
+        color: var(--text-light);
+        font-size: 1.25rem;
     }
 
     .article-content :global(code) {
-        background: var(--dark-card);
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.375rem;
+        background: var(--bg-cream);
+        padding: 2px 8px;
+        border-radius: 4px;
         font-size: 0.9em;
-        font-family: 'Fira Code', monospace;
+        font-family: 'Fira Code', 'Monaco', monospace;
+        color: var(--text-dark);
     }
 
     .article-content :global(pre) {
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        margin: 2rem 0;
+        background: #1a1a2e;
+        border-radius: 8px;
+        padding: 24px;
+        margin: 32px 0;
         overflow-x: auto;
     }
 
     .article-content :global(pre code) {
         background: none;
         padding: 0;
+        color: #e0e0e0;
+        font-size: 0.9rem;
     }
 
     .article-content :global(strong) {
-        color: var(--text-primary);
+        color: var(--text-dark);
         font-weight: 600;
     }
 
     .article-content :global(img) {
         max-width: 100%;
         height: auto;
-        border-radius: 0.75rem;
-        margin: 2rem 0;
+        border-radius: 8px;
+        margin: 32px 0;
+    }
+
+    .article-content :global(table) {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 32px 0;
+    }
+
+    .article-content :global(th),
+    .article-content :global(td) {
+        padding: 12px 16px;
+        border: 1px solid var(--border-light);
+        text-align: left;
+    }
+
+    .article-content :global(th) {
+        background: var(--bg-cream);
+        font-weight: 600;
+        color: var(--text-dark);
     }
 
     .article-content :global(hr) {
         border: none;
-        border-top: 1px solid var(--border-subtle);
-        margin: 3rem 0;
+        border-top: 1px solid var(--border-light);
+        margin: 48px 0;
+    }
+
+    /* Article Tags */
+    .article-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 32px 0;
+        border-top: 1px solid var(--border-light);
+        margin-top: 48px;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 6px 14px;
+        background: var(--bg-cream);
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        color: var(--text-medium);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .tag:hover {
+        background: var(--accent-blue);
+        color: white;
     }
 
     /* Article Footer */
     .article-footer {
-        margin-top: 4rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border-subtle);
+        padding-top: 32px;
     }
 
-    .share-section {
-        display: flex;
+    .back-link {
+        display: inline-flex;
         align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 2rem;
+        gap: 8px;
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-weight: 600;
+        transition: gap 0.2s;
     }
 
-    .share-section span {
-        color: var(--text-secondary);
-        font-size: 0.9375rem;
+    .back-link:hover {
+        gap: 12px;
     }
 
-    .share-buttons {
+    /* Sidebar */
+    .sidebar {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .sidebar-card {
+        background: var(--bg-cream);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .card-label {
+        display: block;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 16px;
+    }
+
+    .card-title {
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        line-height: 1.3;
+        margin-bottom: 8px;
+    }
+
+    .card-description {
+        font-size: 0.875rem;
+        color: var(--text-medium);
+        line-height: 1.5;
+        margin-bottom: 16px;
+    }
+
+    /* Newsletter Form */
+    .newsletter-form {
         display: flex;
-        gap: 0.75rem;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .share-btn {
-        width: 40px;
-        height: 40px;
+    .newsletter-input {
+        padding: 12px 16px;
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        font-size: 0.9375rem;
+        color: var(--text-dark);
+    }
+
+    .newsletter-input:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+    }
+
+    .newsletter-btn {
+        padding: 12px 20px;
+        background: var(--accent-blue);
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .newsletter-btn:hover {
+        background: var(--accent-blue-hover);
+    }
+
+    /* Related Articles */
+    .related-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .related-item {
+        display: block;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-light);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .related-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .related-item:hover h4 {
+        color: var(--accent-blue);
+    }
+
+    .related-category {
+        display: block;
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+
+    .related-item h4 {
+        font-family: var(--font-serif);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        line-height: 1.3;
+        margin-bottom: 4px;
+        transition: color 0.2s;
+    }
+
+    .related-meta {
+        font-size: 0.75rem;
+        color: var(--text-light);
+    }
+
+    /* Author Card */
+    .author-content {
+        text-align: center;
+    }
+
+    .author-avatar-large {
+        width: 72px;
+        height: 72px;
+        background: var(--bg-white);
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 0.625rem;
-        color: var(--text-secondary);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        margin: 0 auto 12px;
+        font-size: 1.75rem;
+        color: var(--text-light);
     }
 
-    .share-btn:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-        transform: translateY(-2px);
+    .author-content h4 {
+        font-family: var(--font-serif);
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 8px;
     }
 
-    .share-btn.twitter:hover {
-        color: #1DA1F2;
-        border-color: #1DA1F2;
+    .author-content p {
+        font-size: 0.875rem;
+        color: var(--text-medium);
+        line-height: 1.5;
+        margin-bottom: 16px;
     }
 
-    .share-btn.linkedin:hover {
-        color: #0A66C2;
-        border-color: #0A66C2;
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
     }
 
-    .back-link-footer {
-        display: inline-flex;
+    .social-links a {
+        width: 36px;
+        height: 36px;
+        background: var(--bg-white);
+        border-radius: 50%;
+        display: flex;
         align-items: center;
-        gap: 0.5rem;
-        color: var(--primary);
+        justify-content: center;
+        color: var(--text-light);
         text-decoration: none;
-        font-weight: 600;
-        transition: all 0.2s ease;
+        transition: all 0.2s;
     }
 
-    .back-link-footer:hover {
-        gap: 0.75rem;
+    .social-links a:hover {
+        background: var(--accent-blue);
+        color: white;
     }
 
     /* Responsive */
+    @media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+            gap: 48px;
+        }
+
+        .sidebar {
+            position: static;
+        }
+    }
+
     @media (max-width: 768px) {
-        .dispatch-article {
-            padding: 100px 0 60px;
+        .breadcrumb {
+            padding: 80px 16px 12px;
+        }
+
+        .page-wrapper {
+            padding: 24px 16px 60px;
+        }
+
+        .article-meta {
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .article-content {
             font-size: 1rem;
+        }
+
+        .share-bar {
+            flex-wrap: wrap;
         }
     }
 </style>
@@ -435,16 +873,18 @@ const readTime = calculateReadTime(article.content || '');
 <script is:inline>
     function copyLink() {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            const btn = document.querySelector('.share-btn.copy');
+            const btn = document.querySelector('.copy-btn');
             const icon = btn.querySelector('i');
+            const originalClass = icon.className;
+            
             icon.className = 'fas fa-check';
-            btn.style.color = '#10b981';
-            btn.style.borderColor = '#10b981';
+            btn.style.background = '#22c55e';
+            btn.style.color = 'white';
             
             setTimeout(() => {
-                icon.className = 'fas fa-link';
+                icon.className = originalClass;
+                btn.style.background = '';
                 btn.style.color = '';
-                btn.style.borderColor = '';
             }, 2000);
         });
     }
