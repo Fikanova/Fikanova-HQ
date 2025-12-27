@@ -1,0 +1,11 @@
+{
+    "name": "multi-llm-engine",
+    "runtime": "python-ml-3.11",
+    "entrypoint": "main.py",
+    "permissions": [
+        "any"
+    ],
+    "events": [],
+    "schedule": "",
+    "timeout": 60
+}
