@@ -17,12 +17,23 @@
         },
         {
             "name": "Load Draft with Edits",
-            "type": "n8n-nodes-appwrite.appwrite",
+            "type": "n8n-nodes-base.httpRequest",
             "parameters": {
-                "operation": "getDocument",
-                "databaseId": "693703ef001133c62d78",
-                "collectionId": "Content_Drafts",
-                "documentId": "={{$json.draft_id}}"
+                "method": "GET",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Content_Drafts/documents/{{$json.draft_id}}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        }
+                    ]
+                }
             },
             "position": [
                 300,
@@ -67,18 +78,30 @@
         },
         {
             "name": "Log to Learning_Traces",
-            "type": "n8n-nodes-appwrite.appwrite",
+            "type": "n8n-nodes-base.httpRequest",
             "parameters": {
-                "operation": "createDocument",
-                "databaseId": "693703ef001133c62d78",
-                "collectionId": "Learning_Traces",
-                "data": {
-                    "agent_name": "Editor",
-                    "observation": "={{$json.output.split('OBSERVATION:')[1]?.split('PATTERN:')[0] || $json.output}}",
-                    "action_taken": "={{$json.output.split('ACTION:')[1] || 'Logged for review'}}",
-                    "diff_summary": "={{$json.output}}",
-                    "logged_at": "={{new Date().toISOString()}}"
-                }
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Learning_Traces/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"agent_name\": \"Editor\",\n    \"observation\": \"{{$json.output.split('OBSERVATION:')[1]?.split('PATTERN:')[0] || $json.output}}\",\n    \"action_taken\": \"{{$json.output.split('ACTION:')[1] || 'Logged for review'}}\",\n    \"diff_summary\": \"{{$json.output}}\",\n    \"logged_at\": \"{{new Date().toISOString()}}\"\n  }\n}"
             },
             "position": [
                 900,
@@ -98,19 +121,30 @@
         },
         {
             "name": "Log ESG Metric - Time Saved",
-            "type": "n8n-nodes-appwrite.appwrite",
+            "type": "n8n-nodes-base.httpRequest",
             "parameters": {
-                "operation": "createDocument",
-                "databaseId": "693703ef001133c62d78",
-                "collectionId": "ESG_Metrics",
-                "data": {
-                    "metric_type": "hours_saved",
-                    "value": "={{$json.hours_saved}}",
-                    "unit": "hours",
-                    "context": "={{$json.content_type}} content generation",
-                    "period": "={{new Date().toISOString().slice(0,7)}}",
-                    "logged_at": "={{new Date().toISOString()}}"
-                }
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/ESG_Metrics/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"metric_type\": \"hours_saved\",\n    \"value\": \"{{$json.hours_saved}}\",\n    \"unit\": \"hours\",\n    \"context\": \"{{$json.content_type}} content generation\",\n    \"period\": \"{{new Date().toISOString().slice(0,7)}}\",\n    \"logged_at\": \"{{new Date().toISOString()}}\"\n  }\n}"
             },
             "position": [
                 700,

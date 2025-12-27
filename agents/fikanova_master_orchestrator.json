@@ -1,5 +1,5 @@
 {
-    "name": "Fikanova Master Orchestrator v3.0",
+    "name": "Fikanova Master Orchestrator v4.0",
     "nodes": [
         {
             "parameters": {
@@ -781,59 +781,71 @@
         },
         {
             "parameters": {
-                "operation": "create",
-                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
-                "collectionId": "Articles",
-                "data": {
-                    "title": "={{ $json.cmo_action?.content?.title || 'Untitled' }}",
-                    "slug": "={{ ($json.cmo_action?.content?.title || 'untitled').toLowerCase().replace(/[^a-z0-9]+/g, '-') }}",
-                    "content": "={{ $json.cmo_action?.content?.body || '' }}",
-                    "excerpt": "={{ ($json.cmo_action?.content?.body || '').substring(0, 200) }}",
-                    "published_at": "={{ new Date().toISOString() }}"
-                }
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Articles/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"title\": \"{{ $json.cmo_action?.content?.title || 'Untitled' }}\",\n    \"slug\": \"{{ ($json.cmo_action?.content?.title || 'untitled').toLowerCase().replace(/[^a-z0-9]+/g, '-') }}\",\n    \"content\": \"{{ $json.cmo_action?.content?.body || '' }}\",\n    \"excerpt\": \"{{ ($json.cmo_action?.content?.body || '').substring(0, 200) }}\",\n    \"published_at\": \"{{ new Date().toISOString() }}\"\n  }\n}"
             },
             "id": "appwrite-article",
             "name": "CMO_Appwrite_Blog",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 2200,
                 200
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {
-                "operation": "create",
-                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
-                "collectionId": "Agent_Logs",
-                "data": {
-                    "agent_name": "={{ $json.routing?.manager || 'Unknown' }}",
-                    "action": "={{ $json.error?.message || $json.cimpo_action?.log_entry?.message || 'Error logged' }}",
-                    "status": "error",
-                    "error_message": "={{ JSON.stringify($json.error || $json) }}",
-                    "logged_at": "={{ new Date().toISOString() }}"
-                }
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Agent_Logs/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"agent_name\": \"{{ $json.routing?.manager || 'Unknown' }}\",\n    \"action\": \"{{ $json.error?.message || $json.cimpo_action?.log_entry?.message || 'Error logged' }}\",\n    \"status\": \"error\",\n    \"error_message\": \"{{ JSON.stringify($json.error || $json) }}\",\n    \"logged_at\": \"{{ new Date().toISOString() }}\"\n  }\n}"
             },
             "id": "error-logger",
             "name": "CimpO_Error_Logger",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 1350,
                 1000
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {
@@ -952,7 +964,7 @@
         {
             "parameters": {
                 "respondWith": "json",
-                "responseBody": "={{ JSON.stringify({ success: true, message: $json.cmo_action?.message_to_user || $json.cfo_action?.message_to_user || 'Request processed' }) }}",
+                "responseBody": "={{ JSON.stringify({ success: true, message: $json.cmo_action?.message_to_user || $json.cfo_action?.message_to_user || $json.llm_response?.text || 'Request processed', engine_used: $json.llm_response?.engine || 'gemini' }) }}",
                 "options": {}
             },
             "id": "response-node",
@@ -962,6 +974,128 @@
             "position": [
                 2600,
                 500
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.MULTI_LLM_ENGINE_URL || 'https://694a4e4a0034ba05c8df.fra.appwrite.run' }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"task_type\": \"{{ $json.routing?.intent?.includes('x_post') ? 'x_post' : $json.routing?.intent?.includes('linkedin') ? 'linkedin' : $json.routing?.intent?.includes('prd') ? 'prd' : 'general' }}\",\n  \"prompt\": \"{{ $json.message }}\"\n}",
+                "options": {
+                    "timeout": 60000
+                }
+            },
+            "id": "multi-llm-engine",
+            "name": "Multi_LLM_Engine",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                700,
+                700
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "// Parse Multi-LLM Engine response\nconst response = items[0].json;\nitems[0].json.llm_response = {\n  success: response.success || false,\n  engine: response.engine || 'gemini',\n  text: response.text || response.response || '',\n  tokens: response.tokens || 0,\n  cost_usd: response.cost_usd || 0,\n  fallback_used: response.fallback_used || false\n};\nreturn items;"
+            },
+            "id": "parse-llm-response",
+            "name": "Parse_LLM_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                900,
+                700
+            ]
+        },
+        {
+            "parameters": {
+                "resource": "file",
+                "operation": "upload",
+                "driveId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "myDrive"
+                },
+                "folderId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_DRIVE_PRD_FOLDER_ID || '' }}"
+                },
+                "name": "={{ 'PRD_' + ($json.cto_action?.content?.title || $json.prd_title || 'Untitled').replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().toISOString().slice(0,10) + '.md' }}",
+                "binaryPropertyName": "data",
+                "options": {}
+            },
+            "id": "drive-upload-prd",
+            "name": "CTO_Drive_Upload_PRD",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 3,
+            "position": [
+                1800,
+                800
+            ],
+            "credentials": {
+                "googleDriveOAuth2Api": {
+                    "id": "google-drive-creds",
+                    "name": "Google Drive OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "resource": "file",
+                "operation": "list",
+                "driveId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "myDrive"
+                },
+                "folderId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_DRIVE_KNOWLEDGE_FOLDER_ID || '' }}"
+                },
+                "filter": {
+                    "name": "={{ $json.search_query || '' }}"
+                },
+                "options": {}
+            },
+            "id": "drive-list-knowledge",
+            "name": "CIO_Drive_List_Knowledge",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 3,
+            "position": [
+                1350,
+                900
+            ],
+            "credentials": {
+                "googleDriveOAuth2Api": {
+                    "id": "google-drive-creds",
+                    "name": "Google Drive OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Process Tally PRD submission\nconst tallyData = items[0].json.payload?.data?.fields || items[0].json.data?.fields || items[0].json;\n\nitems[0].json = {\n  source: 'tally',\n  message: `Generate a PRD for: ${tallyData.product_name || tallyData.title || tallyData.brief || 'Untitled'}`,\n  prd_brief: tallyData,\n  routing: {\n    manager: 'CTO',\n    intent: 'generate_prd',\n    priority: 'high'\n  },\n  task_type: 'prd'\n};\n\nreturn items;"
+            },
+            "id": "tally-prd-processor",
+            "name": "Tally_PRD_Processor",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                300,
+                600
             ]
         }
     ],
@@ -981,7 +1115,51 @@
             "main": [
                 [
                     {
-                        "node": "CEO_Normalize_Input",
+                        "node": "Tally_PRD_Processor",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Tally_PRD_Processor": {
+            "main": [
+                [
+                    {
+                        "node": "Multi_LLM_Engine",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Multi_LLM_Engine": {
+            "main": [
+                [
+                    {
+                        "node": "Parse_LLM_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse_LLM_Response": {
+            "main": [
+                [
+                    {
+                        "node": "CTO_Drive_Upload_PRD",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CTO_Drive_Upload_PRD": {
+            "main": [
+                [
+                    {
+                        "node": "CEO_Webhook_Response",
                         "type": "main",
                         "index": 0
                     }

@@ -18,26 +18,30 @@
         },
         {
             "parameters": {
-                "operation": "getAll",
-                "databaseId": "={{ $env.DATABASE_ID }}",
-                "collectionId": "Articles",
-                "limit": 20,
-                "options": {}
+                "method": "GET",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Articles/documents?limit=20",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        }
+                    ]
+                }
             },
             "id": "fetch-articles",
             "name": "Fetch_Articles",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 300,
                 300
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {

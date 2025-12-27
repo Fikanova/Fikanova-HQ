@@ -1,0 +1,32 @@
+{
+    "name": "Sheng NLP",
+    "version": "1.0.0",
+    "description": "Translates Kenyan Sheng slang to formal English for intent classification",
+    "triggers": [
+        "sheng",
+        "kenyan slang",
+        "translate slang",
+        "nipe",
+        "pesa",
+        "chapaa",
+        "fiti",
+        "sawa"
+    ],
+    "preferred_engine": "gemini",
+    "token_budget": 1000,
+    "requires_tools": [],
+    "output_format": "json",
+    "requires_approval": false,
+    "agent_access": [
+        "CEO",
+        "CMO",
+        "all"
+    ],
+    "automatic": true,
+    "metadata": {
+        "author": "Fikanova CEO Agent",
+        "created": "2024-01-01",
+        "last_updated": "2024-12-23",
+        "note": "Auto-invoked on inbound WhatsApp messages"
+    }
+}

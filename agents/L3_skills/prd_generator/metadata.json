@@ -1,0 +1,31 @@
+{
+    "name": "PRD Generator",
+    "version": "1.0.0",
+    "description": "Generates comprehensive Product Requirement Documents from briefs",
+    "triggers": [
+        "prd",
+        "product requirement",
+        "product spec",
+        "feature request",
+        "build spec",
+        "write a prd"
+    ],
+    "preferred_engine": "claude",
+    "token_budget": 4000,
+    "requires_tools": [
+        "google_drive"
+    ],
+    "output_format": "markdown",
+    "output_destination": "/Fikanova/PRDs",
+    "requires_approval": false,
+    "agent_access": [
+        "CTO",
+        "Dev",
+        "CEO"
+    ],
+    "metadata": {
+        "author": "Fikanova CTO Agent",
+        "created": "2024-01-01",
+        "last_updated": "2024-12-23"
+    }
+}

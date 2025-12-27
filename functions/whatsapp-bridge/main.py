@@ -7,9 +7,9 @@ import json
 import hmac
 import hashlib
 from datetime import datetime
-
-# Defer Appwrite imports until needed (POST requests only)
-# This allows GET webhook verification to work even if SDK has issues
+from appwrite.client import Client
+from appwrite.services.databases import Databases
+from appwrite.id import ID
 
 # Environment
 APPWRITE_ENDPOINT = os.environ.get('APPWRITE_ENDPOINT', 'https://fra.cloud.appwrite.io/v1')
@@ -19,6 +19,11 @@ DATABASE_ID = os.environ.get('DATABASE_ID', '693703ef001133c62d78')
 SOZURI_WEBHOOK_SECRET = os.environ.get('SOZURI_WEBHOOK_SECRET', '')
 N8N_CEO_WEBHOOK_URL = os.environ.get('N8N_CEO_WEBHOOK_URL', '')
 WHATSAPP_WEBHOOK_VERIFY_TOKEN = os.environ.get('WHATSAPP_WEBHOOK_VERIFY_TOKEN', '')
+
+# WhatsApp Cloud API for outbound messaging
+WHATSAPP_PHONE_NUMBER_ID = os.environ.get('WHATSAPP_PHONE_NUMBER_ID', '')
+WHATSAPP_ACCESS_TOKEN = os.environ.get('WHATSAPP_ACCESS_TOKEN', '')
+FOUNDER_PHONE = os.environ.get('FOUNDER_PHONE', '')
 
 # C-Suite routing keywords
 AGENT_ROUTING = {
@@ -57,6 +62,54 @@ def verify_sozuri_signature(payload: str, signature: str) -> bool:
     return hmac.compare_digest(expected, signature)
 
 
+def send_whatsapp_message(to_phone: str, message: str, context) -> dict:
+    """
+    Send WhatsApp message via Meta Cloud API.
+    Used for sending notifications to founder.
+    """
+    import urllib.request
+    import urllib.error
+    
+    if not WHATSAPP_PHONE_NUMBER_ID or not WHATSAPP_ACCESS_TOKEN:
+        context.log("WhatsApp Cloud API not configured")
+        return {'success': False, 'error': 'WhatsApp not configured'}
+    
+    # Remove + from phone number if present
+    phone = to_phone.replace('+', '')
+    
+    api_url = f"https://graph.facebook.com/v18.0/{WHATSAPP_PHONE_NUMBER_ID}/messages"
+    
+    payload = json.dumps({
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": phone,
+        "type": "text",
+        "text": {
+            "preview_url": False,
+            "body": message[:4096]  # WhatsApp limit
+        }
+    }).encode()
+    
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {WHATSAPP_ACCESS_TOKEN}'
+    }
+    
+    try:
+        req = urllib.request.Request(api_url, data=payload, headers=headers)
+        response = urllib.request.urlopen(req, timeout=10)
+        result = json.loads(response.read().decode())
+        context.log(f"WhatsApp sent successfully: {result}")
+        return {'success': True, 'message_id': result.get('messages', [{}])[0].get('id')}
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode()
+        context.log(f"WhatsApp send error: {error_body}")
+        return {'success': False, 'error': error_body}
+    except Exception as e:
+        context.log(f"WhatsApp send exception: {str(e)}")
+        return {'success': False, 'error': str(e)}
+
+
 def main(context):
     """
     Appwrite Function Entry Point
@@ -72,47 +125,25 @@ def main(context):
         # === META WEBHOOK VERIFICATION (GET request) ===
         # Meta sends: GET /?hub.mode=subscribe&hub.verify_token=XXX&hub.challenge=YYY
         if req.method == 'GET':
-            # Get query parameters - Appwrite uses different accessor
-            query_string = req.query_string if hasattr(req, 'query_string') else ''
-            query = {}
-            
-            # Parse query string manually if needed
-            if hasattr(req, 'query') and req.query:
-                query = req.query
-            elif query_string:
-                from urllib.parse import parse_qs
-                parsed = parse_qs(query_string)
-                query = {k: v[0] for k, v in parsed.items()}
+            # Get query parameters
+            query = req.query if hasattr(req, 'query') else {}
             
             hub_mode = query.get('hub.mode', '')
             hub_verify_token = query.get('hub.verify_token', '')
             hub_challenge = query.get('hub.challenge', '')
             
-            context.log(f"Webhook verification request received")
-            context.log(f"  mode: {hub_mode}")
-            context.log(f"  challenge: {hub_challenge}")
-            context.log(f"  token received: {hub_verify_token[:10]}..." if hub_verify_token else "  token received: (empty)")
-            context.log(f"  expected token: {WHATSAPP_WEBHOOK_VERIFY_TOKEN[:10]}..." if WHATSAPP_WEBHOOK_VERIFY_TOKEN else "  expected token: (NOT SET)")
-            
-            # Validate
-            if not WHATSAPP_WEBHOOK_VERIFY_TOKEN:
-                context.log("ERROR: WHATSAPP_WEBHOOK_VERIFY_TOKEN environment variable not set!")
-                return context.res.json({'error': 'Server not configured'}, 500)
+            context.log(f"Webhook verification: mode={hub_mode}, challenge={hub_challenge}")
             
             if hub_mode == 'subscribe' and hub_verify_token == WHATSAPP_WEBHOOK_VERIFY_TOKEN:
                 context.log("Webhook verified successfully!")
-                # Meta requires the challenge returned as plain text body
-                return context.res.text(hub_challenge)
+                # Meta requires exactly the challenge value as response body with 200 status
+                # Using body parameter to set raw response content
+                return context.res.text(str(hub_challenge), 200)
             else:
-                context.log(f"Verification FAILED: mode={hub_mode}, token_match={hub_verify_token == WHATSAPP_WEBHOOK_VERIFY_TOKEN}")
+                context.log(f"Verification failed: token mismatch or invalid mode")
                 return context.res.json({'error': 'Verification failed'}, 403)
         
         # === POST REQUESTS (Inbound/Outbound messages) ===
-        # Import Appwrite SDK here (deferred to avoid import errors on GET requests)
-        from appwrite.client import Client
-        from appwrite.services.databases import Databases
-        from appwrite.id import ID
-        
         # Initialize Appwrite
         client = Client()
         client.set_endpoint(APPWRITE_ENDPOINT)
@@ -194,14 +225,24 @@ def main(context):
             })
         
         else:
-            # === OUTBOUND: Send WhatsApp via Sozuri ===
-            # Called by agents to send responses
-            to_phone = data.get('to_phone', '')
+            # === OUTBOUND: Send WhatsApp via Meta Cloud API ===
+            # Called by n8n agents to send notifications to founder
+            to_phone = data.get('to_phone', FOUNDER_PHONE)  # Default to founder
             message = data.get('message', '')
             agent_source = data.get('agent_source', 'CEO')
+            notification_type = data.get('type', 'notification')  # brief, approval, alert, metric
             
-            if not to_phone or not message:
-                return context.res.json({'error': 'Missing to_phone or message'}, 400)
+            if not message:
+                return context.res.json({'error': 'Missing message'}, 400)
+            
+            if not to_phone:
+                return context.res.json({'error': 'No recipient phone (set FOUNDER_PHONE)'}, 400)
+            
+            # Format message with agent prefix
+            formatted_message = f"🤖 *{agent_source} Agent*\n\n{message}"
+            
+            # Send via Meta Cloud API
+            send_result = send_whatsapp_message(to_phone, formatted_message, context)
             
             # Store outbound in Communications
             doc = databases.create_document(
@@ -211,21 +252,23 @@ def main(context):
                 data={
                     'direction': 'outbound',
                     'channel': 'whatsapp',
-                    'from_phone': '',  # Our system number
+                    'from_phone': WHATSAPP_PHONE_NUMBER_ID,
                     'to_agent': agent_source,
                     'message': message[:2000],
-                    'status': 'pending',
-                    'metadata': json.dumps({'to_phone': to_phone}),
+                    'status': 'sent' if send_result.get('success') else 'failed',
+                    'metadata': json.dumps({
+                        'to_phone': to_phone,
+                        'type': notification_type,
+                        'send_result': send_result
+                    }),
                     'created_at': datetime.utcnow().isoformat()
                 }
             )
             
-            # TODO: Integrate actual Sozuri send API
-            # For now, mark as pending for n8n to handle
-            
             return context.res.json({
-                'status': 'queued',
-                'communication_id': doc['$id']
+                'status': 'sent' if send_result.get('success') else 'failed',
+                'communication_id': doc['$id'],
+                'send_result': send_result
             })
     
     except Exception as e:

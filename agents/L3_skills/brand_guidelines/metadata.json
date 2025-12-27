@@ -1,0 +1,33 @@
+{
+    "name": "Brand Guidelines",
+    "version": "1.0.0",
+    "description": "Ensures all content matches Fikanova's brand voice and style",
+    "triggers": [
+        "brand check",
+        "style guide",
+        "tone check",
+        "brand voice",
+        "edgy content",
+        "review content"
+    ],
+    "preferred_engine": "chatgpt",
+    "token_budget": 2000,
+    "requires_tools": [],
+    "output_format": "json",
+    "requires_approval": false,
+    "agent_access": [
+        "CMO",
+        "Editor",
+        "Marketing Lead"
+    ],
+    "automatic_on": [
+        "linkedin",
+        "blog",
+        "newsletter"
+    ],
+    "metadata": {
+        "author": "Fikanova CMO Agent",
+        "created": "2024-01-01",
+        "last_updated": "2024-12-23"
+    }
+}

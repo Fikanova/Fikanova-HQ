@@ -200,15 +200,30 @@
         },
         {
             "name": "Update Communications Status",
-            "type": "n8n-nodes-appwrite.appwrite",
+            "type": "n8n-nodes-base.httpRequest",
             "parameters": {
-                "operation": "updateDocument",
-                "databaseId": "693703ef001133c62d78",
-                "collectionId": "Communications",
-                "documentId": "={{$json.communication_id}}",
-                "data": {
-                    "status": "processed"
-                }
+                "method": "PATCH",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Communications/documents/{{$json.communication_id}}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "{\n  \"data\": {\n    \"status\": \"processed\"\n  }\n}"
             },
             "position": [
                 900,

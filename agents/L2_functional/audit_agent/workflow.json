@@ -18,29 +18,30 @@
         },
         {
             "parameters": {
-                "operation": "getAll",
-                "databaseId": "={{ $env.DATABASE_ID }}",
-                "collectionId": "Agent_Logs",
-                "limit": 50,
-                "options": {
-                    "orderByField": "timestamp",
-                    "orderByDirection": "DESC"
+                "method": "GET",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Agent_Logs/documents?limit=50",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        }
+                    ]
                 }
             },
             "id": "fetch-logs",
             "name": "Fetch_Agent_Logs",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 300,
                 300
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {

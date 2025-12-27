@@ -1,0 +1,34 @@
+{
+    "name": "Ledger Skill",
+    "version": "1.0.0",
+    "description": "Handles financial entries - expenses, revenue, and ledger calculations",
+    "triggers": [
+        "expense",
+        "revenue",
+        "ledger",
+        "log payment",
+        "record expense",
+        "add income",
+        "transaction"
+    ],
+    "preferred_engine": "gemini",
+    "token_budget": 1500,
+    "requires_tools": [
+        "google_sheets"
+    ],
+    "output_format": "json",
+    "output_destination": "Google Sheets Ledger",
+    "requires_approval": true,
+    "approval_threshold": 50000,
+    "agent_access": [
+        "CFO",
+        "Accounts",
+        "CEO"
+    ],
+    "metadata": {
+        "author": "Fikanova CFO Agent",
+        "created": "2024-01-01",
+        "last_updated": "2024-12-23",
+        "sheet_id": "env:GOOGLE_SHEETS_LEDGER_ID"
+    }
+}

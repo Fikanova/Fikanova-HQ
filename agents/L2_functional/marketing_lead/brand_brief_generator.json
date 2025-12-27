@@ -3,32 +3,23 @@
     "nodes": [
         {
             "parameters": {
-                "events": [
-                    "databases.*.collections.*.documents.*.create"
-                ],
-                "projectId": "={{ $env.APPWRITE_PROJECT_ID }}",
-                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
-                "collectionId": "Lead_Intakes"
+                "httpMethod": "POST",
+                "path": "brand-brief-trigger",
+                "options": {}
             },
-            "id": "appwrite-trigger",
-            "name": "Appwrite_Lead_Created",
-            "type": "n8n-nodes-appwrite.appwriteTrigger",
-            "typeVersion": 1,
+            "id": "webhook-trigger",
+            "name": "Webhook_Lead_Created",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
             "position": [
                 100,
                 300
             ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            },
-            "webhookId": "lead-intake-brand-brief"
+            "webhookId": "brand-brief-trigger"
         },
         {
             "parameters": {
-                "jsCode": "// Extract social links from the new lead document\nconst doc = items[0].json;\n\nconst socialLinks = {\n  linkedin_url: doc.linkedin_url || null,\n  x_url: doc.x_url || null,\n  instagram_url: doc.instagram_url || null,\n  lead_id: doc.$id,\n  contact_name: doc.contact_name,\n  contact_email: doc.contact_email,\n  service_interest: doc.service_interest\n};\n\n// Only proceed if at least one social link exists\nconst hasSocialLinks = socialLinks.linkedin_url || socialLinks.x_url || socialLinks.instagram_url;\n\nif (!hasSocialLinks) {\n  items[0].json.skip = true;\n  items[0].json.reason = 'No social links provided';\n} else {\n  items[0].json = socialLinks;\n  items[0].json.skip = false;\n}\n\nreturn items;"
+                "jsCode": "// Extract social links from the webhook payload\nconst doc = items[0].json;\n\nconst socialLinks = {\n  linkedin_url: doc.linkedin_url || null,\n  x_url: doc.x_url || null,\n  instagram_url: doc.instagram_url || null,\n  lead_id: doc.$id || doc.lead_id,\n  contact_name: doc.contact_name,\n  contact_email: doc.contact_email,\n  service_interest: doc.service_interest\n};\n\n// Only proceed if at least one social link exists\nconst hasSocialLinks = socialLinks.linkedin_url || socialLinks.x_url || socialLinks.instagram_url;\n\nif (!hasSocialLinks) {\n  items[0].json.skip = true;\n  items[0].json.reason = 'No social links provided';\n} else {\n  items[0].json = socialLinks;\n  items[0].json.skip = false;\n}\n\nreturn items;"
             },
             "id": "extract-social",
             "name": "Extract_Social_Links",
@@ -111,58 +102,71 @@
         },
         {
             "parameters": {
-                "operation": "create",
-                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
-                "collectionId": "Content_Drafts",
-                "data": {
-                    "content_type": "brand_brief",
-                    "title": "Brand Brief: {{ $json.contact_name }}",
-                    "ai_draft": "={{ JSON.stringify($json.brand_brief) }}",
-                    "status": "draft",
-                    "agent_source": "CMO_Marketing_Lead",
-                    "created_at": "={{ new Date().toISOString() }}",
-                    "updated_at": "={{ new Date().toISOString() }}"
-                }
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Content_Drafts/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"content_type\": \"brand_brief\",\n    \"title\": \"Brand Brief: {{ $json.contact_name }}\",\n    \"ai_draft\": {{ JSON.stringify(JSON.stringify($json.brand_brief)) }},\n    \"status\": \"draft\",\n    \"agent_source\": \"CMO_Marketing_Lead\",\n    \"created_at\": \"{{ new Date().toISOString() }}\",\n    \"updated_at\": \"{{ new Date().toISOString() }}\"\n  }\n}"
             },
             "id": "save-draft",
             "name": "Save_To_Content_Drafts",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 1250,
                 250
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {
-                "operation": "update",
-                "databaseId": "={{ $env.APPWRITE_DATABASE_ID }}",
-                "collectionId": "Lead_Intakes",
-                "documentId": "={{ $json.lead_id || $('Extract_Social_Links').first().json.lead_id }}",
-                "data": {
-                    "audit_status": "completed"
-                }
+                "method": "PATCH",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Lead_Intakes/documents/{{ $('Extract_Social_Links').first().json.lead_id }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "{\n  \"data\": {\n    \"audit_status\": \"completed\"\n  }\n}"
             },
             "id": "update-lead",
             "name": "Update_Lead_Status",
-            "type": "n8n-nodes-appwrite.appwrite",
-            "typeVersion": 1,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
                 1500,
                 250
-            ],
-            "credentials": {
-                "appwriteApi": {
-                    "id": "appwrite-creds",
-                    "name": "Appwrite API"
-                }
-            }
+            ]
         },
         {
             "parameters": {
@@ -179,7 +183,7 @@
         }
     ],
     "connections": {
-        "Appwrite_Lead_Created": {
+        "Webhook_Lead_Created": {
             "main": [
                 [
                     {
@@ -261,7 +265,7 @@
         "templateCredsSetupCompleted": true
     },
     "pinData": {},
-    "versionId": "1.0.0",
+    "versionId": "2.0.0",
     "triggerCount": 0,
     "tags": [
         {

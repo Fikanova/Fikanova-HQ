@@ -1,0 +1,2506 @@
+{
+    "projectId": "6936df5800371a655e8e",
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "projectName": "Fikanova-HQ",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "sites": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": true,
+                "invites": true,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "functions": [
+        {
+            "$id": "69375b020011252ec774",
+            "execute": [],
+            "name": "kra-invoice",
+            "enabled": true,
+            "logging": true,
+            "runtime": "node-22",
+            "scopes": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "main.js",
+            "commands": "",
+            "specification": "s-0.5vcpu-512mb",
+            "path": "functions/kra-invoice"
+        },
+        {
+            "$id": "69375c880032c95427bb",
+            "execute": [],
+            "name": "crewai-recon",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-ml-3.11",
+            "scopes": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "main.py",
+            "commands": "",
+            "specification": "s-0.5vcpu-512mb",
+            "path": "functions/crewai-recon"
+        },
+        {
+            "$id": "69375dcf0015205cb8af",
+            "execute": [
+                "any"
+            ],
+            "name": "impact-monitor",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-ml-3.11",
+            "scopes": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "main.py",
+            "commands": "",
+            "specification": "s-0.5vcpu-512mb",
+            "path": "functions/impact-monitor"
+        },
+        {
+            "$id": "6948e3830020bb54a6a8",
+            "execute": [
+                "any"
+            ],
+            "name": "whatsapp-bridge",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-ml-3.11",
+            "scopes": [
+                "sessions.write",
+                "users.read",
+                "users.write",
+                "teams.read",
+                "teams.write",
+                "databases.read",
+                "databases.write",
+                "policies.read",
+                "policies.write",
+                "archives.read",
+                "archives.write",
+                "restorations.read",
+                "restorations.write",
+                "tables.read",
+                "collections.read",
+                "tables.write",
+                "collections.write",
+                "columns.read",
+                "attributes.read",
+                "columns.write",
+                "attributes.write",
+                "indexes.read",
+                "indexes.write",
+                "rows.read",
+                "documents.read",
+                "rows.write",
+                "documents.write",
+                "files.read",
+                "files.write",
+                "buckets.read",
+                "buckets.write",
+                "functions.read",
+                "functions.write",
+                "execution.read",
+                "execution.write",
+                "targets.read",
+                "targets.write",
+                "providers.read",
+                "providers.write",
+                "messages.read",
+                "messages.write",
+                "topics.read",
+                "topics.write",
+                "subscribers.read",
+                "subscribers.write",
+                "locale.read",
+                "avatars.read",
+                "health.read",
+                "migrations.read",
+                "migrations.write",
+                "tokens.read",
+                "tokens.write",
+                "sites.read",
+                "sites.write",
+                "log.read",
+                "log.write"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "main.py",
+            "commands": "pip install -r requirements.txt",
+            "specification": "s-0.5vcpu-512mb",
+            "path": "functions/whatsapp-bridge"
+        },
+        {
+            "$id": "multi-llm-engine",
+            "execute": [
+                "any"
+            ],
+            "name": "multi-llm-engine",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-ml-3.11",
+            "scopes": [
+                "databases.read",
+                "databases.write",
+                "documents.read",
+                "documents.write"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 60,
+            "entrypoint": "main.py",
+            "commands": "pip install -r requirements.txt",
+            "specification": "s-1vcpu-512mb",
+            "path": "functions/multi-llm-engine"
+        }
+    ],
+    "sites": [
+        {
+            "$id": "693d304a0006aeed0f84",
+            "name": "Dashboard",
+            "enabled": true,
+            "logging": true,
+            "framework": "astro",
+            "timeout": 30,
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./dist",
+            "specification": "s-0.5vcpu-512mb",
+            "buildRuntime": "node-22",
+            "adapter": "ssr",
+            "fallbackFile": "",
+            "path": "sites/Dashboard"
+        },
+        {
+            "$id": "693d330000356def8f7e",
+            "name": "Store",
+            "enabled": true,
+            "logging": true,
+            "framework": "astro",
+            "timeout": 30,
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./dist",
+            "specification": "s-0.5vcpu-512mb",
+            "buildRuntime": "node-22",
+            "adapter": "ssr",
+            "fallbackFile": "",
+            "path": "sites/Store"
+        },
+        {
+            "$id": "693d348000234129f0de",
+            "name": "Site",
+            "enabled": true,
+            "logging": true,
+            "framework": "astro",
+            "timeout": 30,
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./dist",
+            "specification": "s-0.5vcpu-512mb",
+            "buildRuntime": "node-22",
+            "adapter": "static",
+            "fallbackFile": "",
+            "path": "sites/Site"
+        }
+    ],
+    "tablesDB": [
+        {
+            "$id": "693703ef001133c62d78",
+            "name": "Fikanova_DB",
+            "enabled": true
+        }
+    ],
+    "tables": [
+        {
+            "$id": "Engine_Usage",
+            "$permissions": [],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Engine_Usage",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "engine",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "model",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "task_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tokens_used",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": 0,
+                    "max": 2147483647,
+                    "default": null
+                },
+                {
+                    "key": "cost_usd",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": 0,
+                    "max": 1000,
+                    "default": null
+                },
+                {
+                    "key": "latency_ms",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": 0,
+                    "max": 300000,
+                    "default": null
+                },
+                {
+                    "key": "fallback_used",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "engine_idx",
+                    "type": "key",
+                    "status": "available",
+                    "error": "",
+                    "attributes": [
+                        "engine"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "created_at_idx",
+                    "type": "key",
+                    "status": "available",
+                    "error": "",
+                    "attributes": [
+                        "created_at"
+                    ],
+                    "orders": [
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "Engine_Status",
+            "$permissions": [],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Engine_Status",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "engine",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "available",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "consecutive_failures",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 100,
+                    "default": 0
+                },
+                {
+                    "key": "last_error",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "last_check",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "engine_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "error": "",
+                    "attributes": [
+                        "engine"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "Services",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Services",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "slug",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "short_description",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "full_body_markdown",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tally_form_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "price_estimate",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Pages",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Pages",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "slug",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "content_markdown",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "hero_image",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "meta_description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 160,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_us",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Clients",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Clients",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "logo_url",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "website_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "service_provided",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "CaseStudies",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "CaseStudies",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "client_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "summary_result",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "full_story_markdown",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "service_category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Impact_Metrics",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Impact_Metrics",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "client_reference",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "metric_label",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "metric_value",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Expenses",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Expenses",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "amount",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "receipt_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "logged_by",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Runway_Snapshots",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Runway_Snapshots",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "month",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 7,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "balance",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "burn_rate",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "runway_months",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "alert_level",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Uptime_Logs",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Uptime_Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "site_url",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "response_time_ms",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "checked_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Repo_Activity",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Repo_Activity",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "repo_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "commit_sha",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 40,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "commit_message",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "author",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "pushed_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Social_Posts",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Social_Posts",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "platform",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "content",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "post_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "posted_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "likes",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "comments",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Newsletter_Campaigns",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Newsletter_Campaigns",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "subject",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sent_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "recipients_count",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "open_rate",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "click_rate",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Daily_Briefs",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Daily_Briefs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "date",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "summary",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "priority_items",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sent_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Lead_Intakes",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Lead_Intakes",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "tally_submission_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "lead_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "service_interest",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_email",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "contact_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "received_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "linkedin_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "x_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "instagram_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "audit_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": "pending",
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Quotations",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Quotations",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "quote_number",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "client_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "total_amount",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "pdf_url",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Tax_Filings",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Tax_Filings",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "filing_period",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tax_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "amount_due",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "payment_slip_url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "filing_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Agent_Logs",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Agent_Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "agent_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "action",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "error_message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "execution_time",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "logged_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Testimonials",
+            "$permissions": [],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Testimonials",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "client_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "quote",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "role",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "date",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "rating",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": 1,
+                    "max": 5,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Articles",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Articles",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "slug",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "excerpt",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "content",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tags",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "author",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "published_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Communications",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Communications",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "direction",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "channel",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "from_phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "to_agent",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "message",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "metadata",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Content_Drafts",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Content_Drafts",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "content_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 256,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "ai_draft",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "human_edit",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "agent_source",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "feedback_notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Learning_Traces",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Learning_Traces",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "agent_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "observation",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "action_taken",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "diff_summary",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "logged_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "ESG_Metrics",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "ESG_Metrics",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "metric_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "value",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "unit",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "context",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "period",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "logged_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Skills",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Skills",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "slug",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "version",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "pricing",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 16,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "agent_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "triggers",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "system_prompt_url",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "usage_count",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "published_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "Client_Audits",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Client_Audits",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "lead_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "suggested_vibe",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vibe_reasoning",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "marketing_gaps",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "web_integrations",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "platform_activity",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "priority_actions",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "audit_score",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "audited_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "audited_by",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "transactions",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "Transactions",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "transaction_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "merchant_request_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "checkout_request_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "amount",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "currency",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "KES",
+                    "encrypt": false
+                },
+                {
+                    "key": "payment_method",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "mpesa_receipt",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "phone_number",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "account_reference",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status_message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "lead_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "invoice_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "initiated_at",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "completed_at",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "metadata",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_status",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_payment_method",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "payment_method"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_lead_id",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "lead_id"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "ai_responses",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "693703ef001133c62d78",
+            "name": "AI_Responses",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "agent_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "workflow_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "workflow_name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "input_message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "input_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sender_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "response_text",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "model_used",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tokens_used",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "intent_detected",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "confidence_score",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "routed_to",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "requires_approval",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "approval_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approved_by",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approved_at",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "response_time_ms",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "was_helpful",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "created_at",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "retry_count",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_agent",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "agent_name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_intent",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "intent_detected"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_approval",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "approval_status"
+                    ],
+                    "orders": []
+                }
+            ]
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "6948fc80003ca6505164",
+            "$permissions": [],
+            "fileSecurity": false,
+            "name": "esg-reports",
+            "enabled": true,
+            "maximumFileSize": 5000000000,
+            "allowedFileExtensions": [],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        }
+    ],
+    "teams": [
+        {
+            "$id": "subscribers",
+            "name": "SUBSCRIBERS"
+        }
+    ]
+}
