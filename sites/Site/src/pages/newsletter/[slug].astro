@@ -674,20 +674,32 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
     /* Article Footer */
     .article-footer {
         padding-top: 32px;
+        background: transparent;
     }
 
     .back-link {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: var(--accent-blue);
+        color: #1a365d;
         text-decoration: none;
         font-weight: 600;
-        transition: gap 0.2s;
+        transition: gap 0.2s, color 0.2s;
     }
 
     .back-link:hover {
         gap: 12px;
+        color: #0f2440;
+        text-decoration: underline;
+    }
+
+    /* Dark mode back-link */
+    :global(body:not(.theme-light)) .back-link {
+        color: #1a365d;
+    }
+
+    :global(body:not(.theme-light)) .back-link:hover {
+        color: #3b82f6;
     }
 
     /* Sidebar */
