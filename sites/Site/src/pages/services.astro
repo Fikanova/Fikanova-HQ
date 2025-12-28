@@ -2,74 +2,525 @@
 import Layout from '../layouts/Layout.astro';
 
 // Services data - matches Appwrite DB structure
-const services = {
-    'Development': [
-        { slug: 'web-development', title: 'Web Development', description: 'High-performance websites built with modern technologies.', price: 'Starts at KES 35,000' },
-        { slug: 'mobile-app-development', title: 'Mobile App Development', description: 'Native Android & iOS apps for your business.', price: 'Starts at KES 80,000' },
-        { slug: 'custom-software', title: 'Custom Software', description: 'Internal tools and enterprise solutions.', price: 'Custom Quote' }
-    ],
-    'Marketing': [
-        { slug: 'seo-optimization', title: 'SEO Optimization', description: 'Rank #1 on Google with proven strategies.', price: 'Retainer: KES 15,000/mo' },
-        { slug: 'social-media-marketing', title: 'Social Media Marketing', description: 'Grow your audience with automated content.', price: 'Retainer: KES 20,000/mo' },
-        { slug: 'content-strategy', title: 'Content Strategy', description: 'Brand storytelling that converts.', price: 'Starts at KES 10,000' }
-    ],
-    'AI and Tech': [
-        { slug: 'chatbot-integration', title: 'Chatbot Integration', description: '24/7 WhatsApp and web support automation.', price: 'Starts at KES 25,000' },
-        { slug: 'ai-automation', title: 'AI Automation', description: 'Digital employees for repetitive tasks.', price: 'Custom Quote' },
-        { slug: 'tech-consultation', title: 'Tech Consultation', description: 'Expert digital strategy advice.', price: 'Hourly Rate' }
-    ]
-};
-
-const categoryIcons = {
-    'Development': 'fas fa-code',
-    'Marketing': 'fas fa-chart-line',
-    'AI and Tech': 'fas fa-robot'
-};
+const services = [
+    {
+        category: 'Development',
+        displayName: 'WEB & APP DEVELOPMENT',
+        slug: 'web-development',
+        description: 'High-performance websites and native mobile apps built with modern technologies. From simple landing pages to complex enterprise solutions.',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&q=80',
+        subServices: [
+            { slug: 'web-development', title: 'Web Development', price: 'From KES 35,000' },
+            { slug: 'mobile-app-development', title: 'Mobile App Development', price: 'From KES 80,000' },
+            { slug: 'custom-software', title: 'Custom Software', price: 'Custom Quote' }
+        ]
+    },
+    {
+        category: 'Marketing',
+        displayName: 'DIGITAL MARKETING',
+        slug: 'seo-optimization',
+        description: 'Data-driven strategies to grow your audience, improve search rankings, and convert visitors into loyal customers.',
+        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80',
+        subServices: [
+            { slug: 'seo-optimization', title: 'SEO Optimization', price: 'KES 15,000/mo' },
+            { slug: 'social-media-marketing', title: 'Social Media Marketing', price: 'KES 20,000/mo' },
+            { slug: 'content-strategy', title: 'Content Strategy', price: 'From KES 10,000' }
+        ]
+    },
+    {
+        category: 'AI and Tech',
+        displayName: 'AI & AUTOMATION',
+        slug: 'ai-automation',
+        description: '24/7 intelligent chatbots, workflow automation, and digital employees that free up your team for high-value work.',
+        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80',
+        subServices: [
+            { slug: 'chatbot-integration', title: 'Chatbot Integration', price: 'From KES 25,000' },
+            { slug: 'ai-automation', title: 'AI Automation', price: 'Custom Quote' },
+            { slug: 'tech-consultation', title: 'Tech Consultation', price: 'Hourly Rate' }
+        ]
+    }
+];
 ---
 
 <Layout title="Our Services">
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="services-hero">
         <div class="container">
-            <div class="hero-badge">
-                <span class="badge-dot"></span>
-                Comprehensive Solutions
+            <div class="services-hero-content">
+                <h1 class="services-hero-title">
+                    <span class="line-1">Our Company</span>
+                    <span class="line-2">Services<span class="title-dot">.</span></span>
+                </h1>
+                <p class="services-hero-desc">
+                    From web development to AI integration, we provide end-to-end digital solutions that drive real business growth.
+                </p>
             </div>
-            <h1>
-                Our <span class="gradient-text">Services</span><br>
-                Tailored for growth
-            </h1>
-            <p>
-                From web development to AI integration, we provide end-to-end digital solutions.
-            </p>
         </div>
     </section>
 
-    <!-- Services Sections -->
-    <main class="page-main">
-        <div class="container">
-            {Object.entries(services).map(([category, items]) => (
-                <div style="margin-bottom: 80px;">
-                    <div class="section-header scroll-reveal">
-                        <h2><i class={categoryIcons[category]} style="margin-right: 12px;"></i>{category}</h2>
-                    </div>
-                    <div class="services-grid">
-                        {items.map(service => (
-                            <div class="service-card scroll-reveal">
-                                <div class="service-icon">
-                                    <i class={categoryIcons[category]}></i>
-                                </div>
-                                <h3>{service.title}</h3>
-                                <p>{service.description}</p>
-                                <p style="font-weight: 600; color: var(--primary); margin-top: 12px;">{service.price}</p>
-                                <a href={`/service/${service.slug}`} class="btn btn-secondary" style="margin-top: 16px;">
-                                    Learn More <i class="fas fa-arrow-right"></i>
+    <!-- Service Strips Section -->
+    <section class="services-strips">
+        {services.map((service, index) => (
+            <div class="service-strip" data-index={index}>
+                <div class="strip-background" style={`background-image: url('${service.image}')`}></div>
+                <div class="strip-overlay"></div>
+                
+                <div class="strip-content">
+                    <h2 class="strip-title">{service.displayName}</h2>
+                </div>
+                
+                <div class="strip-expanded">
+                    <div class="expanded-inner">
+                        <p class="expanded-desc">{service.description}</p>
+                        <div class="expanded-services">
+                            {service.subServices.map(sub => (
+                                <a href={`/service/${sub.slug}`} class="sub-service-link">
+                                    <span class="sub-title">{sub.title}</span>
+                                    <span class="sub-price">{sub.price}</span>
+                                    <i class="fas fa-arrow-right"></i>
                                 </a>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
-            ))}
+                
+                <a href={`/service/${service.slug}`} class="strip-arrow" aria-label={`View ${service.displayName}`}>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="arrow-index">0{index + 1}</span>
+                </a>
+            </div>
+        ))}
+    </section>
+
+    <!-- All Works CTA -->
+    <section class="all-works-cta">
+        <div class="container">
+            <div class="cta-row">
+                <div class="cta-left">
+                    <span class="cta-label"><i class="fas fa-th-large"></i> Explore</span>
+                    <span class="cta-label"><i class="fas fa-images"></i> Gallery</span>
+                </div>
+                <a href="/portfolio" class="cta-link">
+                    <span>All Works</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Get In Touch Section -->
+    <section class="services-contact">
+        <div class="container">
+            <span class="contact-label">HIRE US</span>
+            <h2 class="contact-title">GET IN TOUCH</h2>
+            <a href="/contact" class="contact-btn">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+    </section>
 </Layout>
+
+<style>
+    /* Services Hero */
+    .services-hero {
+        padding: 140px 0 80px;
+        position: relative;
+        background: var(--dark-bg);
+    }
+    
+    .services-hero-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 60px;
+        align-items: end;
+    }
+    
+    .services-hero-title {
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -2px;
+    }
+    
+    .services-hero-title .line-1 {
+        display: block;
+        font-style: italic;
+        font-weight: 400;
+    }
+    
+    .services-hero-title .line-2 {
+        display: block;
+    }
+    
+    .title-dot {
+        color: var(--accent-gold);
+    }
+    
+    .services-hero-desc {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        max-width: 300px;
+    }
+    
+    /* Service Strips */
+    .services-strips {
+        position: relative;
+    }
+    
+    .service-strip {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .service-strip:hover {
+        height: 320px;
+    }
+    
+    .strip-background {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.6s ease, filter 0.4s ease;
+    }
+    
+    .service-strip:hover .strip-background {
+        transform: scale(1.05);
+    }
+    
+    .strip-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%);
+        transition: background 0.4s ease;
+    }
+    
+    body.theme-light .strip-overlay {
+        background: linear-gradient(90deg, rgba(26,54,93,0.85) 0%, rgba(26,54,93,0.5) 50%, rgba(26,54,93,0.7) 100%);
+    }
+    
+    .strip-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 60px;
+        z-index: 2;
+    }
+    
+    .strip-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    
+    .arrow-index {
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .strip-expanded {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 60px 30px;
+        z-index: 2;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease 0.1s;
+    }
+    
+    .service-strip:hover .strip-expanded {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .expanded-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+    }
+    
+    .expanded-desc {
+        flex: 1;
+        max-width: 400px;
+        font-size: 0.95rem;
+        color: rgba(255,255,255,0.8);
+        line-height: 1.6;
+    }
+    
+    .expanded-services {
+        display: flex;
+        gap: 24px;
+    }
+    
+    .sub-service-link {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 16px 20px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s ease;
+        min-width: 160px;
+    }
+    
+    .sub-service-link:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: var(--accent-gold);
+        transform: translateY(-4px);
+    }
+    
+    .sub-service-link .sub-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .sub-service-link .sub-price {
+        font-size: 0.8rem;
+        color: var(--accent-gold);
+    }
+    
+    .sub-service-link i {
+        font-size: 0.75rem;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
+    
+    .sub-service-link:hover i {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .strip-arrow {
+        position: absolute;
+        right: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 56px;
+        height: 56px;
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 3;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(4px);
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .strip-arrow i {
+        font-size: 0.7rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .strip-arrow:hover {
+        border-color: rgba(255,255,255,0.5);
+        color: #ffffff;
+        transform: translateY(-50%) scale(1.05);
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    
+    .strip-arrow:hover i {
+        transform: translateX(2px);
+    }
+    
+    /* All Works CTA */
+    .all-works-cta {
+        padding: 60px 0;
+        border-top: 1px solid var(--border-subtle);
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .cta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .cta-left {
+        display: flex;
+        gap: 24px;
+    }
+    
+    .cta-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .cta-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .cta-link:hover {
+        color: var(--accent-gold);
+    }
+    
+    .cta-link i {
+        transition: transform 0.3s ease;
+    }
+    
+    .cta-link:hover i {
+        transform: translateX(6px);
+    }
+    
+    /* Get In Touch */
+    .services-contact {
+        padding: 100px 0;
+        text-align: center;
+    }
+    
+    .contact-label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+    
+    .contact-title {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        letter-spacing: 4px;
+        margin-bottom: 40px;
+    }
+    
+    .contact-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border: 2px solid var(--border-medium);
+        border-radius: 50%;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover {
+        border-color: var(--accent-gold);
+        color: var(--accent-gold);
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(201, 169, 98, 0.3);
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+        .services-hero-content {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .services-hero-desc {
+            max-width: 100%;
+        }
+        
+        .strip-content {
+            padding: 0 30px;
+        }
+        
+        .strip-expanded {
+            padding: 0 30px 20px;
+        }
+        
+        .expanded-inner {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .expanded-services {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .sub-service-link {
+            min-width: 140px;
+            padding: 12px 16px;
+        }
+        
+        .strip-arrow {
+            right: 30px;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .services-hero {
+            padding: 120px 0 60px;
+        }
+        
+        .service-strip {
+            height: 140px;
+        }
+        
+        .service-strip:hover {
+            height: 280px;
+        }
+        
+        .strip-title {
+            font-size: 1.5rem;
+        }
+        
+        .strip-arrow {
+            width: 40px;
+            height: 40px;
+            right: 20px;
+        }
+        
+        .strip-content,
+        .strip-expanded {
+            padding: 0 20px;
+        }
+        
+        .strip-expanded {
+            padding-bottom: 16px;
+        }
+        
+        .cta-row {
+            flex-direction: column;
+            gap: 24px;
+            text-align: center;
+        }
+        
+        .cta-left {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+</style>
