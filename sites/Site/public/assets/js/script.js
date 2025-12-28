@@ -13,19 +13,10 @@ function initScript() {
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
 
-    function updateThemeIcon() {
-        if (!themeToggle) return;
-        const isLight = body.classList.contains('theme-light');
-        // Show opposite icon: sun in dark mode (to switch to light), moon in light mode (to switch to dark)
-        const icon = isLight ? 'fa-moon' : 'fa-sun';
-        themeToggle.innerHTML = `<i class="fas ${icon}"></i>`;
-    }
-
     function toggleTheme() {
         body.classList.toggle('theme-light');
         const isLight = body.classList.contains('theme-light');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        updateThemeIcon();
         if (navigator.vibrate) navigator.vibrate(10);
     }
 
@@ -34,7 +25,6 @@ function initScript() {
     if (savedTheme === 'light') {
         body.classList.add('theme-light');
     }
-    updateThemeIcon();
 
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);

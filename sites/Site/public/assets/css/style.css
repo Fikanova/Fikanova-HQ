@@ -97,33 +97,52 @@ body {
     text-orientation: mixed;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #c9a962;
     letter-spacing: 2px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .social-float-icon {
     width: 45px;
     height: 45px;
-    border: 1px solid var(--border-medium);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-primary);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     transition: all 0.3s ease;
     font-size: 1.125rem;
+    background: transparent;
+}
+
+/* Dark mode hover: glow effect */
+.social-float-icon:hover {
+    border-color: #c9a962;
+    color: #c9a962;
+    background: transparent;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(201, 169, 98, 0.5), 0 0 30px rgba(201, 169, 98, 0.3);
+}
+
+/* Light mode: gold icons for visibility on all backgrounds */
+body.theme-light .follow-text {
+    color: #c9a962;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 body.theme-light .social-float-icon {
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: #c9a962;
+    color: #c9a962;
+    background: transparent;
 }
 
-.social-float-icon:hover {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: #ffffff;
-    transform: scale(1.1);
+body.theme-light .social-float-icon:hover {
+    border-color: #c9a962;
+    color: #c9a962;
+    background: transparent;
+    box-shadow: 0 0 15px rgba(201, 169, 98, 0.6), 0 0 30px rgba(201, 169, 98, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -153,36 +172,26 @@ body.theme-light header {
 body.theme-light .logo,
 body.theme-light .nav-link,
 body.theme-light .theme-toggle {
-    color: #c9a962;
+    color: #e0c478;
 }
 
 body.theme-light .hamburger span {
-    background: #c9a962;
+    background: #e0c478;
 }
 
 body.theme-light .nav-link:hover {
-    color: #e0c478;
-    border-bottom-color: #c9a962;
+    color: #f0d88c;
+    border-bottom-color: #e0c478;
 }
 
 body.theme-light .btn-call {
-    border-color: #c9a962;
-    color: #c9a962;
+    border-color: #e0c478;
+    color: #e0c478;
 }
 
 body.theme-light .btn-call:hover {
-    background: #c9a962;
+    background: #e0c478;
     color: #1a365d;
-}
-
-body.theme-light .theme-toggle {
-    border-color: rgba(201, 169, 98, 0.3);
-    color: #c9a962;
-}
-
-body.theme-light .theme-toggle:hover {
-    border-color: #c9a962;
-    box-shadow: 0 0 8px rgba(201, 169, 98, 0.4);
 }
 
 /* Card styling */
@@ -423,23 +432,84 @@ body.theme-light .mega-menu-group a:hover {
     height: auto;
 }
 
-.theme-toggle {
-    background: none;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    font-size: 1rem;
+/* Theme Switch - Pill-shaped toggle with sun/moon icons */
+.theme-switch {
     cursor: pointer;
-    padding: 0.625rem 0.875rem;
-    border-radius: 8px;
+    position: relative;
+}
+
+.switch-track {
+    width: 70px;
+    height: 36px;
+    background: #2a2a2a;
+    border-radius: 50px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
     transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.switch-thumb {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+    border-radius: 50%;
+    left: 38px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.switch-icon {
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 14px;
+    z-index: 1;
+    transition: all 0.3s ease;
 }
 
-.theme-toggle:hover {
-    background: var(--dark-surface);
-    border-color: var(--primary);
+.sun-icon {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.moon-icon {
+    color: #ffffff;
+}
+
+/* Light mode: thumb slides to left, sun is active */
+body.theme-light .switch-track {
+    background: #e8e8e8;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .switch-thumb {
+    left: 4px;
+    background: linear-gradient(135deg, #f9a825 0%, #f57c00 100%);
+    box-shadow: 0 2px 6px rgba(249, 168, 37, 0.4);
+}
+
+body.theme-light .sun-icon {
+    color: #ffffff;
+}
+
+body.theme-light .moon-icon {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+/* Hover effect */
+.theme-switch:hover .switch-track {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+body.theme-light .theme-switch:hover .switch-track {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 10px rgba(249, 168, 37, 0.3);
 }
 
 .btn-call {

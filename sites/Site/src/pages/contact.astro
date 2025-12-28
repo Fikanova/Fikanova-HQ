@@ -154,7 +154,57 @@ import Layout from '../layouts/Layout.astro';
     .contact-hero {
         padding: 160px 24px 60px;
         text-align: center;
-        background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: -2;
+    }
+
+    .contact-hero::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+    }
+
+    :global(body.theme-light) .contact-hero::after {
+        background: rgba(0, 0, 0, 0.55);
+    }
+
+    .contact-hero .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-hero h1 {
+        color: #ffffff;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .contact-hero .gradient-text {
+        color: #c9a962;
+    }
+
+    .contact-hero .hero-badge {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #c9a962;
     }
 
     .hero-tagline {
