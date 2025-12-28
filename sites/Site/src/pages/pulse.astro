@@ -218,10 +218,30 @@ function formatDate(dateString: string): string {
 
     .hero-desc {
         font-size: 18px;
-        color: var(--text-secondary);
+        color: #e0e0e0;
         max-width: 550px;
         margin: 0 auto;
         line-height: 1.6;
+    }
+
+    :global(body.theme-light) .pulse-hero {
+        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    :global(body.theme-light) .pulse-hero h1 {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .hero-desc {
+        color: var(--text-secondary);
+    }
+
+    :global(body.theme-light) .hero-badge {
+        color: #16a34a;
+    }
+
+    :global(body.theme-light) .live-dot {
+        background: #16a34a;
     }
 
     .pulse-main {

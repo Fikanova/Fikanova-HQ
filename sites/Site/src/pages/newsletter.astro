@@ -235,7 +235,7 @@ const moreArticles = articles.slice(7); // Rest for "More" section
 
     .newsletter-header p {
         font-size: 1.125rem;
-        color: var(--text-secondary);
+        color: #e0e0e0;
         line-height: 1.6;
     }
 
@@ -246,6 +246,10 @@ const moreArticles = articles.slice(7); // Rest for "More" section
 
     :global(body.theme-light) .newsletter-header h1 .accent {
         color: #1a365d;
+    }
+
+    :global(body.theme-light) .newsletter-header p {
+        color: var(--text-secondary);
     }
 
     /* Main Content */

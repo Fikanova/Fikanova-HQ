@@ -729,14 +729,14 @@ body.theme-light .submenu a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    /* Minimal overlay for text readability */
-    background: rgba(0, 0, 0, 0.3);
+    /* Dark overlay for text readability */
+    background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
 
 body.theme-light .hero::after {
-    /* Light mode: very subtle overlay */
-    background: rgba(255, 255, 255, 0.2);
+    /* Light mode: dark overlay for text visibility */
+    background: rgba(0, 0, 0, 0.55);
 }
 
 /* Hero text styling */
@@ -745,20 +745,30 @@ body.theme-light .hero::after {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-body.theme-light .hero h1,
+/* Dark mode: Make subtitle more visible with lighter color */
+.hero p {
+    color: #e0e0e0;
+}
+
+/* Light mode hero: white/gold text on dark overlay */
+body.theme-light .hero h1 {
+    color: #ffffff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
 body.theme-light .hero p {
-    color: var(--text-primary);
-    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 body.theme-light .hero .gradient-text {
-    color: #1a365d;
+    color: #c9a962;
 }
 
 body.theme-light .hero-badge {
-    background: rgba(26, 54, 93, 0.1);
-    border-color: rgba(26, 54, 93, 0.2);
-    color: #1a365d;
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #c9a962;
 }
 
 .hero .container {
@@ -814,7 +824,6 @@ body.theme-light .hero-badge {
 
 .hero p {
     font-size: 20px;
-    color: var(--text-secondary);
     max-width: 700px;
     margin: 0 auto 40px;
     line-height: 1.6;
@@ -1918,6 +1927,7 @@ body.theme-light .glass-card {
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--accent-green));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 16px 0;
 }
@@ -1975,6 +1985,7 @@ body.theme-light .glass-card {
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--accent-green));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

@@ -130,13 +130,10 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                     <header class="article-header">
                         <span class="category-label">{getCategoryLabel(article.tags)}</span>
                         <h1>{article.title}</h1>
-                        <p class="article-deck">{article.excerpt}</p>
                         
                         <div class="article-meta">
                             <div class="author-section">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
+                                <img class="author-avatar" src="https://ui-avatars.com/api/?name=Nyaenya+Moseti&background=1a365d&color=c9a962&size=96&font-size=0.4&bold=true" alt={article.author || 'Nyaenya Moseti'} />
                                 <div class="author-details">
                                     <span class="author-name">{article.author || 'Nyaenya Moseti'}</span>
                                     <span class="author-title">Founder, Fikanova</span>
@@ -164,9 +161,9 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="share-btn"
-                                title="Share on Twitter"
+                                title="Share on X"
                             >
-                                <i class="fab fa-twitter"></i>
+                                <i class="fab fa-x-twitter"></i>
                             </a>
                             <a 
                                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
@@ -255,17 +252,15 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                     <div class="sidebar-card author-card">
                         <span class="card-label">ABOUT THE AUTHOR</span>
                         <div class="author-content">
-                            <div class="author-avatar-large">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <img class="author-avatar-large" src="https://ui-avatars.com/api/?name=Nyaenya+Moseti&background=1a365d&color=c9a962&size=144&font-size=0.4&bold=true" alt={article.author || 'Nyaenya Moseti'} />
                             <h4>{article.author || 'Nyaenya Moseti'}</h4>
                             <p>
                                 Building AI-powered systems for African SMEs. 
                                 Former dev, current founder, perpetual learner.
                             </p>
                             <div class="social-links">
-                                <a href="https://twitter.com/nyaenyamoseti" target="_blank" rel="noopener">
-                                    <i class="fab fa-twitter"></i>
+                                <a href="https://x.com/nyaenyamoseti" target="_blank" rel="noopener">
+                                    <i class="fab fa-x-twitter"></i>
                                 </a>
                                 <a href="https://linkedin.com/in/nyaenyamoseti" target="_blank" rel="noopener">
                                     <i class="fab fa-linkedin"></i>
@@ -386,53 +381,96 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
         margin-bottom: 24px;
     }
 
+    /* Light mode: Ensure title and excerpt are clearly visible on WHITE background */
+    :global(body.theme-light) .article-header {
+        background: #ffffff;
+    }
+
+    :global(body.theme-light) .article-header h1 {
+        color: #0c0c0c;
+    }
+
+    :global(body.theme-light) .article-deck {
+        color: #333333;
+    }
+
+    :global(body.theme-light) .category-label {
+        color: #1a365d;
+        background: rgba(26, 54, 93, 0.1);
+        padding: 4px 10px;
+        border-radius: 4px;
+    }
+
     .article-meta {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 16px;
+        padding: 0;
+        margin-top: 16px;
+        margin-bottom: 8px;
     }
 
     .author-section {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     .author-avatar {
-        width: 48px;
-        height: 48px;
-        background: var(--bg-cream);
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-light);
-        font-size: 1.25rem;
+        object-fit: cover;
+        border: none;
     }
 
     .author-details {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
     }
 
     .author-name {
         font-weight: 600;
-        color: var(--text-dark);
-        font-size: 0.9375rem;
+        color: var(--text-medium, #444444);
+        font-size: 0.875rem;
     }
 
     .author-title {
         font-size: 0.8125rem;
-        color: var(--text-light);
+        color: var(--text-light, #666666);
+    }
+
+    .author-title::before {
+        content: "·";
+        margin-right: 6px;
+        color: var(--text-light, #666666);
     }
 
     .meta-section {
         display: flex;
-        gap: 20px;
-        font-size: 0.875rem;
-        color: var(--text-light);
+        gap: 16px;
+        font-size: 0.8125rem;
+        color: var(--text-light, #666666);
+    }
+
+    .meta-section::before {
+        content: "·";
+        color: var(--text-light, #666666);
+    }
+
+    /* Dark mode: Same minimal styling with appropriate colors */
+    :global(body:not(.theme-light)) .author-name {
+        color: #a0a0a0;
+    }
+
+    :global(body:not(.theme-light)) .author-title,
+    :global(body:not(.theme-light)) .author-title::before,
+    :global(body:not(.theme-light)) .meta-section,
+    :global(body:not(.theme-light)) .meta-section::before {
+        color: #666666;
     }
 
     .meta-section time,
@@ -785,14 +823,10 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
     .author-avatar-large {
         width: 72px;
         height: 72px;
-        background: var(--bg-white);
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        object-fit: cover;
         margin: 0 auto 12px;
-        font-size: 1.75rem;
-        color: var(--text-light);
+        border: 3px solid #1a365d;
     }
 
     .author-content h4 {
@@ -867,6 +901,177 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
         .share-bar {
             flex-wrap: wrap;
         }
+    }
+
+    /* ==================== DARK MODE SUPPORT ==================== */
+    :global(body:not(.theme-light)) .breadcrumb {
+        background: var(--dark-surface, #0a0a0a);
+        border-bottom-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .breadcrumb .container,
+    :global(body:not(.theme-light)) .breadcrumb a,
+    :global(body:not(.theme-light)) .breadcrumb .current {
+        color: #a0a0a0;
+    }
+
+    :global(body:not(.theme-light)) .breadcrumb a:hover {
+        color: #ffffff;
+    }
+
+    :global(body:not(.theme-light)) .breadcrumb .separator {
+        color: rgba(255, 255, 255, 0.2);
+    }
+
+    :global(body:not(.theme-light)) .page-wrapper {
+        background: var(--dark-bg, #000000);
+    }
+
+    :global(body:not(.theme-light)) .article-header {
+        border-bottom-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .category-label {
+        color: var(--primary, #ffffff);
+    }
+
+    :global(body:not(.theme-light)) .article-header h1,
+    :global(body:not(.theme-light)) .article-content :global(h2),
+    :global(body:not(.theme-light)) .article-content :global(h3),
+    :global(body:not(.theme-light)) .article-content :global(strong),
+    :global(body:not(.theme-light)) .card-title,
+    :global(body:not(.theme-light)) .author-content h4,
+    :global(body:not(.theme-light)) .related-item h4 {
+        color: #ffffff;
+    }
+
+    :global(body:not(.theme-light)) .article-deck,
+    :global(body:not(.theme-light)) .article-content,
+    :global(body:not(.theme-light)) .card-description,
+    :global(body:not(.theme-light)) .author-content p {
+        color: #a0a0a0;
+    }
+
+    :global(body:not(.theme-light)) .author-avatar {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    :global(body:not(.theme-light)) .author-name {
+        color: #ffffff;
+    }
+
+    :global(body:not(.theme-light)) .author-title,
+    :global(body:not(.theme-light)) .meta-section,
+    :global(body:not(.theme-light)) .share-label,
+    :global(body:not(.theme-light)) .related-meta {
+        color: #666666;
+    }
+
+    :global(body:not(.theme-light)) .share-bar {
+        border-bottom-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .share-btn {
+        background: var(--dark-card, #131313);
+        color: #a0a0a0;
+    }
+
+    :global(body:not(.theme-light)) .share-btn:hover {
+        background: var(--primary, #ffffff);
+        color: #000000;
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(a),
+    :global(body:not(.theme-light)) .back-link {
+        color: var(--primary, #ffffff);
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(blockquote) {
+        border-left-color: var(--primary, #ffffff);
+        color: #888888;
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(code) {
+        background: var(--dark-card, #131313);
+        color: #e0e0e0;
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(th) {
+        background: var(--dark-card, #131313);
+        color: #ffffff;
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(th),
+    :global(body:not(.theme-light)) .article-content :global(td) {
+        border-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .article-content :global(hr) {
+        border-top-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .article-tags {
+        border-top-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .tag {
+        background: var(--dark-card, #131313);
+        color: #a0a0a0;
+    }
+
+    :global(body:not(.theme-light)) .tag:hover {
+        background: var(--primary, #ffffff);
+        color: #000000;
+    }
+
+    :global(body:not(.theme-light)) .sidebar-card {
+        background: var(--dark-card, #131313);
+    }
+
+    :global(body:not(.theme-light)) .card-label,
+    :global(body:not(.theme-light)) .related-category {
+        color: var(--primary, #ffffff);
+    }
+
+    :global(body:not(.theme-light)) .newsletter-input {
+        background: var(--dark-surface, #0a0a0a);
+        border-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+        color: #ffffff;
+    }
+
+    :global(body:not(.theme-light)) .newsletter-input:focus {
+        border-color: var(--primary, #ffffff);
+    }
+
+    :global(body:not(.theme-light)) .newsletter-btn {
+        background: var(--primary, #ffffff);
+        color: #000000;
+    }
+
+    :global(body:not(.theme-light)) .newsletter-btn:hover {
+        background: #e5e5e5;
+    }
+
+    :global(body:not(.theme-light)) .related-item {
+        border-bottom-color: var(--border-subtle, rgba(255, 255, 255, 0.1));
+    }
+
+    :global(body:not(.theme-light)) .related-item:hover h4 {
+        color: var(--primary, #ffffff);
+    }
+
+    :global(body:not(.theme-light)) .author-avatar-large {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    :global(body:not(.theme-light)) .social-links a {
+        background: var(--dark-surface, #0a0a0a);
+        color: #666666;
+    }
+
+    :global(body:not(.theme-light)) .social-links a:hover {
+        background: var(--primary, #ffffff);
+        color: #000000;
     }
 </style>
 
