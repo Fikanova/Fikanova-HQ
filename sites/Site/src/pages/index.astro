@@ -23,7 +23,10 @@ import GlassShape from '../components/GlassShape.astro';
 
     <!-- Hero Section -->
     <section class="hero">
-        <!-- Video Background -->
+        <!-- Mobile Image Background (hidden on desktop) -->
+        <div class="hero-image-bg" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80');"></div>
+        
+        <!-- Video Background (hidden on mobile) -->
         <div class="hero-video-container">
             <video autoplay muted loop playsinline class="hero-video">
                 <source src="https://cdn.pixabay.com/video/2017/12/20/13495-248644905_large.mp4" type="video/mp4" />

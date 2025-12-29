@@ -1011,7 +1011,7 @@ body.theme-light .submenu a:hover {
     isolation: isolate;
 }
 
-/* Video Background Container */
+/* Video Background Container - Hidden on mobile for better scroll UX */
 .hero-video-container {
     position: absolute;
     top: 0;
@@ -1019,6 +1019,32 @@ body.theme-light .submenu a:hover {
     right: 0;
     bottom: 0;
     z-index: 0;
+}
+
+/* Mobile Image Background - Shows only on mobile */
+.hero-image-bg {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Overlay for mobile image */
+.hero-image-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000;
+    opacity: 0.75;
 }
 
 .hero-video {
@@ -1692,6 +1718,15 @@ body.theme-light .social-icons a:hover {
 
     .hero {
         padding: 80px 0 60px;
+    }
+
+    /* Mobile Hero: Show image, hide video for better scroll UX */
+    .hero-video-container {
+        display: none;
+    }
+
+    .hero-image-bg {
+        display: block;
     }
 
     .hero h1 {
