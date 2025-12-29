@@ -32,7 +32,6 @@ try {
         ]
     );
     articles = response.documents;
-    console.log(`Fetched ${articles.length} articles from Appwrite`);
 } catch (error: any) {
     console.error('Error fetching articles from Appwrite:', error?.message || error);
     fetchError = true;

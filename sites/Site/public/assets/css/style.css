@@ -196,6 +196,53 @@ body.theme-light .social-float-icon:hover .social-icon {
     }
 }
 
+/* Return to Top Button */
+.return-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--dark-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--accent-gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.return-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.return-to-top:hover {
+    background: var(--accent-gold);
+    color: #000;
+    border-color: var(--accent-gold);
+    transform: translateY(-3px);
+}
+
+body.theme-light .return-to-top {
+    background: #1a365d;
+    border-color: #1a365d;
+    color: #ffffff;
+}
+
+body.theme-light .return-to-top:hover {
+    background: #c9a962;
+    border-color: #c9a962;
+    color: #1a365d;
+}
+
 /* HEADER - Dark mode default */
 header {
     position: sticky;
@@ -212,6 +259,60 @@ body.theme-light header {
     background: #1a365d;
     border-bottom: 1px solid rgba(201, 169, 98, 0.2);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Logo theme switching */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-dark,
+.logo-light {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    height: 36px;
+    width: auto;
+}
+
+.logo-separator {
+    width: 1px;
+    height: 24px;
+    background: #ffffff;
+}
+
+.logo-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.logo-light {
+    display: none;
+}
+
+.logo-dark {
+    display: flex;
+}
+
+body.theme-light .logo-dark {
+    display: none;
+}
+
+body.theme-light .logo-light {
+    display: flex;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
 }
 
 body.theme-light .logo,
@@ -787,6 +888,15 @@ body.theme-light .submenu-toggle:hover {
     font-size: 0.75rem;
 }
 
+/* Light mode: Make chevron (+ icon) visible in gold */
+body.theme-light .submenu-toggle .chevron {
+    color: #c9a962;
+}
+
+body.theme-light .submenu-toggle .chevron svg {
+    color: #c9a962;
+}
+
 .submenu-toggle.active .chevron {
     transform: rotate(180deg);
 }
@@ -887,79 +997,47 @@ body.theme-light .submenu a:hover {
     opacity: 0.9;
 }
 
-/* Hero Section with Background Image */
+/* Hero Section - Pragmatic Engineering Aesthetic */
 .hero {
-    padding: 140px 0 100px;
+    padding: 0;
     text-align: center;
     position: relative;
-    min-height: 60vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background: #000;
 }
 
-.hero::before {
-    content: '';
+/* Video Background Container */
+.hero-video-container {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
+    z-index: 0;
 }
 
-.hero::after {
-    content: '';
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    /* Dark overlay for text readability */
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    background-color: #000;
+    opacity: 0.8;
 }
 
-body.theme-light .hero::after {
-    /* Light mode: dark overlay for text visibility */
-    background: rgba(0, 0, 0, 0.55);
-}
-
-/* Hero text styling */
-.hero h1,
-.hero p {
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-/* Dark mode: Make subtitle more visible with lighter color */
-.hero p {
-    color: #e0e0e0;
-}
-
-/* Light mode hero: white/gold text on dark overlay */
-body.theme-light .hero h1 {
-    color: #ffffff;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-}
-
-body.theme-light .hero p {
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-body.theme-light .hero .gradient-text {
-    color: #c9a962;
-}
-
-body.theme-light .hero-badge {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #c9a962;
+body.theme-light .hero-overlay {
+    opacity: 0.75;
 }
 
 .hero .container {
@@ -967,18 +1045,26 @@ body.theme-light .hero-badge {
     z-index: 1;
 }
 
+/* Hero Badge - Technical Pill Styling */
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    background: var(--dark-card);
-    border: 1px solid var(--border-medium);
+    gap: 10px;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 24px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+body.theme-light .hero-badge {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .badge-dot {
@@ -1007,17 +1093,30 @@ body.theme-light .hero-badge {
     line-height: 1.1;
     margin-bottom: 24px;
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .gradient-text {
-    color: var(--primary);
+    color: var(--accent-gold);
 }
 
-.hero p {
+/* Light mode: Use white for Vision text for better contrast */
+body.theme-light .hero .gradient-text {
+    color: #c9a962;
+}
+
+/* Light mode: Make h1 white for arrow and Function */
+body.theme-light .hero h1 {
+    color: #ffffff;
+}
+
+.hero-subtitle {
     font-size: 20px;
     max-width: 700px;
     margin: 0 auto 40px;
     line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .cta-buttons {
@@ -1025,6 +1124,18 @@ body.theme-light .hero-badge {
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* Primary CTA - 8px gap between text and icon */
+.hero .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Secondary CTA - underline on hover */
+.hero .btn-secondary:hover {
+    text-decoration: underline;
 }
 
 /* Light mode hero buttons */
@@ -1279,6 +1390,31 @@ body.theme-light .hero .btn-secondary:hover {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 48px;
     text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.stat-item .stat-icon-animated {
+    margin-bottom: 16px;
+}
+
+.stat-item .stat-icon-img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+    object-fit: contain;
+    /* Match the gold color of AnimatedIcons */
+    filter: sepia(1) saturate(2) hue-rotate(10deg);
+}
+
+/* Light mode - make icon dark blue */
+body.theme-light .stat-item .stat-icon-img {
+    filter: brightness(0) saturate(100%) invert(18%) sepia(45%) saturate(1000%) hue-rotate(185deg) brightness(95%);
 }
 
 .stat-item h3 {

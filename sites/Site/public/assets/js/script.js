@@ -132,5 +132,27 @@ function initScript() {
             if (navigator.vibrate) navigator.vibrate(10);
         });
     });
+    // =============================================================================
+    // RETURN TO TOP BUTTON
+    // =============================================================================
+    const returnToTop = document.getElementById('return-to-top');
+
+    if (returnToTop) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                returnToTop.classList.add('visible');
+            } else {
+                returnToTop.classList.remove('visible');
+            }
+        });
+
+        returnToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            if (navigator.vibrate) navigator.vibrate(10);
+        });
+    }
 
 } // End initScript

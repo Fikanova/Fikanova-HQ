@@ -10,7 +10,18 @@ import Icon from './Icon.astro';
 <header>
     <nav>
         <a href="/" class="logo">
-            <img src="/assets/logos/fikanova-logo1.png" class="logo-image" alt="Fikanova" />
+            <!-- Dark theme: Icon + Line + Text -->
+            <div class="logo-dark">
+                <img src="/assets/logos/icon-dark.png" class="logo-icon" alt="Fikanova Icon" />
+                <span class="logo-separator"></span>
+                <span class="logo-text">Fikanova</span>
+            </div>
+            <!-- Light theme: Icon + Line + Text -->
+            <div class="logo-light">
+                <img src="/assets/logos/icon-light.png" class="logo-icon" alt="Fikanova Icon" />
+                <span class="logo-separator"></span>
+                <span class="logo-text">Fikanova</span>
+            </div>
         </a>
 
         <div class="nav-desktop">

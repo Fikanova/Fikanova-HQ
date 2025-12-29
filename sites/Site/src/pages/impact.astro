@@ -2,8 +2,6 @@
 import Icon from '../components/Icon.astro';
 import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
-import ImpactDashboard from '../components/ImpactDashboard.jsx';
-import A2UIUnified from '../components/A2UIUnified.jsx';
 ---
 
 <Layout title="Impact | Fikanova">
@@ -37,14 +35,6 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                 </div>
             </div>
 
-            <!-- A2UI Global Trace - LIVE PROOF OF WORK -->
-            <section class="a2ui-section scroll-reveal">
-                <A2UIUnified client:load mode="globalTrace" />
-            </section>
-
-            <!-- Live Dashboard -->
-            <ImpactDashboard client:load />
-
             <!-- Impact Areas Section -->
             <section class="impact-areas scroll-reveal">
                 <h2 class="section-title">Impact Areas</h2>
@@ -59,31 +49,9 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                             </div>
                             <div>
                                 <h3>Economic Impact</h3>
-                                <span class="impact-tag">SME Growth</span>
                             </div>
                         </div>
-                        <div class="impact-chart">
-                            <svg viewBox="0 0 200 80" class="area-chart">
-                                <defs>
-                                    <linearGradient id="economicGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" style="stop-color:var(--accent-green);stop-opacity:0.4"/>
-                                        <stop offset="100%" style="stop-color:var(--accent-green);stop-opacity:0"/>
-                                    </linearGradient>
-                                </defs>
-                                <path d="M0,70 L30,55 L60,50 L90,40 L120,35 L150,25 L180,15 L200,10 L200,80 L0,80 Z" fill="url(#economicGrad)"/>
-                                <polyline points="0,70 30,55 60,50 90,40 120,35 150,25 180,15 200,10" fill="none" stroke="var(--accent-green)" stroke-width="3" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="impact-metrics">
-                            <div class="metric">
-                                <span class="metric-value">KES 120K</span>
-                                <span class="metric-label">Cost Savings</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">8</span>
-                                <span class="metric-label">SMEs Served</span>
-                            </div>
-                        </div>
+                        <p class="impact-description">Helping SMEs reduce operational costs through automation and AI-powered solutions, enabling sustainable business growth.</p>
                     </div>
 
                     <!-- Social Impact -->
@@ -94,28 +62,9 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                             </div>
                             <div>
                                 <h3>Social Impact</h3>
-                                <span class="impact-tag">Community Growth</span>
                             </div>
                         </div>
-                        <div class="impact-chart">
-                            <svg viewBox="0 0 200 80" class="bar-chart">
-                                <rect x="10" y="60" width="25" height="20" fill="var(--accent-blue)" opacity="0.4"/>
-                                <rect x="45" y="50" width="25" height="30" fill="var(--accent-blue)" opacity="0.5"/>
-                                <rect x="80" y="35" width="25" height="45" fill="var(--accent-blue)" opacity="0.6"/>
-                                <rect x="115" y="25" width="25" height="55" fill="var(--accent-blue)" opacity="0.8"/>
-                                <rect x="150" y="10" width="25" height="70" fill="var(--accent-blue)"/>
-                            </svg>
-                        </div>
-                        <div class="impact-metrics">
-                            <div class="metric">
-                                <span class="metric-value">150+</span>
-                                <span class="metric-label">Lives Touched</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">2</span>
-                                <span class="metric-label">NGOs Supported</span>
-                            </div>
-                        </div>
+                        <p class="impact-description">Supporting communities and NGOs with technology solutions that amplify their reach and effectiveness.</p>
                     </div>
 
                     <!-- Environmental Impact -->
@@ -126,31 +75,9 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                             </div>
                             <div>
                                 <h3>Environmental Impact</h3>
-                                <span class="impact-tag">Sustainability</span>
                             </div>
                         </div>
-                        <div class="impact-chart donut-chart-container">
-                            <svg viewBox="0 0 100 100" class="donut-chart">
-                                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border-subtle)" stroke-width="10"/>
-                                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--accent-green)" stroke-width="10"
-                                    stroke-dasharray="188.5 251.2"
-                                    style="transform: rotate(-90deg); transform-origin: center;"/>
-                            </svg>
-                            <div class="donut-center">
-                                <span class="donut-value">75%</span>
-                                <span class="donut-label">Digital First</span>
-                            </div>
-                        </div>
-                        <div class="impact-metrics">
-                            <div class="metric">
-                                <span class="metric-value">85</span>
-                                <span class="metric-label">kg CO₂ Reduced</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">100%</span>
-                                <span class="metric-label">Remote Work</span>
-                            </div>
-                        </div>
+                        <p class="impact-description">Championing digital-first operations and remote work to minimize our carbon footprint and promote sustainable practices.</p>
                     </div>
                 </div>
             </section>
@@ -281,6 +208,13 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
         font-weight: 500;
     }
 
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 16px;
+        object-fit: contain;
+    }
+
     /* Section Titles */
     .section-title {
         font-size: 32px;
@@ -347,7 +281,13 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
         display: flex;
         align-items: center;
         gap: 16px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
+    }
+
+    .impact-description {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.7;
     }
 
     .impact-icon {
@@ -603,5 +543,79 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
         .esg-grid {
             grid-template-columns: 1fr;
         }
+    }
+
+    /* Light Mode Overrides - Dark blue text on white backgrounds */
+    :global(body.theme-light) .stat-item {
+        background: linear-gradient(135deg, rgba(26, 54, 93, 0.03) 0%, rgba(26, 54, 93, 0.01) 100%);
+        border: 1px solid rgba(26, 54, 93, 0.08);
+    }
+
+    :global(body.theme-light) .stat-item::before {
+        background: linear-gradient(90deg, transparent, rgba(26, 54, 93, 0.3), transparent);
+    }
+
+    :global(body.theme-light) .stat-item:hover {
+        border-color: rgba(26, 54, 93, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    :global(body.theme-light) .stat-item h3 {
+        background: #1a365d;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    :global(body.theme-light) .stat-item p {
+        color: #444444;
+    }
+
+    :global(body.theme-light) .section-title {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .section-subtitle {
+        color: #444444;
+    }
+
+    :global(body.theme-light) .section-tag {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .impact-card {
+        background: linear-gradient(145deg, rgba(26, 54, 93, 0.04) 0%, rgba(26, 54, 93, 0.01) 100%);
+        border: 1px solid rgba(26, 54, 93, 0.1);
+    }
+
+    :global(body.theme-light) .impact-card::after {
+        background: linear-gradient(135deg, rgba(26, 54, 93, 0.15), transparent, rgba(26, 54, 93, 0.1));
+    }
+
+    :global(body.theme-light) .impact-header h3 {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .metric-value,
+    :global(body.theme-light) .donut-value {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .esg-card {
+        background: #ffffff;
+        border: 1px solid rgba(26, 54, 93, 0.1);
+    }
+
+    :global(body.theme-light) .esg-card h3 {
+        color: #1a365d;
+    }
+
+    :global(body.theme-light) .cta-section {
+        background: #f8f9fa;
+        border-color: rgba(26, 54, 93, 0.1);
+    }
+
+    :global(body.theme-light) .cta-section h2 {
+        color: #1a365d;
     }
 </style>

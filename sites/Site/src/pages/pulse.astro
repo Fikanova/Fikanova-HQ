@@ -29,7 +29,7 @@ try {
     );
     traces = response.documents;
 } catch (error) {
-    console.log('Could not fetch traces');
+    // Silently handle fetch errors
 }
 
 // Format date for display
