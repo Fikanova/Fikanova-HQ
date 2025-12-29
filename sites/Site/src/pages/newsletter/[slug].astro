@@ -3,6 +3,8 @@
  * Individual Article Page - CIO-inspired editorial design
  * Renders article with sidebar, breadcrumbs, and professional typography
  */
+import Icon from "../../components/Icon.astro";
+import SocialIcon from "../../components/SocialIcon.astro";
 import Layout from '../../layouts/Layout.astro';
 import { Client, Databases, Query } from 'appwrite';
 import { marked } from 'marked';
@@ -141,11 +143,11 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                             </div>
                             <div class="meta-section">
                                 <time datetime={article.published_at}>
-                                    <i class="fas fa-calendar"></i>
+                                    <Icon name="calendar" size={16} />
                                     {formatDate(article.published_at)}
                                 </time>
                                 <span class="read-time">
-                                    <i class="fas fa-clock"></i>
+                                    <Icon name="clock" size={16} />
                                     {readTime} min read
                                 </span>
                             </div>
@@ -163,7 +165,7 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                                 class="share-btn"
                                 title="Share on X"
                             >
-                                <i class="fab fa-x-twitter"></i>
+                                <SocialIcon name="x-twitter" size={18} />
                             </a>
                             <a 
                                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://fikanova.co.ke/newsletter/${article.slug}`)}`}
@@ -172,14 +174,14 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                                 class="share-btn"
                                 title="Share on LinkedIn"
                             >
-                                <i class="fab fa-linkedin-in"></i>
+                                <SocialIcon name="linkedin" size={18} />
                             </a>
                             <button 
                                 class="share-btn copy-btn"
                                 title="Copy link"
                                 onclick="copyLink()"
                             >
-                                <i class="fas fa-link"></i>
+                                <Icon name="link" size={16} />
                             </button>
                         </div>
                     </div>
@@ -201,7 +203,7 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                     <!-- Article Footer -->
                     <footer class="article-footer">
                         <a href="/newsletter" class="back-link">
-                            <i class="fas fa-arrow-left"></i>
+                            <Icon name="arrow-left" size={16} />
                             Back to Newsletter
                         </a>
                     </footer>
@@ -260,10 +262,10 @@ const filteredRelated = relatedArticles.filter(a => a.slug !== article.slug).sli
                             </p>
                             <div class="social-links">
                                 <a href="https://x.com/nyaenyamoseti" target="_blank" rel="noopener">
-                                    <i class="fab fa-x-twitter"></i>
+                                    <SocialIcon name="x-twitter" size={18} />
                                 </a>
                                 <a href="https://linkedin.com/in/nyaenyamoseti" target="_blank" rel="noopener">
-                                    <i class="fab fa-linkedin"></i>
+                                    <SocialIcon name="linkedin" size={18} />
                                 </a>
                             </div>
                         </div>

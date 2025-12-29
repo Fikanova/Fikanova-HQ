@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 /**
  * The Pulse - Live System Monitor & Termite Stack Archive
  * Real-time agent activity and system transparency
@@ -60,7 +62,7 @@ function formatDate(dateString: string): string {
             <!-- 3 Elements Market Monitor -->
             <section class="monitor-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-chart-line"></i> The 3 Elements</h2>
+                    <h2><Icon name="chart-bar" size={24} /> The 3 Elements</h2>
                     <span class="section-badge">Live Metrics</span>
                 </div>
                 <ElementsMonitor client:load />
@@ -69,7 +71,7 @@ function formatDate(dateString: string): string {
             <!-- Agent Workforce Monitor -->
             <section class="monitor-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-robot"></i> Agent Workforce</h2>
+                    <h2><Icon name="cpu-chip" size={18} /> Agent Workforce</h2>
                     <span class="section-badge">L2 C-Suite</span>
                 </div>
                 <AgentWorkforceMonitor client:load />
@@ -78,7 +80,7 @@ function formatDate(dateString: string): string {
             <!-- A2UI Terminal -->
             <section class="monitor-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-terminal"></i> A2UI Terminal</h2>
+                    <h2><Icon name="command-line" size={24} /> A2UI Terminal</h2>
                     <span class="section-badge">Live Logs</span>
                 </div>
                 <A2UIMonitor client:load maxLines={30} />
@@ -87,7 +89,7 @@ function formatDate(dateString: string): string {
             <!-- The Termite Stack Archive -->
             <section class="termite-stack">
                 <div class="section-header">
-                    <h2><i class="fas fa-layer-group"></i> The Termite Stack</h2>
+                    <h2><Icon name="squares-2x2" size={24} /> The Termite Stack</h2>
                     <span class="section-badge">System Traces</span>
                 </div>
                 <p class="stack-desc">
@@ -98,7 +100,7 @@ function formatDate(dateString: string): string {
                 <div class="trace-grid">
                     {traces.length === 0 ? (
                         <div class="empty-traces">
-                            <i class="fas fa-database"></i>
+                            <Icon name="cpu-chip" size={24} />
                             <p>System traces loading...</p>
                         </div>
                     ) : (
@@ -107,7 +109,7 @@ function formatDate(dateString: string): string {
                                 <a href={`/newsletter/${trace.slug}`}>
                                     <div class="trace-header">
                                         <span class="trace-type">
-                                            <i class="fas fa-code-branch"></i>
+                                            <Icon name="code-bracket" size={16} />
                                             TRACE
                                         </span>
                                         <time>{formatDate(trace.published_at)}</time>
@@ -123,7 +125,7 @@ function formatDate(dateString: string): string {
                                             ))}
                                         </span>
                                         <span class="trace-link">
-                                            View trace <i class="fas fa-arrow-right"></i>
+                                            View trace <Icon name="arrow-right" size={14} />
                                         </span>
                                     </div>
                                 </a>
@@ -134,7 +136,7 @@ function formatDate(dateString: string): string {
 
                 <div class="stack-cta">
                     <a href="/newsletter" class="btn-secondary">
-                        <i class="fas fa-archive"></i>
+                        <Icon name="document-text" size={24} />
                         View Full Archive
                     </a>
                 </div>
@@ -162,7 +164,7 @@ function formatDate(dateString: string): string {
                         <input type="hidden" name="firstname" value="" />
                         <input type="hidden" name="lastname" value="" />
                         <button type="submit" class="newsletter-btn">
-                            <i class="fas fa-paper-plane"></i>
+                            <Icon name="paper-airplane" size={18} />
                             Subscribe
                         </button>
                     </form>

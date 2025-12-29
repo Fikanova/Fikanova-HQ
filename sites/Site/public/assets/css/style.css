@@ -6,6 +6,11 @@
     --accent-green: #10b981;
     --accent-blue: #3b82f6;
     --accent-gold: #c9a962;
+    --accent: #c9a962;
+    /* Gold accent - used on dark backgrounds */
+    --accent-hover: #e0c478;
+    --accent-on-light: #c9a962;
+    /* Gold still works on dark surfaces */
     --dark-bg: #000000;
     --dark-surface: #0a0a0a;
     --dark-card: #131313;
@@ -19,23 +24,27 @@
     --glow: rgba(255, 255, 255, 0.05);
     --bg-cream: #131313;
     --bg-white: #0a0a0a;
+    --icon-color: #c9a962;
+    /* Gold icons in dark mode */
 }
 
-/* Light Mode - Clean Editorial Style with Dark Blue + Gold Accents */
+/* Light Mode - Dark blue on white backgrounds, Gold on dark sections */
 body.theme-light {
     --primary: #1a365d;
-    /* Dark blue accent */
     --primary-hover: #0f2440;
     --secondary: #2c5282;
     --accent-blue: #1a365d;
     --accent-gold: #c9a962;
-    /* Gold for text on dark blue */
+    --accent: #1a365d;
+    /* Dark blue for white background sections */
+    --accent-hover: #0f2440;
+    --accent-on-dark: #c9a962;
+    /* Gold for dark overlays (heroes/footer) */
     --accent-gold-hover: #e0c478;
     --dark-bg: #ffffff;
     --dark-surface: #f8f9fa;
     --dark-card: #ffffff;
     --footer-dark: #1a365d;
-    /* Dark blue footer background */
     --text-primary: #0c0c0c;
     --text-secondary: #444444;
     --text-tertiary: #666666;
@@ -45,6 +54,8 @@ body.theme-light {
     --glow: rgba(26, 54, 93, 0.1);
     --bg-cream: #faf8f5;
     --bg-white: #ffffff;
+    --icon-color: #1a365d;
+    /* Dark blue icons in light mode */
 }
 
 * {
@@ -55,6 +66,17 @@ body.theme-light {
 
 html {
     scroll-behavior: smooth;
+}
+
+/* Global Icon Styling - Gold in dark mode, Dark blue in light mode */
+.icon,
+.social-icon {
+    color: var(--icon-color);
+}
+
+/* Social icons should be gold in light mode for visibility */
+body.theme-light .social-icon {
+    color: #c9a962;
 }
 
 body {
@@ -69,6 +91,21 @@ body {
 .grid-background {
     display: none;
     /* Grid lines removed for cleaner look */
+}
+
+/* Animated Icon Styling for Service Cards */
+.service-icon-animated {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Animated Icon Styling for Stats */
+.stat-icon-animated {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .container {
@@ -145,6 +182,14 @@ body.theme-light .social-float-icon:hover {
     box-shadow: 0 0 15px rgba(201, 169, 98, 0.6), 0 0 30px rgba(201, 169, 98, 0.4);
 }
 
+body.theme-light .social-float-icon .social-icon {
+    color: #c9a962;
+}
+
+body.theme-light .social-float-icon:hover .social-icon {
+    color: #c9a962;
+}
+
 @media (max-width: 768px) {
     .social-float {
         display: none;
@@ -192,6 +237,19 @@ body.theme-light .btn-call {
 body.theme-light .btn-call:hover {
     background: #e0c478;
     color: #1a365d;
+}
+
+/* Navigation link icons - white in light mode, uppercase text */
+.nav-link {
+    text-transform: uppercase;
+}
+
+.nav-link .icon {
+    color: var(--icon-color);
+}
+
+body.theme-light .nav-link .icon {
+    color: #ffffff;
 }
 
 /* Card styling */
@@ -246,10 +304,26 @@ body.theme-light .tab-btn.active {
 }
 
 /* Buttons */
+/* Global rule: All button hover states with white background should have dark blue icons in dark mode */
+.btn:hover .icon,
+[class*="btn-"]:hover .icon {
+    color: #1a365d;
+}
+
+body.theme-light .btn:hover .icon,
+body.theme-light [class*="btn-"]:hover .icon {
+    color: #ffffff;
+}
+
 .btn-primary {
     background: var(--primary);
     color: var(--dark-bg);
     box-shadow: 0 4px 16px var(--glow);
+}
+
+/* Dark mode: dark blue icons in white background buttons */
+.btn-primary .icon {
+    color: #1a365d;
 }
 
 .btn-primary:hover {
@@ -259,12 +333,24 @@ body.theme-light .tab-btn.active {
     color: #000000;
 }
 
+.btn-primary:hover .icon {
+    color: #1a365d;
+}
+
 body.theme-light .btn-primary {
+    color: #ffffff;
+}
+
+body.theme-light .btn-primary .icon {
     color: #ffffff;
 }
 
 body.theme-light .btn-primary:hover {
     background: var(--primary-hover);
+    color: #ffffff;
+}
+
+body.theme-light .btn-primary:hover .icon {
     color: #ffffff;
 }
 
@@ -281,7 +367,16 @@ body.theme-light .btn-primary:hover {
     transform: translateY(-2px);
 }
 
+/* Dark mode: dark blue icons on hover (white background) */
+.btn-secondary:hover .icon {
+    color: #1a365d;
+}
+
 body.theme-light .btn-secondary:hover {
+    color: #ffffff;
+}
+
+body.theme-light .btn-secondary:hover .icon {
     color: #ffffff;
 }
 
@@ -532,15 +627,33 @@ body.theme-light .theme-switch:hover .switch-track {
     height: 40px;
 }
 
+/* Dark mode: white icon, black on hover */
+.btn-call .icon {
+    color: #ffffff;
+}
+
 .btn-call:hover {
     background: var(--primary);
     color: #000000;
     box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
 }
 
+.btn-call:hover .icon {
+    color: #000000;
+}
+
+/* Light mode: white icon, white on hover */
+body.theme-light .btn-call .icon {
+    color: #ffffff;
+}
+
 body.theme-light .btn-call:hover {
     color: #ffffff;
     box-shadow: 0 8px 24px rgba(26, 54, 93, 0.25);
+}
+
+body.theme-light .btn-call:hover .icon {
+    color: #ffffff;
 }
 
 .hamburger {
@@ -742,6 +855,10 @@ body.theme-light .submenu a:hover {
     color: #000000;
 }
 
+.btn-primary:hover .icon {
+    color: #1a365d;
+}
+
 .btn-primary:active {
     transform: translateY(0);
     background: #e5e5e5;
@@ -759,6 +876,10 @@ body.theme-light .submenu a:hover {
     background: var(--primary);
     color: var(--dark-bg);
     transform: translateY(-2px);
+}
+
+.btn-secondary:hover .icon {
+    color: #1a365d;
 }
 
 .btn-secondary:active {
@@ -1322,9 +1443,10 @@ body.theme-light .social-icons a {
 }
 
 body.theme-light .social-icons a:hover {
-    background: #c9a962;
-    color: #1a365d;
-    box-shadow: 0 0 12px rgba(201, 169, 98, 0.5);
+    background: transparent;
+    border-color: #c9a962;
+    color: #c9a962;
+    box-shadow: 0 0 15px rgba(201, 169, 98, 0.6), 0 0 30px rgba(201, 169, 98, 0.4);
     transform: translateY(-2px);
 }
 

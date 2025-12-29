@@ -1,0 +1,139 @@
+---
+/**
+ * AnimatedIcon Component
+ * Technical line art icons with assembly/unfold animations
+ * Triggered on scroll-reveal, not constant looping
+ */
+interface Props {
+  type: 'code' | 'chart' | 'ai' | 'rocket' | 'target' | 'users';
+  class?: string;
+  size?: number;
+}
+
+const { type, class: className = '', size = 64 } = Astro.props;
+
+// Technical line art SVG paths (1px stroke geometric wireframes)
+const icons: Record<string, string> = {
+  code: `
+    <path class="line line-1" d="M8 6L3 12L8 18" />
+    <path class="line line-2" d="M16 6L21 12L16 18" />
+    <path class="line line-3" d="M14 4L10 20" />
+  `,
+  chart: `
+    <path class="line line-1" d="M3 20V14" />
+    <path class="line line-2" d="M8 20V10" />
+    <path class="line line-3" d="M13 20V6" />
+    <path class="line line-4" d="M18 20V16" />
+    <path class="line line-5" d="M3 4L9 10L15 6L21 12" />
+  `,
+  ai: `
+    <circle class="line line-1" cx="12" cy="12" r="3" />
+    <path class="line line-2" d="M12 2V5" />
+    <path class="line line-3" d="M12 19V22" />
+    <path class="line line-4" d="M2 12H5" />
+    <path class="line line-5" d="M19 12H22" />
+    <path class="line line-6" d="M4.93 4.93L7.05 7.05" />
+    <path class="line line-7" d="M16.95 16.95L19.07 19.07" />
+    <path class="line line-8" d="M4.93 19.07L7.05 16.95" />
+    <path class="line line-9" d="M16.95 7.05L19.07 4.93" />
+  `,
+  rocket: `
+    <path class="line line-1" d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+    <path class="line line-2" d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+    <path class="line line-3" d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+    <path class="line line-4" d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+  `,
+  target: `
+    <circle class="line line-1" cx="12" cy="12" r="10" />
+    <circle class="line line-2" cx="12" cy="12" r="6" />
+    <circle class="line line-3" cx="12" cy="12" r="2" />
+  `,
+  users: `
+    <circle class="line line-1" cx="9" cy="7" r="4" />
+    <path class="line line-2" d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+    <circle class="line line-3" cx="16" cy="11" r="3" />
+    <path class="line line-4" d="M21 21v-2a3 3 0 0 0-3-3h-1" />
+  `
+};
+
+const svgPath = icons[type] || icons['code'];
+---
+
+<div class:list={['animated-icon', className]} style={`--icon-size: ${size}px`}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+    width={size}
+    height={size}
+    aria-hidden="true"
+    set:html={svgPath}
+  />
+</div>
+
+<style>
+  .animated-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold, #c9a962);
+  }
+
+  :global(body.theme-light) .animated-icon {
+    color: var(--accent-blue, #1a365d);
+  }
+
+  .animated-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Line animation - staggered assembly */
+  .animated-icon :global(.line) {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    opacity: 0;
+    transition: stroke-dashoffset 0.8s ease-out, opacity 0.3s ease;
+  }
+
+  /* Scroll-reveal trigger */
+  .animated-icon.revealed :global(.line) {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  /* Staggered delays for assembly effect */
+  .animated-icon.revealed :global(.line-1) { transition-delay: 0s; }
+  .animated-icon.revealed :global(.line-2) { transition-delay: 0.1s; }
+  .animated-icon.revealed :global(.line-3) { transition-delay: 0.2s; }
+  .animated-icon.revealed :global(.line-4) { transition-delay: 0.3s; }
+  .animated-icon.revealed :global(.line-5) { transition-delay: 0.4s; }
+  .animated-icon.revealed :global(.line-6) { transition-delay: 0.5s; }
+  .animated-icon.revealed :global(.line-7) { transition-delay: 0.6s; }
+  .animated-icon.revealed :global(.line-8) { transition-delay: 0.7s; }
+  .animated-icon.revealed :global(.line-9) { transition-delay: 0.8s; }
+
+  /* Hover interaction - subtle glow */
+  .animated-icon:hover {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+</style>
+
+<script>
+  // Scroll-reveal for animated icons
+  const animatedIcons = document.querySelectorAll('.animated-icon');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  animatedIcons.forEach(icon => observer.observe(icon));
+</script>

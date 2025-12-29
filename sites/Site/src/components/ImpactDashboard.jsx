@@ -29,45 +29,45 @@ export default function ImpactDashboard() {
                     <span className="ticker-divider" />
                     <TickerStat label="Active Agents" value={ticker.agents} type="success" pulse />
                     <span className="ticker-divider" />
-                    <TickerStat label="Clients Onboarded" value="8" type="highlight" />
+                    <TickerStat label="Early Partners" value="3" type="highlight" />
                     <span className="ticker-divider" />
-                    <TickerStat label="Uptime" value="99.9%" type="success" />
+                    <TickerStat label="System Status" value="Operational" type="success" />
                 </div>
             </div>
 
             {/* Section Header */}
             <div className="dashboard-header">
                 <div className="header-left">
-                    <h2 className="dashboard-title">System Impact</h2>
+                    <h2 className="dashboard-title">Pre-Launch Metrics</h2>
                     <span className="live-badge">
                         <span className="live-dot" />
                         Live
                     </span>
                 </div>
-                <p className="dashboard-subtitle">Real-time performance metrics across Fikanova operations</p>
+                <p className="dashboard-subtitle">Early-stage performance tracking as we build and launch</p>
             </div>
 
             {/* Metric Cards */}
             <div className="metrics-grid">
                 <MetricCard
-                    title="Operational Savings"
-                    value="KES 120K"
-                    change={15}
-                    chartData={[0, 5, 12, 18, 25, 35, 48, 65, 85, 120]}
+                    title="Time Saved"
+                    value="48 hrs"
+                    change={12}
+                    chartData={[5, 8, 12, 15, 22, 28, 32, 38, 44, 48]}
                     type="green"
                 />
                 <MetricCard
-                    title="SME Partners"
-                    value="8"
-                    change={25}
-                    chartData={[0, 1, 2, 3, 4, 5, 6, 7, 8, 8]}
+                    title="Early Clients"
+                    value="3"
+                    change={50}
+                    chartData={[0, 0, 1, 1, 1, 2, 2, 2, 3, 3]}
                     type="blue"
                 />
                 <MetricCard
-                    title="Efficiency Gain"
-                    value="2.4x"
-                    change={18}
-                    chartData={[1, 1.2, 1.4, 1.6, 1.8, 2, 2.1, 2.2, 2.3, 2.4]}
+                    title="Avg. Delivery"
+                    value="1.8x"
+                    change={22}
+                    chartData={[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.75, 1.8]}
                     type="default"
                 />
             </div>
@@ -75,44 +75,43 @@ export default function ImpactDashboard() {
             {/* Distribution Charts */}
             <div className="charts-grid">
                 <DonutCard
-                    title="Project Distribution"
+                    title="Focus Areas"
                     data={[
-                        { label: 'Web Development', value: 42, color: 'var(--accent-blue)' },
-                        { label: 'AI Integration', value: 28, color: 'var(--primary)' },
-                        { label: 'E-commerce', value: 18, color: 'var(--accent-green)' },
-                        { label: 'Consulting', value: 12, color: 'var(--accent-gold)' }
+                        { label: 'Web Development', value: 40, color: '#3b82f6' },
+                        { label: 'AI Automation', value: 35, color: '#c9a962' },
+                        { label: 'Consulting', value: 25, color: '#10b981' }
                     ]}
                 />
                 <DonutCard
-                    title="Revenue Channels"
+                    title="Client Stage"
                     data={[
-                        { label: 'Project Work', value: 65, color: 'var(--accent-blue)' },
-                        { label: 'Retainers', value: 25, color: 'var(--accent-green)' },
-                        { label: 'Licensing', value: 10, color: 'var(--primary)' }
+                        { label: 'Active Projects', value: 60, color: '#3b82f6' },
+                        { label: 'In Discussion', value: 25, color: '#10b981' },
+                        { label: 'Completed', value: 15, color: '#c9a962' }
                     ]}
                 />
             </div>
 
-            {/* Regional Table */}
+            {/* Pipeline Table */}
             <div className="regional-section">
                 <div className="regional-header">
-                    <span className="regional-title">Regional Impact</span>
-                    <span className="regional-status">● Real-time</span>
+                    <span className="regional-title">Pipeline Overview</span>
+                    <span className="regional-status">● Pre-launch</span>
                 </div>
                 <table className="regional-table">
                     <thead>
                         <tr>
-                            <th>Region</th>
-                            <th>Services Offered</th>
-                            <th>Clients</th>
-                            <th>Satisfaction</th>
+                            <th>Project</th>
+                            <th>Type</th>
+                            <th>Stage</th>
+                            <th>Progress</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <RegionRow region="Nairobi, KE" services={4} clients={5} satisfaction="98%" status="active" />
-                        <RegionRow region="Mombasa, KE" services={2} clients={2} satisfaction="100%" status="growing" />
-                        <RegionRow region="Remote / Global" services={3} clients={1} satisfaction="95%" status="active" />
+                        <RegionRow region="Client Website v1" services="Web Dev" clients="In Progress" satisfaction="75%" status="active" />
+                        <RegionRow region="AI Chatbot MVP" services="AI/ML" clients="Building" satisfaction="45%" status="growing" />
+                        <RegionRow region="Internal Tools" services="Automation" clients="Testing" satisfaction="90%" status="active" />
                     </tbody>
                 </table>
             </div>
@@ -122,45 +121,61 @@ export default function ImpactDashboard() {
           font-family: 'Inter', sans-serif;
         }
 
-        /* Ticker Bar */
+        /* Ticker Bar - Premium Glass */
         .ticker-bar {
-          background: var(--dark-surface);
-          border: 1px solid var(--border-subtle);
-          border-radius: 12px;
-          padding: 14px 24px;
-          margin-bottom: 32px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 16px;
+          padding: 18px 28px;
+          margin-bottom: 36px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .ticker-bar::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.4), transparent);
         }
 
         .ticker-content {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 24px;
+          gap: 32px;
           flex-wrap: wrap;
         }
 
         .ticker-divider {
           width: 1px;
-          height: 16px;
-          background: var(--border-subtle);
+          height: 20px;
+          background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.15), transparent);
         }
 
         /* Dashboard Header */
         .dashboard-header {
-          margin-bottom: 28px;
+          margin-bottom: 32px;
         }
 
         .header-left {
           display: flex;
           align-items: center;
-          gap: 12px;
-          margin-bottom: 8px;
+          gap: 14px;
+          margin-bottom: 10px;
         }
 
         .dashboard-title {
-          font-size: 24px;
+          font-size: 26px;
           font-weight: 700;
-          color: var(--text-primary);
+          background: linear-gradient(135deg, #ffffff 0%, #c9a962 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
           margin: 0;
         }
 
@@ -168,13 +183,15 @@ export default function ImpactDashboard() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: rgba(16, 185, 129, 0.15);
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+          border: 1px solid rgba(16, 185, 129, 0.3);
           color: var(--accent-green);
-          padding: 4px 10px;
+          padding: 5px 12px;
           border-radius: 20px;
-          font-size: 11px;
-          font-weight: 600;
+          font-size: 10px;
+          font-weight: 700;
           text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .live-dot {
@@ -182,12 +199,13 @@ export default function ImpactDashboard() {
           height: 6px;
           border-radius: 50%;
           background: var(--accent-green);
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
           animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6); }
+          50% { opacity: 0.5; box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); }
         }
 
         .dashboard-subtitle {
@@ -199,43 +217,58 @@ export default function ImpactDashboard() {
         /* Metrics Grid */
         .metrics-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-          gap: 20px;
-          margin-bottom: 24px;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
+          margin-bottom: 28px;
         }
 
         /* Charts Grid */
         .charts-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 20px;
-          margin-bottom: 24px;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 24px;
+          margin-bottom: 28px;
         }
 
-        /* Regional Section */
+        /* Regional Section - Premium Table */
         .regional-section {
-          background: var(--dark-card);
-          border: 1px solid var(--border-subtle);
-          border-radius: 16px;
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 20px;
           overflow: hidden;
+          position: relative;
+        }
+
+        .regional-section::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.3), transparent);
         }
 
         .regional-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px 20px;
-          border-bottom: 1px solid var(--border-subtle);
+          padding: 18px 24px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.02);
         }
 
         .regional-title {
           font-weight: 600;
+          font-size: 15px;
           color: var(--text-primary);
         }
 
         .regional-status {
           font-size: 11px;
           color: var(--accent-green);
+          font-weight: 600;
         }
 
         .regional-table {
@@ -244,21 +277,21 @@ export default function ImpactDashboard() {
         }
 
         .regional-table th {
-          padding: 12px 16px;
+          padding: 14px 20px;
           text-align: left;
           font-size: 11px;
           font-weight: 600;
           color: var(--text-tertiary);
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          background: var(--dark-surface);
+          letter-spacing: 1px;
+          background: rgba(255, 255, 255, 0.02);
         }
 
         .regional-table td {
-          padding: 14px 16px;
+          padding: 16px 20px;
           font-size: 13px;
           color: var(--text-secondary);
-          border-bottom: 1px solid var(--border-subtle);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .regional-table tr:last-child td {
@@ -266,17 +299,16 @@ export default function ImpactDashboard() {
         }
 
         .regional-table tr:hover td {
-          background: var(--dark-surface);
+          background: rgba(201, 169, 98, 0.03);
         }
 
         @media (max-width: 768px) {
           .ticker-content {
-            gap: 16px;
+            gap: 20px;
           }
           .ticker-divider {
             display: none;
           }
-          /* Regional table mobile - prevent right margin cutoff */
           .regional-section {
             margin-left: -12px;
             margin-right: -12px;
@@ -289,7 +321,7 @@ export default function ImpactDashboard() {
           }
           .regional-table th,
           .regional-table td {
-            padding: 10px 12px;
+            padding: 12px 14px;
             white-space: nowrap;
           }
         }
@@ -323,11 +355,12 @@ function TickerStat({ label, value, type, pulse }) {
 }
 
 function MetricCard({ title, value, change, chartData, type }) {
+    const [hoveredPoint, setHoveredPoint] = useState(null);
     const max = Math.max(...chartData);
     const colors = {
-        green: 'var(--accent-green)',
-        blue: 'var(--accent-blue)',
-        default: 'var(--primary)'
+        green: '#10b981',
+        blue: '#3b82f6',
+        default: '#c9a962'
     };
     const color = colors[type] || colors.default;
 
@@ -335,37 +368,97 @@ function MetricCard({ title, value, change, chartData, type }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -6, boxShadow: '0 25px 70px rgba(0, 0, 0, 0.25), 0 0 50px rgba(201, 169, 98, 0.08)' }}
+            transition={{ duration: 0.3 }}
             style={{
-                background: 'var(--dark-card)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '16px',
-                padding: '20px'
+                background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderRadius: '20px',
+                padding: '24px',
+                position: 'relative',
+                overflow: 'hidden'
             }}
         >
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{title}</span>
-                <span style={{ color: 'var(--accent-green)', fontSize: '12px', fontWeight: 600 }}>+{change}%</span>
+            {/* Gradient top border */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '1px',
+                background: `linear-gradient(90deg, transparent, ${color}40, transparent)`
+            }} />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500, letterSpacing: '0.5px' }}>{title}</span>
+                <span style={{
+                    color: '#10b981',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    padding: '3px 8px',
+                    borderRadius: '12px'
+                }}>+{change}%</span>
             </div>
-            <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px' }}>{value}</div>
-            <div style={{ height: '50px' }}>
-                <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id={`grad-${type}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-                            <stop offset="100%" stopColor={color} stopOpacity="0" />
-                        </linearGradient>
-                    </defs>
+            <div style={{
+                fontSize: '32px',
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #ffffff 0%, #c9a962 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                marginBottom: '18px'
+            }}>{value}</div>
+            <div style={{ height: '70px', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 100 70" preserveAspectRatio="none">
+                    {/* Minimal single line */}
                     <path
-                        d={`M0,50 ${chartData.map((v, i) => `L${(i / (chartData.length - 1)) * 100},${50 - (v / max) * 45}`).join(' ')} L100,50 Z`}
-                        fill={`url(#grad-${type})`}
-                    />
-                    <path
-                        d={`M${chartData.map((v, i) => `${(i / (chartData.length - 1)) * 100},${50 - (v / max) * 45}`).join(' L')}`}
+                        d={`M${chartData.map((v, i) => `${(i / (chartData.length - 1)) * 100},${70 - (v / max) * 55}`).join(' L')}`}
                         fill="none"
                         stroke={color}
                         strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                     />
+                    {/* Interactive data points - tiny dots */}
+                    {chartData.map((v, i) => (
+                        <circle
+                            key={i}
+                            cx={(i / (chartData.length - 1)) * 100}
+                            cy={70 - (v / max) * 55}
+                            r={hoveredPoint === i ? 3 : 1.5}
+                            fill={color}
+                            style={{
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease',
+                                opacity: hoveredPoint === i ? 1 : 0.7
+                            }}
+                            onMouseEnter={() => setHoveredPoint(i)}
+                            onMouseLeave={() => setHoveredPoint(null)}
+                        />
+                    ))}
                 </svg>
+                {/* Tooltip */}
+                {hoveredPoint !== null && (
+                    <div style={{
+                        position: 'absolute',
+                        left: `${(hoveredPoint / (chartData.length - 1)) * 100}%`,
+                        top: `${70 - (chartData[hoveredPoint] / max) * 55 - 12}%`,
+                        transform: 'translate(-50%, -100%)',
+                        background: 'rgba(0, 0, 0, 0.9)',
+                        border: `1px solid ${color}`,
+                        borderRadius: '6px',
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: color,
+                        whiteSpace: 'nowrap',
+                        zIndex: 10,
+                        pointerEvents: 'none'
+                    }}>
+                        {chartData[hoveredPoint]}
+                    </div>
+                )}
             </div>
         </motion.div>
     );
@@ -379,38 +472,74 @@ function DonutCard({ title, data }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -6, boxShadow: '0 25px 70px rgba(0, 0, 0, 0.25), 0 0 50px rgba(201, 169, 98, 0.08)' }}
+            transition={{ duration: 0.3 }}
             style={{
-                background: 'var(--dark-card)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '16px',
-                padding: '20px'
+                background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderRadius: '20px',
+                padding: '24px',
+                position: 'relative',
+                overflow: 'hidden'
             }}
         >
-            <div style={{ marginBottom: '16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{title}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-                <div style={{ width: '100px', height: '100px', position: 'relative' }}>
-                    <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+            {/* Gradient top border */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '1px',
+                background: 'linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.3), transparent)'
+            }} />
+
+            <div style={{ marginBottom: '18px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500, letterSpacing: '0.5px' }}>{title}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+                <div style={{ width: '110px', height: '110px', position: 'relative' }}>
+                    <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.3))' }}>
                         {data.map((seg, i) => {
                             const start = cumulative;
                             cumulative += (seg.value / total) * 100;
                             return (
-                                <circle key={i} cx="50" cy="50" r="40" fill="none"
-                                    stroke={seg.color} strokeWidth="12"
-                                    strokeDasharray={`${(seg.value / total) * 251.2} 251.2`}
-                                    strokeDashoffset={-start * 2.512}
+                                <circle key={i} cx="50" cy="50" r="38" fill="none"
+                                    stroke={seg.color} strokeWidth="14"
+                                    strokeDasharray={`${(seg.value / total) * 238.76} 238.76`}
+                                    strokeDashoffset={-start * 2.3876}
+                                    style={{ filter: `drop-shadow(0 0 8px ${seg.color}40)` }}
                                 />
                             );
                         })}
                     </svg>
+                    {/* Center value */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>{total}%</div>
+                    </div>
                 </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {data.map((item, i) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span style={{ width: '8px', height: '8px', borderRadius: '2px', background: item.color }} />
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span style={{
+                                    width: '10px',
+                                    height: '10px',
+                                    borderRadius: '3px',
+                                    background: item.color,
+                                    boxShadow: `0 0 8px ${item.color}60`
+                                }} />
                                 <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
                             </div>
-                            <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{item.value}%</span>
+                            <span style={{
+                                color: 'var(--text-primary)',
+                                fontWeight: 700,
+                                fontFamily: 'monospace'
+                            }}>{item.value}%</span>
                         </div>
                     ))}
                 </div>

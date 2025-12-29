@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
@@ -26,29 +28,29 @@ import Layout from '../layouts/Layout.astro';
                     <div class="contact-items">
                         <a href="mailto:info@fikanova.co.ke" class="contact-item">
                             <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
+                                <Icon name="envelope" size={18} />
                             </div>
                             <div>
                                 <h3>Email</h3>
                                 <span>info@fikanova.co.ke</span>
                             </div>
-                            <i class="fas fa-arrow-right item-arrow"></i>
+                            <Icon name="arrow-right" size={14} class="item-arrow" />
                         </a>
 
                         <a href="https://www.fikanova.co.ke" target="_blank" class="contact-item">
                             <div class="contact-icon">
-                                <i class="fas fa-globe"></i>
+                                <Icon name="globe-alt" size={18} />
                             </div>
                             <div>
                                 <h3>Website</h3>
                                 <span>www.fikanova.co.ke</span>
                             </div>
-                            <i class="fas fa-arrow-right item-arrow"></i>
+                            <Icon name="arrow-right" size={14} class="item-arrow" />
                         </a>
 
                         <div class="contact-item">
                             <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
+                                <Icon name="map-pin" size={18} />
                             </div>
                             <div>
                                 <h3>Location</h3>
@@ -58,7 +60,7 @@ import Layout from '../layouts/Layout.astro';
 
                         <div class="contact-item">
                             <div class="contact-icon">
-                                <i class="fas fa-robot"></i>
+                                <Icon name="cpu-chip" size={18} />
                             </div>
                             <div>
                                 <h3>AI Agents</h3>
@@ -120,7 +122,7 @@ import Layout from '../layouts/Layout.astro';
                         </div>
 
                         <button type="submit" class="btn btn-primary submit-btn">
-                            <i class="fas fa-paper-plane"></i> Send Message
+                            <Icon name="paper-airplane" size={18} /> Send Message
                         </button>
                     </form>
                 </div>
@@ -209,11 +211,7 @@ import Layout from '../layouts/Layout.astro';
 
     .hero-tagline {
         font-size: 20px;
-        color: #e0e0e0;
-    }
-
-    :global(body.theme-light) .hero-tagline {
-        color: var(--text-secondary);
+        color: #c9a962; /* Gold */
     }
 
     /* Grid Layout */

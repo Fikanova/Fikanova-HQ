@@ -3,6 +3,7 @@
  * Shared Footer Component with Newsletter Signup
  * Progressive disclosure - shows subscribe button after email input
  */
+import SocialIcon from './SocialIcon.astro';
 ---
 
 <footer>
@@ -33,16 +34,16 @@
             <!-- Social Icons - Always visible -->
             <div class="social-icons">
                 <a href="https://twitter.com/FikanovaTech" target="_blank" rel="noopener" aria-label="Twitter">
-                    <i class="fab fa-x-twitter"></i>
+                    <SocialIcon name="x-twitter" size={20} />
                 </a>
                 <a href="https://linkedin.com/company/fikanova" target="_blank" rel="noopener" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
+                    <SocialIcon name="linkedin" size={20} />
                 </a>
                 <a href="https://instagram.com/fikanovatech" target="_blank" rel="noopener" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
+                    <SocialIcon name="instagram" size={20} />
                 </a>
                 <a href="https://github.com/fikanova" target="_blank" rel="noopener" aria-label="GitHub">
-                    <i class="fab fa-github"></i>
+                    <SocialIcon name="github" size={20} />
                 </a>
             </div>
         </div>
@@ -224,10 +225,10 @@
     }
 
     :global(body.theme-light) .social-icons a:hover {
-        background: #c9a962;
-        color: #1a365d;
+        background: transparent;
+        color: #c9a962;
         border-color: #c9a962;
-        box-shadow: 0 0 12px rgba(201, 169, 98, 0.5);
+        box-shadow: 0 0 15px rgba(201, 169, 98, 0.6), 0 0 30px rgba(201, 169, 98, 0.4);
     }
 
     /* Footer Bottom */

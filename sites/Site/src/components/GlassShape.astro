@@ -1,0 +1,174 @@
+---
+/**
+ * GlassShape Component
+ * Glassmorphism 3D shapes with subtle depth and light refraction
+ * For hero backgrounds and decorative elements
+ */
+interface Props {
+  variant?: 'orb' | 'ring' | 'blob';
+  class?: string;
+  size?: 'sm' | 'md' | 'lg';
+  position?: 'left' | 'right' | 'center';
+}
+
+const { variant = 'orb', class: className = '', size = 'md', position = 'right' } = Astro.props;
+
+const sizeMap = {
+  sm: '120px',
+  md: '200px',
+  lg: '300px'
+};
+
+const positionMap = {
+  left: 'left: 10%; right: auto;',
+  right: 'right: 10%; left: auto;',
+  center: 'left: 50%; transform: translateX(-50%);'
+};
+---
+
+<div 
+  class:list={['glass-shape', `glass-${variant}`, `glass-${size}`, `glass-pos-${position}`, className]}
+  style={`--shape-size: ${sizeMap[size]}; ${positionMap[position]}`}
+  aria-hidden="true"
+>
+  {variant === 'ring' && (
+    <div class="ring-inner"></div>
+  )}
+</div>
+
+<style>
+  .glass-shape {
+    position: absolute;
+    width: var(--shape-size);
+    height: var(--shape-size);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: glass-float 20s ease-in-out infinite, glass-fade-in 1s ease-out forwards;
+  }
+
+  /* Orb - translucent sphere */
+  .glass-orb {
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(201, 169, 98, 0.3) 0%,
+      rgba(201, 169, 98, 0.1) 40%,
+      rgba(201, 169, 98, 0.05) 70%,
+      transparent 100%
+    );
+    border-radius: 50%;
+    backdrop-filter: blur(2px);
+    box-shadow: 
+      inset 0 0 60px rgba(201, 169, 98, 0.15),
+      0 0 80px rgba(201, 169, 98, 0.1);
+  }
+
+  :global(body.theme-light) .glass-orb {
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(26, 54, 93, 0.2) 0%,
+      rgba(26, 54, 93, 0.08) 40%,
+      rgba(26, 54, 93, 0.03) 70%,
+      transparent 100%
+    );
+    box-shadow: 
+      inset 0 0 60px rgba(26, 54, 93, 0.1),
+      0 0 80px rgba(26, 54, 93, 0.08);
+  }
+
+  /* Ring - hollow circle with gradient */
+  .glass-ring {
+    border: 2px solid rgba(201, 169, 98, 0.3);
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  .glass-ring .ring-inner {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+    border: 1px solid rgba(201, 169, 98, 0.2);
+    border-radius: 50%;
+  }
+
+  :global(body.theme-light) .glass-ring {
+    border-color: rgba(26, 54, 93, 0.25);
+  }
+
+  :global(body.theme-light) .glass-ring .ring-inner {
+    border-color: rgba(26, 54, 93, 0.15);
+  }
+
+  /* Blob - organic amorphous shape */
+  .glass-blob {
+    background: linear-gradient(
+      135deg,
+      rgba(201, 169, 98, 0.2) 0%,
+      rgba(201, 169, 98, 0.05) 100%
+    );
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    backdrop-filter: blur(4px);
+    animation: glass-float 20s ease-in-out infinite, glass-fade-in 1s ease-out forwards, blob-morph 15s ease-in-out infinite;
+  }
+
+  :global(body.theme-light) .glass-blob {
+    background: linear-gradient(
+      135deg,
+      rgba(26, 54, 93, 0.15) 0%,
+      rgba(26, 54, 93, 0.03) 100%
+    );
+  }
+
+  /* Float animation - slow vertical movement */
+  @keyframes glass-float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-15px) rotate(2deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(-1deg);
+    }
+    75% {
+      transform: translateY(-20px) rotate(1deg);
+    }
+  }
+
+  /* Fade in on page load */
+  @keyframes glass-fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Blob morphing */
+  @keyframes blob-morph {
+    0%, 100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    33% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    66% {
+      border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    }
+  }
+
+  /* Size variants */
+  .glass-sm { --shape-size: 120px; }
+  .glass-md { --shape-size: 200px; }
+  .glass-lg { --shape-size: 300px; }
+
+  /* Position variants */
+  .glass-pos-left { top: 20%; }
+  .glass-pos-right { top: 15%; }
+  .glass-pos-center { top: 30%; }
+</style>

@@ -1,12 +1,94 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
 
+// Project case studies data (from gallery)
+const caseStudies = [
+    {
+        number: "01",
+        name: "OPAL SUITES",
+        industry: "Real Estate & Serviced Apartments",
+        liveUrl: "https://opalsuites.co.ke",
+        challenge: "To translate the physical luxury of high-end serviced apartments into a digital experience. The site needed to serve as a 24/7 sales agent, showcasing amenities and floor plans without slow load times.",
+        phases: [
+            {
+                title: "Concept & Mood",
+                goal: 'Establish a "Quiet Luxury" aesthetic.',
+                artifact: "Moodboard showing the Gold/Dark Navy color palette, serif font choices, and texture samples."
+            },
+            {
+                title: "Wireframing (The Blueprint)",
+                goal: 'We mapped a user journey that prioritizes "Visual Confirmation" (high-res images) followed immediately by "Action" (Book/Inquire buttons).',
+                artifact: "Low-fidelity wireframe sketch of the 'Apartment Detail' page layout."
+            },
+            {
+                title: "The Build (Live)",
+                goal: "A sleek, fast-loading Real Estate portfolio that conveys exclusivity.",
+                artifact: "High-Fidelity Screenshot of the Opal Suites Homepage on a laptop screen."
+            }
+        ],
+        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"
+    },
+    {
+        number: "02",
+        name: "NONDIES RFC",
+        industry: "Sports & Community",
+        liveUrl: "https://nondies.co.ke",
+        challenge: "Digitizing the legacy of Kenya's oldest rugby club. The platform needed to manage dynamic content—fixtures, league tables, and match reports—while selling merchandise and memberships.",
+        phases: [
+            {
+                title: "Information Architecture",
+                goal: "Organize 100 years of history alongside real-time updates.",
+                artifact: "Sitemap Flowchart showing the navigation tree: Home > Match Centre > Shop > History."
+            },
+            {
+                title: "Component Design",
+                goal: 'Creating modular "Cards" for players and matches that look good on mobile, ensuring fans can check scores pitch-side.',
+                artifact: "UI Component sheet showing the 'Player Profile Card' and 'Fixture List' design states."
+            },
+            {
+                title: "The Build (Live)",
+                goal: "A vibrant, community-focused hub that keeps the Red Lion fanbase connected.",
+                artifact: "Mobile mockup of the Nondies site showing the 'Latest News' feed."
+            }
+        ],
+        image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80"
+    },
+    {
+        number: "03",
+        name: "ETCO-KENYA",
+        industry: "Corporate Training & NGO",
+        liveUrl: "https://www.etco-kenya.org",
+        challenge: "To present complex training catalogs and technical course information in a way that is accessible, professional, and authoritative for corporate decision-makers.",
+        phases: [
+            {
+                title: "UX Strategy",
+                goal: "Reduce friction for users looking for specific certification details.",
+                artifact: "'User Flow' diagram showing the path from Landing Page to 'Course Registration'."
+            },
+            {
+                title: "High-Fidelity Prototyping",
+                goal: "We built a clean, grid-based layout to categorize services (Technical vs. Soft Skills) effectively.",
+                artifact: "Figma Screenshot showing the grid system and typography hierarchy used for legibility."
+            },
+            {
+                title: "The Build (Live)",
+                goal: "A credible, corporate-grade platform that validates ETCO's market leadership.",
+                artifact: "Desktop Screenshot of the ETCO 'Our Services' page."
+            }
+        ],
+        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80"
+    }
+];
+
+// Portfolio grid projects
 const projects = [
-    { name: 'Opal Suites', description: 'Real estate platform with property search', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80' },
-    { name: 'ETCO Kenya', description: 'NGO website for education outreach', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
+    { name: 'Opal Suites', description: 'Real estate platform with property search', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80', url: 'https://opalsuites.co.ke/' },
+    { name: 'ETCO Kenya', description: 'NGO website for education outreach', category: 'websites', status: 'completed', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80', url: 'https://www.etco-kenya.org/' },
     { name: 'Jenga365', description: 'Mentorship platform connecting professionals', category: 'apps', status: 'completed', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80' },
     { name: 'Botpress Chatbot', description: 'AI chatbot for customer engagement', category: 'ai-chatbots', status: 'completed', image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80' },
-    { name: 'Nondescripts RFC', description: 'E-commerce for rugby merchandise', category: 'websites', status: 'ongoing', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80' },
+    { name: 'Nondescripts RFC', description: 'E-commerce for rugby merchandise', category: 'websites', status: 'ongoing', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80', url: 'https://nondies.co.ke/' },
     { name: 'Midesa', description: 'Digital payments aggregator', category: 'custom-software', status: 'ongoing', image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80' },
     { name: 'Marketing Automation Suite', description: 'Automated email and social media campaigns', category: 'automation', status: 'completed', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80' },
     { name: 'Business Landing Template', description: 'Modern website template for startups', category: 'website-templates', status: 'completed', image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80' },
@@ -27,17 +109,88 @@ const categories = [
 ];
 ---
 
-<Layout title="Portfolio">
+<Layout title="Portfolio & Process">
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-badge"><span class="badge-dot"></span>Our Work</div>
-            <h1>Our <span class="gradient-text">Portfolio</span></h1>
-            <p>Explore our completed and ongoing projects</p>
+            <h1>Portfolio & <span class="gradient-text">Process</span></h1>
+            <p>From the first sketch to the final commit. See how we build.</p>
         </div>
     </section>
 
-    <main class="page-main">
+    <!-- SECTION 1: Case Studies / Process -->
+    <section class="case-studies-section">
         <div class="container">
+            <div class="section-header">
+                <span class="section-label">THE ANATOMY OF A BUILD</span>
+                <h2>Featured Case Studies</h2>
+                <p>We don't hide our work. Below, we showcase how Fikanova transforms abstract concepts into live, revenue-generating platforms.</p>
+            </div>
+        </div>
+        
+        <!-- Case Studies -->
+        <div class="case-studies-list">
+            {caseStudies.map((project, index) => (
+                <article class="project-case" id={`project-${project.number}`}>
+                    <!-- Project Header -->
+                    <div class="project-header">
+                        <div class="project-image" style={`background-image: url('${project.image}')`}>
+                            <div class="project-overlay"></div>
+                            <div class="project-badge">
+                                <span class="badge-number">{project.number}</span>
+                            </div>
+                        </div>
+                        <div class="project-intro">
+                            <span class="project-industry">{project.industry}</span>
+                            <h3 class="project-name">{project.name}</h3>
+                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" class="project-link">
+                                <Icon name="arrow-top-right-on-square" size={14} />
+                                View Live Site
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="project-challenge">
+                        <span class="challenge-label">THE CHALLENGE</span>
+                        <p>{project.challenge}</p>
+                    </div>
+
+                    <!-- Process Phases -->
+                    <div class="project-process">
+                        <span class="challenge-label">THE FIKANOVA PROCESS</span>
+                        <div class="phases-grid">
+                            {project.phases.map((phase, phaseIndex) => (
+                                <div class="phase-card">
+                                    <div class="phase-header">
+                                        <span class="phase-number">Phase {phaseIndex + 1}</span>
+                                        <h4 class="phase-title">{phase.title}</h4>
+                                    </div>
+                                    <p class="phase-goal"><strong>The Goal:</strong> {phase.goal}</p>
+                                    <div class="phase-artifact">
+                                        <div class="artifact-placeholder">
+                                            <Icon name="photo" size={24} />
+                                            <span>{phase.artifact}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <!-- SECTION 2: Portfolio Grid -->
+    <section class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">ALL PROJECTS</span>
+                <h2>Explore Our Work</h2>
+            </div>
+            
             <!-- Search and Filter -->
             <div class="search-filter-container">
                 <div class="search-bar">
@@ -71,7 +224,11 @@ const categories = [
                             <p>{project.description}</p>
                             <div class="portfolio-actions">
                                 <span class="portfolio-tag">{project.category.replace('-', ' ')}</span>
-                                <a href="#" class="btn btn-secondary btn-small">View Project</a>
+                                {project.url ? (
+                                    <a href={project.url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-small">View Project</a>
+                                ) : (
+                                    <span class="btn btn-secondary btn-small btn-disabled">Coming Soon</span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -84,8 +241,359 @@ const categories = [
                 <p>Try adjusting your search or filter criteria</p>
             </div>
         </div>
-    </main>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="portfolio-cta">
+        <div class="container">
+            <span class="cta-label">YOUR PROJECT NEXT?</span>
+            <h2 class="cta-title">Which process fits<br>your project?</h2>
+            <p class="cta-desc">
+                Whether you are selling premium properties, managing a community, or training the workforce, we have a blueprint ready for you.
+            </p>
+            <a href="/contact" class="btn btn-primary">
+                <Icon name="paper-airplane" size={20} />
+                Start Your Project Strategy
+            </a>
+        </div>
+    </section>
 </Layout>
+
+<style>
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+    
+    .section-label {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    
+    .section-header h2 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    
+    .section-header p {
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    /* Case Studies Section */
+    .case-studies-section {
+        padding: 60px 0 80px;
+        background: var(--dark-surface);
+    }
+    
+    body.theme-light .case-studies-section {
+        background: #f8f9fa;
+    }
+    
+    .case-studies-list {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+    
+    .project-case {
+        margin-bottom: 80px;
+    }
+    
+    .project-case:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Project Header */
+    .project-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+    
+    .project-image {
+        position: relative;
+        height: 280px;
+        border-radius: 16px;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+    }
+    
+    .project-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%);
+    }
+    
+    .project-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .badge-number {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+    
+    .project-intro {
+        padding: 16px 0;
+    }
+    
+    .project-industry {
+        display: inline-block;
+        font-size: 0.7rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        padding: 5px 12px;
+        background: rgba(201, 169, 98, 0.1);
+        border-radius: 16px;
+    }
+    
+    .project-name {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 800;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+    
+    .project-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .project-link:hover {
+        color: var(--accent);
+    }
+    
+    .project-link i {
+        font-size: 0.7rem;
+    }
+    
+    /* Challenge Section */
+    .project-challenge {
+        margin-bottom: 32px;
+        padding: 24px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+    }
+    
+    body.theme-light .project-challenge {
+        background: #ffffff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .challenge-label {
+        display: block;
+        font-size: 0.65rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .project-challenge p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+    
+    /* Process Phases */
+    .phases-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 16px;
+    }
+    
+    .phase-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    body.theme-light .phase-card {
+        background: #ffffff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .phase-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-4px);
+    }
+    
+    .phase-header {
+        margin-bottom: 12px;
+    }
+    
+    .phase-number {
+        font-size: 0.65rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+    }
+    
+    .phase-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-top: 4px;
+    }
+    
+    .phase-goal {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+    
+    .phase-goal strong {
+        color: var(--text-primary);
+    }
+    
+    .artifact-placeholder {
+        padding: 20px;
+        background: var(--dark-surface);
+        border: 1px dashed var(--border-medium);
+        border-radius: 8px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    body.theme-light .artifact-placeholder {
+        background: #f8f9fa;
+    }
+    
+    .artifact-placeholder i {
+        font-size: 1.25rem;
+        color: var(--text-tertiary);
+    }
+    
+    .artifact-placeholder span {
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+        line-height: 1.4;
+    }
+    
+    /* Portfolio Section */
+    .portfolio-section {
+        padding: 80px 0;
+    }
+    
+    /* CTA Section */
+    .portfolio-cta {
+        padding: 80px 0;
+        text-align: center;
+        background: var(--dark-surface);
+        border-top: 1px solid var(--border-subtle);
+    }
+    
+    body.theme-light .portfolio-cta {
+        background: #f8f9fa;
+    }
+    
+    .cta-label {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 16px;
+    }
+    
+    .cta-title {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+    }
+    
+    .cta-desc {
+        max-width: 550px;
+        margin: 0 auto 32px;
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+        .project-header {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .project-image {
+            height: 220px;
+        }
+        
+        .phases-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .case-studies-section {
+            padding: 40px 0 60px;
+        }
+        
+        .project-case {
+            margin-bottom: 60px;
+        }
+        
+        .project-challenge {
+            padding: 20px;
+        }
+        
+        .phase-card {
+            padding: 16px;
+        }
+        
+        .portfolio-section {
+            padding: 60px 0;
+        }
+        
+        .portfolio-cta {
+            padding: 60px 0;
+        }
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

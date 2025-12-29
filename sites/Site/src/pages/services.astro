@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
 
 // Services data - matches Appwrite DB structure
@@ -77,7 +79,7 @@ const services = [
                                 <a href={`/service/${sub.slug}`} class="sub-service-link">
                                     <span class="sub-title">{sub.title}</span>
                                     <span class="sub-price">{sub.price}</span>
-                                    <i class="fas fa-arrow-right"></i>
+                                    <Icon name="arrow-right" size={16} />
                                 </a>
                             ))}
                         </div>
@@ -85,7 +87,7 @@ const services = [
                 </div>
                 
                 <a href={`/service/${service.slug}`} class="strip-arrow" aria-label={`View ${service.displayName}`}>
-                    <i class="fas fa-arrow-right"></i>
+                    <Icon name="arrow-right" size={16} />
                     <span class="arrow-index">0{index + 1}</span>
                 </a>
             </div>
@@ -97,12 +99,11 @@ const services = [
         <div class="container">
             <div class="cta-row">
                 <div class="cta-left">
-                    <span class="cta-label"><i class="fas fa-th-large"></i> Explore</span>
-                    <span class="cta-label"><i class="fas fa-images"></i> Gallery</span>
+                    <a href="/portfolio" class="cta-label"><Icon name="photo" size={18} /> Gallery</a>
                 </div>
                 <a href="/portfolio" class="cta-link">
                     <span>All Works</span>
-                    <i class="fas fa-arrow-right"></i>
+                    <Icon name="arrow-right" size={16} />
                 </a>
             </div>
         </div>
@@ -114,7 +115,7 @@ const services = [
             <span class="contact-label">HIRE US</span>
             <h2 class="contact-title">GET IN TOUCH</h2>
             <a href="/contact" class="contact-btn">
-                <i class="fas fa-plus"></i>
+                <Icon name="plus" size={24} />
             </a>
         </div>
     </section>
@@ -153,7 +154,7 @@ const services = [
     }
     
     .title-dot {
-        color: var(--accent-gold);
+        color: var(--accent);
     }
     
     .services-hero-desc {
@@ -200,7 +201,7 @@ const services = [
     }
     
     body.theme-light .strip-overlay {
-        background: linear-gradient(90deg, rgba(26,54,93,0.85) 0%, rgba(26,54,93,0.5) 50%, rgba(26,54,93,0.7) 100%);
+        background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.65) 100%);
     }
     
     .strip-content {
@@ -280,7 +281,7 @@ const services = [
     
     .sub-service-link:hover {
         background: rgba(255,255,255,0.2);
-        border-color: var(--accent-gold);
+        border-color: var(--accent);
         transform: translateY(-4px);
     }
     
@@ -291,7 +292,7 @@ const services = [
     
     .sub-service-link .sub-price {
         font-size: 0.8rem;
-        color: var(--accent-gold);
+        color: var(--accent);
     }
     
     .sub-service-link i {
@@ -388,7 +389,7 @@ const services = [
     }
     
     .cta-link:hover {
-        color: var(--accent-gold);
+        color: var(--accent);
     }
     
     .cta-link i {
@@ -435,8 +436,8 @@ const services = [
     }
     
     .contact-btn:hover {
-        border-color: var(--accent-gold);
-        color: var(--accent-gold);
+        border-color: var(--accent);
+        color: var(--accent);
         transform: scale(1.1);
         box-shadow: 0 0 20px rgba(201, 169, 98, 0.3);
     }

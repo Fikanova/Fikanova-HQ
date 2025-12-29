@@ -3,6 +3,7 @@
  * Shared Header Component
  * Static navigation with mega menus for Solutions, Company, and Work
  */
+import Icon from './Icon.astro';
 ---
 
 <!-- HEADER -->
@@ -16,7 +17,7 @@
             <ul class="nav-menu">
                 <!-- Solutions Dropdown -->
                 <li class="nav-item has-dropdown">
-                    <span class="nav-link">Solutions <i class="fas fa-chevron-down"></i></span>
+                    <span class="nav-link">Solutions <Icon name="plus" size={12} /></span>
                     <div class="mega-menu">
                         <div class="mega-menu-group">
                             <h4>Development</h4>
@@ -40,7 +41,7 @@
                 </li>
                 <!-- Company Dropdown -->
                 <li class="nav-item has-dropdown">
-                    <span class="nav-link">Company <i class="fas fa-chevron-down"></i></span>
+                    <span class="nav-link">Company <Icon name="plus" size={12} /></span>
                     <div class="dropdown-menu">
                         <a href="/page/about-us">About Us</a>
                         <a href="/page/our-story">Our Story</a>
@@ -50,10 +51,9 @@
                 </li>
                 <!-- Work Dropdown -->
                 <li class="nav-item has-dropdown">
-                    <span class="nav-link">Work <i class="fas fa-chevron-down"></i></span>
+                    <span class="nav-link">Work <Icon name="plus" size={12} /></span>
                     <div class="dropdown-menu">
                         <a href="/portfolio">Portfolio</a>
-                        <a href="/page/case-studies">Case Studies</a>
                         <a href="/resources">Resources</a>
                         <a href="/newsletter">Newsletter</a>
                     </div>
@@ -66,14 +66,14 @@
                 <div class="switch-track">
                     <div class="switch-thumb"></div>
                     <div class="switch-icon sun-icon">
-                        <i class="fas fa-sun"></i>
+                        <Icon name="sun" size={18} />
                     </div>
                     <div class="switch-icon moon-icon">
-                        <i class="fas fa-moon"></i>
+                        <Icon name="moon" size={18} />
                     </div>
                 </div>
             </div>
-            <a href="/contact" class="btn-call"><i class="fas fa-phone-alt"></i> Contact Us</a>
+            <a href="/contact" class="btn-call"><Icon name="phone" size={16} /> Contact Us</a>
             <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
         </div>
     </nav>
@@ -83,7 +83,7 @@
 <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-menu-content">
         <div class="menu-group">
-            <button class="submenu-toggle" data-target="mobile-solutions">Solutions <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <button class="submenu-toggle" data-target="mobile-solutions">Solutions <span class="chevron"><Icon name="plus" size={12} /></span></button>
             <div class="submenu" id="mobile-solutions">
                 <div class="mobile-category-label">Development</div>
                 <a href="/service/web-development" class="menu-item">Web Development</a>
@@ -100,7 +100,7 @@
             </div>
         </div>
         <div class="menu-group">
-            <button class="submenu-toggle" data-target="mobile-company">Company <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <button class="submenu-toggle" data-target="mobile-company">Company <span class="chevron"><Icon name="plus" size={12} /></span></button>
             <div class="submenu" id="mobile-company">
                 <a href="/page/about-us" class="menu-item">About Us</a>
                 <a href="/page/our-story" class="menu-item">Our Story</a>
@@ -109,10 +109,9 @@
             </div>
         </div>
         <div class="menu-group">
-            <button class="submenu-toggle" data-target="mobile-work">Work <span class="chevron"><i class="fas fa-chevron-down"></i></span></button>
+            <button class="submenu-toggle" data-target="mobile-work">Work <span class="chevron"><Icon name="plus" size={12} /></span></button>
             <div class="submenu" id="mobile-work">
                 <a href="/portfolio" class="menu-item">Portfolio</a>
-                <a href="/page/case-studies" class="menu-item">Case Studies</a>
                 <a href="/resources" class="menu-item">Resources</a>
                 <a href="/newsletter" class="menu-item">Newsletter</a>
             </div>

@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
 import ImpactDashboard from '../components/ImpactDashboard.jsx';
 import A2UIUnified from '../components/A2UIUnified.jsx';
@@ -53,7 +55,7 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                     <div class="impact-card">
                         <div class="impact-header">
                             <div class="impact-icon economic">
-                                <i class="fas fa-chart-line"></i>
+                                <Icon name="chart-bar" size={24} />
                             </div>
                             <div>
                                 <h3>Economic Impact</h3>
@@ -88,7 +90,7 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                     <div class="impact-card">
                         <div class="impact-header">
                             <div class="impact-icon social">
-                                <i class="fas fa-users"></i>
+                                <Icon name="user-group" size={24} />
                             </div>
                             <div>
                                 <h3>Social Impact</h3>
@@ -120,7 +122,7 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                     <div class="impact-card">
                         <div class="impact-header">
                             <div class="impact-icon environmental">
-                                <i class="fas fa-leaf"></i>
+                                <Icon name="sparkles" size={24} />
                             </div>
                             <div>
                                 <h3>Environmental Impact</h3>
@@ -165,42 +167,42 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
                     <!-- Environmental -->
                     <div class="esg-card">
                         <div class="esg-icon environmental">
-                            <i class="fas fa-leaf"></i>
+                            <Icon name="sparkles" size={24} />
                         </div>
                         <h3>Green Computing</h3>
                         <p>Optimizing code to reduce server load and carbon footprint through efficient algorithms and edge deployment.</p>
                         <ul class="esg-list">
-                            <li><i class="fas fa-check"></i> Optimized codebases</li>
-                            <li><i class="fas fa-check"></i> 100% remote operations</li>
-                            <li><i class="fas fa-check"></i> Minimal infrastructure</li>
+                            <li><Icon name="check" size={16} /> Optimized codebases</li>
+                            <li><Icon name="check" size={16} /> 100% remote operations</li>
+                            <li><Icon name="check" size={16} /> Minimal infrastructure</li>
                         </ul>
                     </div>
 
                     <!-- Social -->
                     <div class="esg-card">
                         <div class="esg-icon social">
-                            <i class="fas fa-hands-helping"></i>
+                            <Icon name="hand-raised" size={24} />
                         </div>
                         <h3>Digital Inclusion</h3>
                         <p>Providing enterprise-grade technology to NGOs and community groups at accessible rates.</p>
                         <ul class="esg-list">
-                            <li><i class="fas fa-check"></i> NGO partnerships</li>
-                            <li><i class="fas fa-check"></i> Accessible pricing</li>
-                            <li><i class="fas fa-check"></i> Skills transfer</li>
+                            <li><Icon name="check" size={16} /> NGO partnerships</li>
+                            <li><Icon name="check" size={16} /> Accessible pricing</li>
+                            <li><Icon name="check" size={16} /> Skills transfer</li>
                         </ul>
                     </div>
 
                     <!-- Governance -->
                     <div class="esg-card">
                         <div class="esg-icon governance">
-                            <i class="fas fa-balance-scale"></i>
+                            <Icon name="scale" size={24} />
                         </div>
                         <h3>Governance</h3>
                         <p>Automating tax and legal compliance for transparency and accountability in all operations.</p>
                         <ul class="esg-list">
-                            <li><i class="fas fa-check"></i> Automated compliance</li>
-                            <li><i class="fas fa-check"></i> Transparent reporting</li>
-                            <li><i class="fas fa-check"></i> Ethical AI practices</li>
+                            <li><Icon name="check" size={16} /> Automated compliance</li>
+                            <li><Icon name="check" size={16} /> Transparent reporting</li>
+                            <li><Icon name="check" size={16} /> Ethical AI practices</li>
                         </ul>
                     </div>
                 </div>
@@ -226,29 +228,57 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
     }
 
     .stat-item {
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 16px;
-        padding: 32px 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 36px 24px;
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.5), transparent);
+        opacity: 0;
+        transition: opacity 0.4s ease;
     }
 
     .stat-item:hover {
-        border-color: var(--primary);
-        transform: translateY(-4px);
+        border-color: rgba(201, 169, 98, 0.3);
+        transform: translateY(-6px);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.3),
+            0 0 40px rgba(201, 169, 98, 0.1);
+    }
+
+    .stat-item:hover::before {
+        opacity: 1;
     }
 
     .stat-item h3 {
-        font-size: 42px;
+        font-size: 48px;
         font-weight: 800;
-        color: var(--primary);
+        background: linear-gradient(135deg, #ffffff 0%, #c9a962 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 8px;
     }
 
     .stat-item p {
         color: var(--text-secondary);
         font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 500;
     }
 
     /* Section Titles */
@@ -277,16 +307,40 @@ import A2UIUnified from '../components/A2UIUnified.jsx';
     }
 
     .impact-card {
-        background: var(--dark-card);
-        border: 1px solid var(--border-subtle);
-        border-radius: 20px;
-        padding: 28px;
-        transition: all 0.3s ease;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        padding: 32px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .impact-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(201, 169, 98, 0.2), transparent, rgba(201, 169, 98, 0.1));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
     }
 
     .impact-card:hover {
-        border-color: var(--border-medium);
-        transform: translateY(-4px);
+        transform: translateY(-8px);
+        box-shadow: 
+            0 30px 80px rgba(0, 0, 0, 0.25),
+            0 0 60px rgba(201, 169, 98, 0.08);
+    }
+
+    .impact-card:hover::after {
+        opacity: 1;
     }
 
     .impact-header {

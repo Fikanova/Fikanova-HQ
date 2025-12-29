@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import Layout from '../layouts/Layout.astro';
 
 const resources = [
@@ -64,7 +66,7 @@ const categories = [
                         <h3 style="margin-top: 8px;">{resource.title}</h3>
                         <p style="color: var(--text-tertiary); font-size: 14px; margin-top: 8px;">{resource.description}</p>
                         <a href="#" class="btn btn-secondary" style="margin-top: 16px;">
-                            Download <i class="fas fa-download"></i>
+                            Download <Icon name="arrow-down-tray" size={16} />
                         </a>
                     </div>
                 ))}

@@ -1,4 +1,6 @@
 ---
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 /**
  * The Termite Stack - Newsletter & Dispatches
  * CIO.com HOMEPAGE-inspired design with featured hero, article grid,
@@ -101,13 +103,13 @@ const moreArticles = articles.slice(7); // Rest for "More" section
         <div class="container">
             {fetchError ? (
                 <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle"></i>
+                    <Icon name="exclamation-triangle" size={24} />
                     <h3>Unable to Load Articles</h3>
                     <p>We're having trouble connecting. Please check back later.</p>
                 </div>
             ) : articles.length === 0 ? (
                 <div class="empty-state">
-                    <i class="fas fa-newspaper"></i>
+                    <Icon name="newspaper" size={24} />
                     <h3>Coming Soon</h3>
                     <p>We're preparing our first dispatches. Subscribe below to be notified.</p>
                 </div>
