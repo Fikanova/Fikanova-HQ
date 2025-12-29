@@ -1008,6 +1008,7 @@ body.theme-light .submenu a:hover {
     justify-content: center;
     overflow: hidden;
     background: #000;
+    isolation: isolate;
 }
 
 /* Video Background Container */
@@ -1180,7 +1181,10 @@ body.theme-light .hero .btn-secondary:hover {
 
 /* Services */
 .services {
-    padding: 80px 0;
+    padding: 100px 0;
+    background: var(--dark-bg);
+    position: relative;
+    z-index: 10;
 }
 
 .section-header {
@@ -1814,8 +1818,9 @@ body.theme-light .social-icons a:hover {
 
 .scroll-reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease-out;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
 }
 
 .scroll-reveal.active {
