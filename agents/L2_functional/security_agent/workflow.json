@@ -18,19 +18,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Security Agent at Fikanova. Perform a trust audit on:\n\n{{ $json.target || $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Environment variable exposure\n- API key leakage\n- Dependency vulnerabilities\n- Access control issues\n- CORS/CSRF concerns\n\nProvide:\n1. Risk assessment (low/medium/high)\n2. Findings\n3. Recommended mitigations",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the Security Agent at Fikanova. Perform a trust audit on:\n\n{{ $json.target || $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Environment variable exposure\n- API key leakage\n- Dependency vulnerabilities\n- Access control issues\n- CORS/CSRF concerns\n\nProvide:\n1. Risk assessment (low/medium/high)\n2. Findings\n3. Recommended mitigations"
             },
             "id": "audit",
             "name": "Security_Audit",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "audit-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

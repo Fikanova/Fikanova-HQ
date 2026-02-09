@@ -19,19 +19,31 @@
     },
     {
       "parameters": {
-        "model": "models/gemini-2.0-flash",
-        "prompt": "You are the CTO of Fikanova. Analyze this tech/dev request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. code_deploy - Deploy code to production\n2. code_review - Review PR or code changes\n3. security_audit - Run security trust audit\n4. uptime_check - Check site/API uptime\n5. function_deploy - Deploy Appwrite function\n6. bug_fix - Address a bug report\n7. feature_build - Build new feature\n\n## Tools Available:\n- Appwrite CLI/Functions\n- GitHub API\n- Site Uptime Monitors (Railway, Vercel)\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"dev_agent\" | \"security_agent\",\n  \"priority\": \"critical\" | \"high\" | \"medium\" | \"low\",\n  \"repo\": \"repository name if applicable\",\n  \"description\": \"Brief description\"\n}",
-        "options": {
-          "temperature": 0.2
-        }
+        "prompt": "You are the CTO of Fikanova. Analyze this tech/dev request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. code_deploy - Deploy code to production\n2. code_review - Review PR or code changes\n3. security_audit - Run security trust audit\n4. uptime_check - Check site/API uptime\n5. function_deploy - Deploy Appwrite function\n6. bug_fix - Address a bug report\n7. feature_build - Build new feature\n\n## Tools Available:\n- Appwrite CLI/Functions\n- GitHub API\n- Site Uptime Monitors (Railway, Vercel)\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"dev_agent\" | \"security_agent\",\n  \"priority\": \"critical\" | \"high\" | \"medium\" | \"low\",\n  \"repo\": \"repository name if applicable\",\n  \"description\": \"Brief description\"\n}"
       },
       "id": "cto-classify",
       "name": "CTO_Intent_Classifier",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1,
       "position": [
         300,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "models/gemini-2.0-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "cto-gemini-model",
+      "name": "Google Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        300,
+        500
       ],
       "credentials": {
         "googleGeminiApi": {

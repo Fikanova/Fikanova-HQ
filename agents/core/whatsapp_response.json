@@ -1,0 +1,99 @@
+{
+    "name": "Core - WhatsApp Response",
+    "description": "Shared workflow to send WhatsApp responses via the whatsapp-bridge Appwrite function.",
+    "nodes": [
+        {
+            "parameters": {},
+            "id": "start",
+            "name": "Start",
+            "type": "n8n-nodes-base.manualTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://fra.cloud.appwrite.io/v1/functions/6948e3830020bb54a6a8/executions",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "6936df5800371a655e8e"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "standard_b65b18940e0f3bcf8ec0d3f6113e98c227ba525d695bf60cd83462c9b8258ccac60dbff36f5bc100ce6ee7b66a397f898892183145f303067dad2b137155c11026a67225111071f3527c417a21eb626ef95f6a4ef9aac11db4fd9c9d90b77380237533f7f9fcbab17924754357f81874e0deb307b61f55ac642aeef7dae2f3da"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={{ JSON.stringify({ body: JSON.stringify({ direction: 'outbound', message: $json.message || $json.response_message || 'Agent processed your request.', agent_source: $json.agent_source || $json.agent || 'CEO', to_phone: $json.to_phone || '' }) }) }}"
+            },
+            "id": "send-whatsapp",
+            "name": "Send_WhatsApp_Message",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json;\nconst body = response.body || response.responseBody;\nlet result = { success: false };\ntry {\n  if (typeof body === 'string') { result = JSON.parse(body); }\n  else { result = body; }\n} catch (e) { result = { success: false, error: e.message }; }\nitems[0].json.whatsapp_result = result;\nreturn items;"
+            },
+            "id": "parse-response",
+            "name": "Parse_Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Start": {
+            "main": [
+                [
+                    {
+                        "node": "Send_WhatsApp_Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Send_WhatsApp_Message": {
+            "main": [
+                [
+                    {
+                        "node": "Parse_Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "core"
+        },
+        {
+            "name": "whatsapp"
+        }
+    ]
+}

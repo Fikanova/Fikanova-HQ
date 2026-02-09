@@ -19,19 +19,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CFO of Fikanova. Analyze this financial request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. ledger_update - Record transaction in Google Sheets\n2. mpesa_stk - Initiate M-Pesa STK Push payment\n3. invoice_generate - Generate KRA eTIMS invoice\n4. expense_log - Log an expense\n5. runway_report - Calculate burn rate / runway\n6. revenue_track - Track revenue from HubSpot deals\n\n## Tools Available:\n- Google Sheets (Central Ledger)\n- M-Pesa Daraja API\n- KRA eTIMS Bridge\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"amount\": 0,\n  \"category\": \"revenue\" | \"expense\" | \"payment\",\n  \"requires_approval\": true | false,\n  \"description\": \"Brief description\"\n}",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the CFO of Fikanova. Analyze this financial request and decide the action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. ledger_update - Record transaction in Google Sheets\n2. mpesa_stk - Initiate M-Pesa STK Push payment\n3. invoice_generate - Generate KRA eTIMS invoice\n4. expense_log - Log an expense\n5. runway_report - Calculate burn rate / runway\n6. revenue_track - Track revenue from HubSpot deals\n\n## Tools Available:\n- Google Sheets (Central Ledger)\n- M-Pesa Daraja API\n- KRA eTIMS Bridge\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"amount\": 0,\n  \"category\": \"revenue\" | \"expense\" | \"payment\",\n  \"requires_approval\": true | false,\n  \"description\": \"Brief description\"\n}"
             },
             "id": "cfo-classify",
             "name": "CFO_Intent_Classifier",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cfo-gemini-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

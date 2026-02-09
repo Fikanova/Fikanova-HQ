@@ -18,19 +18,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Editor at Fikanova. Refine this content for brand voice and tone:\n\n{{ $json.content || $json.draft || JSON.stringify($json) }}\n\nStyle Guide:\n- Technical, not corporate jargon\n- Witty where appropriate\n- Nairobi-centric cultural awareness\n- Short sentences. Punchy.\n- Forbidden: synergy, leverage, holistic, utilize, facilitate, revolutionary\n\nReturn the refined version with:\n1. Improved headline\n2. Tightened copy\n3. Stronger CTA",
-                "options": {
-                    "temperature": 0.5
-                }
+                "prompt": "You are the Editor at Fikanova. Refine this content for brand voice and tone:\n\n{{ $json.content || $json.draft || JSON.stringify($json) }}\n\nStyle Guide:\n- Technical, not corporate jargon\n- Witty where appropriate\n- Nairobi-centric cultural awareness\n- Short sentences. Punchy.\n- Forbidden: synergy, leverage, holistic, utilize, facilitate, revolutionary\n\nReturn the refined version with:\n1. Improved headline\n2. Tightened copy\n3. Stronger CTA"
             },
             "id": "refine",
             "name": "Refine_Content",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.5
+                }
+            },
+            "id": "refine-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

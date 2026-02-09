@@ -91,66 +91,108 @@
         },
         {
             "name": "KRA Tax Bot (Specialist)",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the KRA Tax Specialist at Fikanova. Process this tax-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- eTIMS invoice generation\n- Tax compliance checks\n- KRA filing reminders\n\nProvide guidance on the tax matter.",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the KRA Tax Specialist at Fikanova. Process this tax-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- eTIMS invoice generation\n- Tax compliance checks\n- KRA filing reminders\n\nProvide guidance on the tax matter."
             },
             "position": [
                 500,
                 100
             ],
+            "typeVersion": 1,
+            "id": "kra-tax"
+        },
+        {
+            "name": "Google Gemini Model (Tax)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                200
+            ],
+            "typeVersion": 1,
+            "id": "kra-tax-model"
         },
         {
             "name": "Expense Tracker (Specialist)",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Expense Tracker at Fikanova. Log and categorize this expense:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Amount (KES)\n- Category (infrastructure, marketing, operations, payroll, other)\n- Description\n- Date\n\nRespond in JSON format.",
-                "options": {
-                    "temperature": 0.1
-                }
+                "prompt": "You are the Expense Tracker at Fikanova. Log and categorize this expense:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Amount (KES)\n- Category (infrastructure, marketing, operations, payroll, other)\n- Description\n- Date\n\nRespond in JSON format."
             },
             "position": [
                 500,
                 250
             ],
+            "typeVersion": 1,
+            "id": "expense"
+        },
+        {
+            "name": "Google Gemini Model (Expense)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                350
+            ],
+            "typeVersion": 1,
+            "id": "expense-model"
         },
         {
             "name": "Runway Calculator (Specialist)",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Runway Calculator at Fikanova. Calculate financial runway:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Current cash position estimate\n- Monthly burn rate\n- Runway in months\n- Recommendations",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the Runway Calculator at Fikanova. Calculate financial runway:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Current cash position estimate\n- Monthly burn rate\n- Runway in months\n- Recommendations"
             },
             "position": [
                 500,
                 400
             ],
+            "typeVersion": 1,
+            "id": "runway"
+        },
+        {
+            "name": "Google Gemini Model (Runway)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                500
+            ],
+            "typeVersion": 1,
+            "id": "runway-model"
         },
         {
             "name": "Log to Google Sheets",

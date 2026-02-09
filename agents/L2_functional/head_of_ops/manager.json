@@ -76,66 +76,108 @@
         },
         {
             "name": "Morning Briefer",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Morning Briefer at Fikanova. Generate a daily executive brief:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Priority tasks for today\n- Key meetings scheduled\n- Pending approvals\n- Important deadlines\n- Quick wins to focus on\n\nKeep it concise and actionable.",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the Morning Briefer at Fikanova. Generate a daily executive brief:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Priority tasks for today\n- Key meetings scheduled\n- Pending approvals\n- Important deadlines\n- Quick wins to focus on\n\nKeep it concise and actionable."
             },
             "position": [
                 500,
                 150
             ],
+            "typeVersion": 1,
+            "id": "morning-briefer"
+        },
+        {
+            "name": "Google Gemini Model (Brief)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                250
+            ],
+            "typeVersion": 1,
+            "id": "morning-briefer-model"
         },
         {
             "name": "Meeting Prep Assistant",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Meeting Prep Specialist at Fikanova. Prepare for this meeting:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Agenda suggestions\n- Key talking points\n- Background context\n- Questions to ask\n- Action items to propose",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the Meeting Prep Specialist at Fikanova. Prepare for this meeting:\n\n{{ $json.message || JSON.stringify($json) }}\n\nProvide:\n- Agenda suggestions\n- Key talking points\n- Background context\n- Questions to ask\n- Action items to propose"
             },
             "position": [
                 500,
                 300
             ],
+            "typeVersion": 1,
+            "id": "meeting-prep"
+        },
+        {
+            "name": "Google Gemini Model (Meeting)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                400
+            ],
+            "typeVersion": 1,
+            "id": "meeting-prep-model"
         },
         {
             "name": "Schedule Manager",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Schedule Manager at Fikanova. Handle this scheduling request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Find optimal meeting times\n- Check calendar conflicts\n- Suggest time blocks for focused work\n- Manage recurring events\n\nProvide scheduling recommendations.",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the Schedule Manager at Fikanova. Handle this scheduling request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Find optimal meeting times\n- Check calendar conflicts\n- Suggest time blocks for focused work\n- Manage recurring events\n\nProvide scheduling recommendations."
             },
             "position": [
                 500,
                 450
             ],
+            "typeVersion": 1,
+            "id": "schedule-manager"
+        },
+        {
+            "name": "Google Gemini Model (Schedule)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                550
+            ],
+            "typeVersion": 1,
+            "id": "schedule-manager-model"
         },
         {
             "name": "Response",

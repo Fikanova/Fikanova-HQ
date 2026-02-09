@@ -76,66 +76,108 @@
         },
         {
             "name": "ESG Report Generator",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the ESG Report Specialist at Fikanova. Generate an ESG/sustainability report:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCover:\n- Environmental impact (carbon footprint, digital sustainability)\n- Social impact (community projects, education initiatives)\n- Governance (transparency, ethics, compliance)\n\nFormat as a professional report.",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the ESG Report Specialist at Fikanova. Generate an ESG/sustainability report:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCover:\n- Environmental impact (carbon footprint, digital sustainability)\n- Social impact (community projects, education initiatives)\n- Governance (transparency, ethics, compliance)\n\nFormat as a professional report."
             },
             "position": [
                 500,
                 150
             ],
+            "typeVersion": 1,
+            "id": "esg-report"
+        },
+        {
+            "name": "Google Gemini Model (ESG)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                250
+            ],
+            "typeVersion": 1,
+            "id": "esg-report-model"
         },
         {
             "name": "Partner Sync Manager",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Partner Sync Specialist at Fikanova. Handle this partner-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Update partner status\n- Sync partner data with NGO networks\n- Generate partner collaboration reports\n\nProvide actionable next steps.",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the Partner Sync Specialist at Fikanova. Handle this partner-related request:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCapabilities:\n- Update partner status\n- Sync partner data with NGO networks\n- Generate partner collaboration reports\n\nProvide actionable next steps."
             },
             "position": [
                 500,
                 300
             ],
+            "typeVersion": 1,
+            "id": "partner-sync"
+        },
+        {
+            "name": "Google Gemini Model (Partner)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                400
+            ],
+            "typeVersion": 1,
+            "id": "partner-sync-model"
         },
         {
             "name": "Impact Metrics Calculator",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Impact Metrics Specialist at Fikanova. Analyze and report on impact:\n\n{{ $json.message || JSON.stringify($json) }}\n\nMetrics to consider:\n- SDG alignment (which goals we're contributing to)\n- Community reach\n- Educational hours delivered\n- Jobs created/supported\n\nProvide quantitative and qualitative insights.",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the Impact Metrics Specialist at Fikanova. Analyze and report on impact:\n\n{{ $json.message || JSON.stringify($json) }}\n\nMetrics to consider:\n- SDG alignment (which goals we're contributing to)\n- Community reach\n- Educational hours delivered\n- Jobs created/supported\n\nProvide quantitative and qualitative insights."
             },
             "position": [
                 500,
                 450
             ],
+            "typeVersion": 1,
+            "id": "impact-metrics"
+        },
+        {
+            "name": "Google Gemini Model (Impact)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                550
+            ],
+            "typeVersion": 1,
+            "id": "impact-metrics-model"
         },
         {
             "name": "Response",

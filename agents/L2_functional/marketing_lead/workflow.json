@@ -18,19 +18,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Marketing Lead at Fikanova. Create content based on this brief:\n\n{{ $json.brief || $json.message || JSON.stringify($json) }}\n\nGuidelines:\n- Use the Fikanova voice: Technical, witty, Nairobi-centric\n- No corporate jargon (synergy, leverage, holistic)\n- Reference the 3 Elements Theory where relevant\n\nProvide:\n1. Headline\n2. Hook (first 2 sentences)\n3. Body outline\n4. CTA",
-                "options": {
-                    "temperature": 0.7
-                }
+                "prompt": "You are the Marketing Lead at Fikanova. Create content based on this brief:\n\n{{ $json.brief || $json.message || JSON.stringify($json) }}\n\nGuidelines:\n- Use the Fikanova voice: Technical, witty, Nairobi-centric\n- No corporate jargon (synergy, leverage, holistic)\n- Reference the 3 Elements Theory where relevant\n\nProvide:\n1. Headline\n2. Hook (first 2 sentences)\n3. Body outline\n4. CTA"
             },
             "id": "generate",
             "name": "Generate_Content",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.7
+                }
+            },
+            "id": "generate-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

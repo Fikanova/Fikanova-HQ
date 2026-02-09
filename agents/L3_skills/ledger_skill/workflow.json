@@ -1,0 +1,274 @@
+{
+    "name": "L3 - Skill: Ledger",
+    "description": "Reusable ledger skill for parsing and recording financial entries to Google Sheets",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Ledger Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "ledger-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "name": "Parse Financial Entry",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "ledger-parser",
+            "credentials": {
+                "googlePalmApi": {
+                    "id": "{{ $env.GEMINI_CREDENTIAL_ID }}",
+                    "name": "Google Gemini(PaLM) Api account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are Fikanova's financial record keeper. Parse this financial entry and output ONLY valid JSON.\n\nInput: {{$json.message}}\n\nCategories:\n- Expense: operations, personnel, marketing, tech, travel, client, misc\n- Revenue: services, products, retainers, one-time\n\nOutput format:\n```json\n{\n  \"type\": \"expense\" or \"revenue\",\n  \"amount\": number,\n  \"currency\": \"KES\",\n  \"category\": \"category_name\",\n  \"description\": \"clean description\",\n  \"date\": \"YYYY-MM-DD\",\n  \"requires_approval\": boolean (true if amount > 50000 or category is personnel),\n  \"confidence\": 0.0-1.0\n}\n```\n\nRespond with ONLY the JSON, no explanation."
+            },
+            "name": "Ledger Parser Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "ledger-prompt",
+            "inputs": [
+                {
+                    "node": "Parse Financial Entry",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  const parsed = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n  items[0].json.ledger_entry = parsed;\n  items[0].json.ledger_entry.parsed_at = new Date().toISOString();\n  items[0].json.ledger_entry.source = 'ai_parsed';\n} catch (e) {\n  items[0].json.ledger_entry = {\n    type: 'expense',\n    amount: 0,\n    currency: 'KES',\n    category: 'misc',\n    description: items[0].json.message || 'Parse error',\n    date: new Date().toISOString().split('T')[0],\n    requires_approval: true,\n    confidence: 0,\n    error: e.message\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Ledger JSON",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "ledger-json-parse"
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.ledger_entry.requires_approval}}",
+                                        "rightValue": true,
+                                        "operator": {
+                                            "type": "boolean",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Needs_Approval"
+                        }
+                    ]
+                },
+                "fallbackOutput": "Auto_Record"
+            },
+            "name": "Approval Check",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
+            "position": [
+                700,
+                300
+            ],
+            "id": "ledger-approval-check"
+        },
+        {
+            "parameters": {
+                "operation": "append",
+                "documentId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_SHEETS_LEDGER_ID }}"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "mode": "name",
+                    "value": "Transactions"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "Date": "={{$json.ledger_entry.date}}",
+                        "Type": "={{$json.ledger_entry.type}}",
+                        "Category": "={{$json.ledger_entry.category}}",
+                        "Description": "={{$json.ledger_entry.description}}",
+                        "Amount": "={{$json.ledger_entry.amount}}",
+                        "Currency": "={{$json.ledger_entry.currency}}",
+                        "Source": "AI Agent",
+                        "RecordedAt": "={{new Date().toISOString()}}"
+                    }
+                },
+                "options": {}
+            },
+            "name": "Write to Ledger",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                900,
+                400
+            ],
+            "id": "ledger-write"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Expenses/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"description\": \"{{ $json.ledger_entry.description }}\",\n    \"amount\": {{ $json.ledger_entry.amount }},\n    \"category\": \"{{ $json.ledger_entry.category }}\",\n    \"date\": \"{{ $json.ledger_entry.date }}T00:00:00.000Z\",\n    \"logged_by\": \"CFO Agent\"\n  }\n}",
+                "options": {}
+            },
+            "name": "Log to Appwrite",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1100,
+                400
+            ],
+            "id": "ledger-appwrite-log"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Return ledger response for parent workflow\nreturn [{\n  json: {\n    success: true,\n    entry: items[0].json.ledger_entry,\n    message: `Recorded ${items[0].json.ledger_entry.type}: ${items[0].json.ledger_entry.amount} KES - ${items[0].json.ledger_entry.description}`,\n    requires_approval: items[0].json.ledger_entry.requires_approval\n  }\n}];"
+            },
+            "name": "Ledger Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1300,
+                300
+            ],
+            "id": "ledger-response"
+        }
+    ],
+    "connections": {
+        "Ledger Input": {
+            "main": [
+                [
+                    {
+                        "node": "Ledger Parser Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Ledger Parser Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Ledger JSON",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Ledger JSON": {
+            "main": [
+                [
+                    {
+                        "node": "Approval Check",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Approval Check": {
+            "Needs_Approval": [
+                [
+                    {
+                        "node": "Ledger Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Auto_Record": [
+                [
+                    {
+                        "node": "Write to Ledger",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Write to Ledger": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Appwrite",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Log to Appwrite": {
+            "main": [
+                [
+                    {
+                        "node": "Ledger Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

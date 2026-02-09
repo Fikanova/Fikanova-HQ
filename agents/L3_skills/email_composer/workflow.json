@@ -1,0 +1,120 @@
+{
+    "name": "L3 - Skill: Email Composer",
+    "description": "Composes professional emails with appropriate tone based on context",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Email Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "email-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "name": "Email Composer LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "email-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are Fikanova's email composer. Write a professional email based on this request.\n\nRequest: {{$json.message}}\nTo: {{$json.recipient || 'recipient'}}\nContext: {{$json.context || 'business'}}\n\n## Email Account Guidelines:\n- info@fikanova.co.ke → Marketing, lead responses\n- moseti@fikanova.co.ke → Invoices, quotations, formal business\n- moseti@etco-kenya.org → NGO/nonprofit context  \n- obadiahnyaenya@my.uopeople.edu → Academic context\n- nya.onmoseti@gmail.com → Personal\n\nDetermine the appropriate sender based on context.\n\nRespond with JSON:\n```json\n{\n  \"suggested_from\": \"email@domain.com\",\n  \"to\": \"recipient email\",\n  \"subject\": \"email subject line\",\n  \"body\": \"email body in markdown\",\n  \"tone\": \"formal|friendly|urgent\",\n  \"context_detected\": \"business|personal|academic|ngo\",\n  \"cc_suggestion\": \"optional cc\"\n}\n```"
+            },
+            "name": "Email Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "email-prompt",
+            "inputs": [
+                {
+                    "node": "Email Composer LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.email = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.email = {\n    suggested_from: 'moseti@fikanova.co.ke',\n    to: '',\n    subject: 'Re: Your Request',\n    body: items[0].json.message,\n    tone: 'formal',\n    context_detected: 'business'\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Email",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "email-parse"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    ...items[0].json.email,\n    requires_approval: true,\n    message: `Email drafted from ${items[0].json.email?.suggested_from}\\nSubject: ${items[0].json.email?.subject}`,\n    preview: items[0].json.email?.body?.substring(0, 200) + '...'\n  }\n}];"
+            },
+            "name": "Email Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "email-response"
+        }
+    ],
+    "connections": {
+        "Email Input": {
+            "main": [
+                [
+                    {
+                        "node": "Email Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Email Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Email": {
+            "main": [
+                [
+                    {
+                        "node": "Email Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

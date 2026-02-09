@@ -76,66 +76,108 @@
         },
         {
             "name": "Lead Processor",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Lead Processor at Fikanova. Process this incoming lead:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Contact name\n- Company/Project\n- Service interest\n- Budget range\n- Timeline\n- Priority level (hot/warm/cold)\n\nRespond in JSON format for CRM entry.",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the Lead Processor at Fikanova. Process this incoming lead:\n\n{{ $json.message || JSON.stringify($json) }}\n\nExtract:\n- Contact name\n- Company/Project\n- Service interest\n- Budget range\n- Timeline\n- Priority level (hot/warm/cold)\n\nRespond in JSON format for CRM entry."
             },
             "position": [
                 500,
                 150
             ],
+            "typeVersion": 1,
+            "id": "lead-processor"
+        },
+        {
+            "name": "Google Gemini Model (Lead)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                250
+            ],
+            "typeVersion": 1,
+            "id": "lead-processor-model"
         },
         {
             "name": "Recon Bot",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Recon Bot at Fikanova. Research this potential client/project:\n\n{{ $json.message || JSON.stringify($json) }}\n\nGather:\n- Company background\n- Social media presence\n- Potential pain points\n- Competition analysis\n- Recommended approach\n\nProvide actionable intelligence.",
-                "options": {
-                    "temperature": 0.4
-                }
+                "prompt": "You are the Recon Bot at Fikanova. Research this potential client/project:\n\n{{ $json.message || JSON.stringify($json) }}\n\nGather:\n- Company background\n- Social media presence\n- Potential pain points\n- Competition analysis\n- Recommended approach\n\nProvide actionable intelligence."
             },
             "position": [
                 500,
                 300
             ],
+            "typeVersion": 1,
+            "id": "recon-bot"
+        },
+        {
+            "name": "Google Gemini Model (Recon)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.4
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                400
+            ],
+            "typeVersion": 1,
+            "id": "recon-bot-model"
         },
         {
             "name": "Quote Generator",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the Quote Generator at Fikanova. Generate a project quote:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Service breakdown\n- Estimated hours\n- Price range (KES)\n- Timeline\n- Deliverables\n- Terms and conditions summary\n\nMake it professional and competitive.",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the Quote Generator at Fikanova. Generate a project quote:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Service breakdown\n- Estimated hours\n- Price range (KES)\n- Timeline\n- Deliverables\n- Terms and conditions summary\n\nMake it professional and competitive."
             },
             "position": [
                 500,
                 450
             ],
+            "typeVersion": 1,
+            "id": "quote-generator"
+        },
+        {
+            "name": "Google Gemini Model (Quote)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                550
+            ],
+            "typeVersion": 1,
+            "id": "quote-generator-model"
         },
         {
             "name": "HubSpot CRM Update",

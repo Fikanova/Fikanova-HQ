@@ -1,0 +1,120 @@
+{
+    "name": "L3 - Skill: Sheng NLP",
+    "description": "Translates Kenyan Sheng slang to formal English for better intent classification",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Sheng Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "sheng-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "name": "Sheng Translator LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "sheng-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are an expert in Kenyan Sheng slang. Translate the following message to formal English and extract the intent.\n\nCommon Sheng terms:\n- Pesa/Chapaa/Doh = Money\n- Nipe = Give me\n- Fiti/Sawa = Okay/Good\n- Niaje = How are you/What's up\n- Maze/Buda = Bro/Friend\n- Uko wapi = Where are you\n- Twende = Let's go\n- Sherehe = Party\n- Mbogi = Team/Group\n- Keja = House\n- Gari = Car\n- Mzinga = Bottle (drinks)\n- Kudinyana = To be stressed\n- Kubeba = To carry/handle\n- Kuomoka = To succeed/get rich\n\nInput: {{$json.message}}\n\nRespond with JSON only:\n```json\n{\n  \"original\": \"original message\",\n  \"translated\": \"formal English translation\",\n  \"contains_sheng\": boolean,\n  \"intent\": \"the main intent/action requested\",\n  \"sentiment\": \"positive|negative|neutral\",\n  \"slang_terms_found\": [\"list of sheng terms detected\"]\n}\n```"
+            },
+            "name": "Sheng Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "sheng-prompt",
+            "inputs": [
+                {
+                    "node": "Sheng Translator LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.sheng_result = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.sheng_result = {\n    original: items[0].json.message,\n    translated: items[0].json.message,\n    contains_sheng: false,\n    intent: 'unknown',\n    sentiment: 'neutral',\n    slang_terms_found: []\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Sheng",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "sheng-parse"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    ...items[0].json.sheng_result,\n    message_for_processing: items[0].json.sheng_result?.translated || items[0].json.message\n  }\n}];"
+            },
+            "name": "Sheng Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "sheng-response"
+        }
+    ],
+    "connections": {
+        "Sheng Input": {
+            "main": [
+                [
+                    {
+                        "node": "Sheng Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sheng Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Sheng",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Sheng": {
+            "main": [
+                [
+                    {
+                        "node": "Sheng Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

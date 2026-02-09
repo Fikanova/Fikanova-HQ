@@ -1,0 +1,201 @@
+{
+    "name": "L3 - Skill: PRD Generator",
+    "description": "Generates comprehensive Product Requirement Documents from briefs, saves to Google Drive",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "PRD Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "prd-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "name": "PRD Generator LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "prd-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are a senior Product Manager at Fikanova. Generate a comprehensive PRD based on this brief.\n\nBrief: {{$json.message}}\n\n## PRD Template\n\n# Product Requirement Document\n\n## 1. Overview\n- **Product Name**: \n- **Author**: Fikanova CTO Agent\n- **Date**: {{new Date().toISOString().split('T')[0]}}\n- **Version**: 1.0\n\n## 2. Problem Statement\n[What problem does this solve?]\n\n## 3. Goals & Success Metrics\n- Goal 1: \n- Goal 2:\n- KPIs:\n\n## 4. User Stories\n- As a [user], I want to [action], so that [benefit]\n\n## 5. Functional Requirements\n| ID | Requirement | Priority | Notes |\n|----|-------------|----------|-------|\n| FR-1 | | High | |\n\n## 6. Non-Functional Requirements\n- Performance:\n- Security:\n- Scalability:\n\n## 7. Technical Approach\n[High-level architecture]\n\n## 8. Timeline & Milestones\n| Phase | Duration | Deliverables |\n|-------|----------|-------------|\n\n## 9. Risks & Mitigations\n\n## 10. Open Questions\n\n---\nGenerate the full PRD in Markdown format."
+            },
+            "name": "PRD Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "prd-prompt",
+            "inputs": [
+                {
+                    "node": "PRD Generator LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const prdContent = items[0].json.text || items[0].json.response || '';\nconst title = prdContent.match(/Product Name[:\\s]*(.*)/i)?.[1]?.trim() || 'Untitled PRD';\nitems[0].json.prd = {\n  title: title,\n  content: prdContent,\n  filename: `PRD_${title.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.md`,\n  generated_at: new Date().toISOString()\n};\nreturn items;"
+            },
+            "name": "Parse PRD",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "prd-parse"
+        },
+        {
+            "parameters": {
+                "name": "={{$json.prd.filename}}",
+                "driveId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "myDrive"
+                },
+                "folderId": {
+                    "__rl": true,
+                    "mode": "id",
+                    "value": "={{ $env.GOOGLE_DRIVE_PRD_FOLDER_ID }}"
+                },
+                "options": {}
+            },
+            "name": "Upload to Drive",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 3,
+            "position": [
+                700,
+                300
+            ],
+            "id": "prd-drive-upload"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.notion.com/v1/pages",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.NOTION_API_KEY }}"
+                        },
+                        {
+                            "name": "Notion-Version",
+                            "value": "2022-06-28"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"parent\": { \"database_id\": \"{{ $env.NOTION_DATABASE_RESOURCES }}\" },\n  \"properties\": {\n    \"Title\": { \"title\": [{ \"text\": { \"content\": \"{{ $json.prd.title }}\" }}] },\n    \"Type\": { \"select\": { \"name\": \"PRD\" }},\n    \"Status\": { \"select\": { \"name\": \"Draft\" }}\n  }\n}",
+                "options": {}
+            },
+            "name": "Log to Notion",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                900,
+                300
+            ],
+            "id": "prd-notion"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    prd_title: items[0].json.prd?.title,\n    filename: items[0].json.prd?.filename,\n    message: `PRD generated: ${items[0].json.prd?.title}`,\n    content_preview: items[0].json.prd?.content?.substring(0, 500) + '...'\n  }\n}];"
+            },
+            "name": "PRD Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1100,
+                300
+            ],
+            "id": "prd-response"
+        }
+    ],
+    "connections": {
+        "PRD Input": {
+            "main": [
+                [
+                    {
+                        "node": "PRD Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "PRD Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse PRD",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse PRD": {
+            "main": [
+                [
+                    {
+                        "node": "Upload to Drive",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Upload to Drive": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Notion",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Log to Notion": {
+            "main": [
+                [
+                    {
+                        "node": "PRD Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

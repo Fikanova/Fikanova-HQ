@@ -1,0 +1,120 @@
+{
+    "name": "L3 - Skill: Brand Guidelines",
+    "description": "Ensures content matches Fikanova's brand voice - edgy, professional, Kenyan",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Brand Check Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "brand-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.4
+                }
+            },
+            "name": "Brand Checker LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "brand-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are Fikanova's brand guardian. Review this content against our brand guidelines.\n\n## FIKANOVA BRAND VOICE\n\n**Tone**: Edgy, confident, direct. Never corporate-speak.\n**Perspective**: Kenyan-first, Africa-focused, globally relevant.\n**Language**: Clear, action-oriented. Use African proverbs when fitting.\n**Avoid**: Jargon, passive voice, apologies, \"just\", \"simply\", \"basically\".\n**Embrace**: Bold claims backed by data, humor when appropriate, authenticity.\n\n**Key phrases**:\n- \"Automate the boring. Amplify the brilliant.\"\n- \"AI that speaks your language.\"\n- \"Built for African businesses.\"\n\n**Colors**: Purple (#8b5cf6), Black, White\n**Personality**: The sharp friend who tells you the truth\n\n---\n\nContent to review:\n{{$json.content}}\n\nPlatform: {{$json.platform || 'general'}}\n\nRespond with JSON:\n```json\n{\n  \"brand_score\": 0-100,\n  \"issues_found\": [\"list of brand violations\"],\n  \"suggestions\": [\"improvement suggestions\"],\n  \"revised_content\": \"content rewritten to match brand voice\",\n  \"tone_analysis\": \"current tone assessment\",\n  \"recommended_tone\": \"suggested tone adjustment\"\n}\n```"
+            },
+            "name": "Brand Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "brand-prompt",
+            "inputs": [
+                {
+                    "node": "Brand Checker LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.brand_check = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.brand_check = {\n    brand_score: 50,\n    issues_found: ['Could not analyze'],\n    suggestions: [],\n    revised_content: items[0].json.content,\n    tone_analysis: 'Unknown',\n    recommended_tone: 'Edgy and professional'\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Brand Check",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "brand-parse"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    ...items[0].json.brand_check,\n    approved: items[0].json.brand_check?.brand_score >= 70,\n    original_content: items[0].json.content\n  }\n}];"
+            },
+            "name": "Brand Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "brand-response"
+        }
+    ],
+    "connections": {
+        "Brand Check Input": {
+            "main": [
+                [
+                    {
+                        "node": "Brand Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Brand Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Brand Check",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Brand Check": {
+            "main": [
+                [
+                    {
+                        "node": "Brand Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

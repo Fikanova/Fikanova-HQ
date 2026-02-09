@@ -1,0 +1,166 @@
+{
+    "name": "L3 - Skill: Meeting Scheduler",
+    "description": "Schedules meetings and checks availability via Notion Calendar",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Scheduler Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "scheduler-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "name": "Scheduler LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "scheduler-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are Fikanova's meeting scheduler. Parse this meeting request.\n\nRequest: {{$json.message}}\n\nExtract:\n- Meeting title\n- Proposed date/time (convert relative dates like 'tomorrow' to actual dates)\n- Duration (default 30 min)\n- Attendees\n- Meeting type (call, video, in-person)\n- Priority\n\nToday is: {{new Date().toISOString().split('T')[0]}}\n\nRespond with JSON:\n```json\n{\n  \"title\": \"meeting title\",\n  \"date\": \"YYYY-MM-DD\",\n  \"time\": \"HH:MM\",\n  \"duration_minutes\": 30,\n  \"attendees\": [\"list of attendees\"],\n  \"type\": \"video|call|in-person\",\n  \"priority\": \"high|normal|low\",\n  \"notes\": \"any additional context\"\n}\n```"
+            },
+            "name": "Scheduler Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "scheduler-prompt",
+            "inputs": [
+                {
+                    "node": "Scheduler LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.meeting = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.meeting = {\n    title: 'Meeting',\n    date: new Date().toISOString().split('T')[0],\n    time: '10:00',\n    duration_minutes: 30,\n    attendees: [],\n    type: 'video',\n    priority: 'normal'\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Meeting",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "scheduler-parse"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.notion.com/v1/pages",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer {{ $env.NOTION_API_KEY }}"
+                        },
+                        {
+                            "name": "Notion-Version",
+                            "value": "2022-06-28"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"parent\": { \"database_id\": \"{{ $env.NOTION_DATABASE_CALENDAR }}\" },\n  \"properties\": {\n    \"Name\": { \"title\": [{ \"text\": { \"content\": \"{{ $json.meeting.title }}\" }}] },\n    \"Date\": { \"date\": { \"start\": \"{{ $json.meeting.date }}T{{ $json.meeting.time }}:00\" }},\n    \"Type\": { \"select\": { \"name\": \"{{ $json.meeting.type }}\" }}\n  }\n}",
+                "options": {}
+            },
+            "name": "Create in Notion",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "scheduler-notion"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    message: `Meeting scheduled: ${items[0].json.meeting?.title} on ${items[0].json.meeting?.date} at ${items[0].json.meeting?.time}`,\n    meeting: items[0].json.meeting\n  }\n}];"
+            },
+            "name": "Scheduler Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                900,
+                300
+            ],
+            "id": "scheduler-response"
+        }
+    ],
+    "connections": {
+        "Scheduler Input": {
+            "main": [
+                [
+                    {
+                        "node": "Scheduler Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Scheduler Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Meeting",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Meeting": {
+            "main": [
+                [
+                    {
+                        "node": "Create in Notion",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Create in Notion": {
+            "main": [
+                [
+                    {
+                        "node": "Scheduler Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

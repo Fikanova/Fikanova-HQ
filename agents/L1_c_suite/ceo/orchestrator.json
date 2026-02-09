@@ -1,34 +1,87 @@
 {
     "name": "L1 - CEO Agent",
-    "description": "Central command router for Human-Centric C-Suite. Routes WhatsApp commands to appropriate executives.",
+    "description": "Central command router for Human-Centric C-Suite. Routes WhatsApp commands to appropriate executives and sends responses back via WhatsApp.",
     "nodes": [
         {
+            "id": "ceo-webhook",
             "parameters": {
                 "httpMethod": "POST",
                 "path": "ceo-command",
-                "responseMode": "responseNode"
+                "responseMode": "lastNode",
+                "options": {}
             },
             "name": "WhatsApp Bridge Webhook",
             "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
             "position": [
                 100,
-                300
-            ],
-            "notes": "Receives from Appwrite whatsapp-bridge function"
-        },
-        {
-            "parameters": {
-                "text": "Analyze this command and determine the best C-Suite executive to handle it.\n\nCommand: {{$json.message}}\nFrom: {{$json.from_phone}}\n\nRespond with ONE of: Finance, Product, Marketing, Operations, Governance\n\n- Finance = CFO (money, runway, expenses, tax, KRA)\n- Product = CTO (tech, code, deploy, systems)\n- Marketing = CMO (content, social, newsletter, branding, drafts)\n- Operations = CIO (data, knowledge, daily briefs)\n- Governance = CimpO (ESG, compliance, audits)",
-                "options": {}
-            },
-            "name": "Strategy Engine (Gemini)",
-            "type": "@n8n/n8n-nodes-langchain.agent",
-            "position": [
-                300,
                 300
             ]
         },
         {
+            "id": "ceo-save-context",
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "={{ JSON.stringify({ original_message: $json.message, from_phone: $json.from_phone, communication_id: $json.communication_id, target_agent: $json.target_agent }) }}"
+            },
+            "name": "Save Context",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "id": "ceo-classify",
+            "parameters": {
+                "prompt": "You are the CEO orchestrator for Fikanova. Analyze this command and determine which C-Suite executive should handle it.\n\nCommand: {{ $json.original_message }}\nFrom: {{ $json.from_phone }}\n\nRespond with ONLY ONE of these exact words: Finance, Product, Marketing, Operations, Governance\n\n- Finance = CFO (money, runway, expenses, tax, KRA, invoice, payment, mpesa)\n- Product = CTO (tech, code, deploy, systems, api, bug, feature)\n- Marketing = CMO (content, social, newsletter, branding, drafts, post)\n- Operations = CIO (data, knowledge, daily briefs, status, report)\n- Governance = CimpO (ESG, compliance, audits, metrics, learning)\n\nIf unclear, respond with: Operations"
+            },
+            "name": "CEO Intent Classifier",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ]
+        },
+        {
+            "id": "ceo-gemini-model",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.1
+                }
+            },
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                450,
+                500
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "gemini-creds",
+                    "name": "Google Gemini API"
+                }
+            }
+        },
+        {
+            "id": "ceo-parse",
+            "parameters": {
+                "jsCode": "const text = items[0].json.text || items[0].json.response || 'Operations';\nconst classification = text.trim().toLowerCase();\nlet route = 'operations';\nif (classification.includes('finance')) route = 'finance';\nelse if (classification.includes('product')) route = 'product';\nelse if (classification.includes('marketing')) route = 'marketing';\nelse if (classification.includes('governance')) route = 'governance';\nelse if (classification.includes('operations')) route = 'operations';\nitems[0].json.route = route;\nitems[0].json.agent_name = { 'finance': 'CFO', 'product': 'CTO', 'marketing': 'CMO', 'operations': 'CIO', 'governance': 'CimpO' }[route];\nreturn items;"
+            },
+            "name": "Parse Classification",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "id": "ceo-router",
             "parameters": {
                 "rules": {
                     "values": [
@@ -39,11 +92,11 @@
                                 },
                                 "conditions": [
                                     {
-                                        "leftValue": "={{$json.output}}",
-                                        "rightValue": "Finance",
+                                        "leftValue": "={{$json.route}}",
+                                        "rightValue": "finance",
                                         "operator": {
                                             "type": "string",
-                                            "operation": "contains"
+                                            "operation": "equals"
                                         }
                                     }
                                 ],
@@ -59,11 +112,11 @@
                                 },
                                 "conditions": [
                                     {
-                                        "leftValue": "={{$json.output}}",
-                                        "rightValue": "Product",
+                                        "leftValue": "={{$json.route}}",
+                                        "rightValue": "product",
                                         "operator": {
                                             "type": "string",
-                                            "operation": "contains"
+                                            "operation": "equals"
                                         }
                                     }
                                 ],
@@ -79,11 +132,11 @@
                                 },
                                 "conditions": [
                                     {
-                                        "leftValue": "={{$json.output}}",
-                                        "rightValue": "Marketing",
+                                        "leftValue": "={{$json.route}}",
+                                        "rightValue": "marketing",
                                         "operator": {
                                             "type": "string",
-                                            "operation": "contains"
+                                            "operation": "equals"
                                         }
                                     }
                                 ],
@@ -99,11 +152,11 @@
                                 },
                                 "conditions": [
                                     {
-                                        "leftValue": "={{$json.output}}",
-                                        "rightValue": "Operations",
+                                        "leftValue": "={{$json.route}}",
+                                        "rightValue": "operations",
                                         "operator": {
                                             "type": "string",
-                                            "operation": "contains"
+                                            "operation": "equals"
                                         }
                                     }
                                 ],
@@ -119,11 +172,11 @@
                                 },
                                 "conditions": [
                                     {
-                                        "leftValue": "={{$json.output}}",
-                                        "rightValue": "Governance",
+                                        "leftValue": "={{$json.route}}",
+                                        "rightValue": "governance",
                                         "operator": {
                                             "type": "string",
-                                            "operation": "contains"
+                                            "operation": "equals"
                                         }
                                     }
                                 ],
@@ -134,86 +187,122 @@
                         }
                     ]
                 },
-                "fallbackOutput": "To_CEO_Self"
+                "fallbackOutput": "Fallback"
             },
             "name": "C-Suite Router",
             "type": "n8n-nodes-base.switch",
+            "typeVersion": 3,
             "position": [
-                500,
+                850,
                 300
             ]
         },
         {
-            "name": "CFO Agent (Delegate)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "id": "ceo-cfo-response",
             "parameters": {
-                "workflowId": "CFO_AGENT_ID"
+                "jsCode": "items[0].json.response_message = `📊 CFO received your request: \"${items[0].json.original_message}\"\\n\\nProcessing financial analysis...`;\nitems[0].json.agent_source = 'CFO';\nreturn items;"
             },
+            "name": "CFO Quick Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
             "position": [
-                700,
+                1050,
                 100
             ]
         },
         {
-            "name": "CTO Agent (Delegate)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "id": "ceo-cto-response",
             "parameters": {
-                "workflowId": "CTO_AGENT_ID"
+                "jsCode": "items[0].json.response_message = `💻 CTO received your request: \"${items[0].json.original_message}\"\\n\\nAnalyzing technical requirements...`;\nitems[0].json.agent_source = 'CTO';\nreturn items;"
             },
+            "name": "CTO Quick Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
             "position": [
-                700,
+                1050,
                 200
             ]
         },
         {
-            "name": "CMO Agent (Delegate)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "id": "ceo-cmo-response",
             "parameters": {
-                "workflowId": "CMO_AGENT_ID"
+                "jsCode": "items[0].json.response_message = `📣 CMO received your request: \"${items[0].json.original_message}\"\\n\\nPreparing marketing strategy...`;\nitems[0].json.agent_source = 'CMO';\nreturn items;"
             },
+            "name": "CMO Quick Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
             "position": [
-                700,
+                1050,
                 300
             ]
         },
         {
-            "name": "CIO Agent (Delegate)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "id": "ceo-cio-response",
             "parameters": {
-                "workflowId": "CIO_AGENT_ID"
+                "jsCode": "items[0].json.response_message = `📋 CIO received your request: \"${items[0].json.original_message}\"\\n\\nGathering operational data...`;\nitems[0].json.agent_source = 'CIO';\nreturn items;"
             },
+            "name": "CIO Quick Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
             "position": [
-                700,
+                1050,
                 400
             ]
         },
         {
-            "name": "CimpO Agent (Delegate)",
-            "type": "n8n-nodes-base.executeWorkflow",
+            "id": "ceo-cimpo-response",
             "parameters": {
-                "workflowId": "CIMPO_AGENT_ID"
+                "jsCode": "items[0].json.response_message = `🔍 CimpO received your request: \"${items[0].json.original_message}\"\\n\\nReviewing compliance and governance...`;\nitems[0].json.agent_source = 'CimpO';\nreturn items;"
             },
+            "name": "CimpO Quick Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
             "position": [
-                700,
+                1050,
                 500
             ]
         },
         {
-            "name": "Update Communications Status",
-            "type": "n8n-nodes-base.httpRequest",
+            "id": "ceo-fallback-response",
             "parameters": {
-                "method": "PATCH",
-                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Communications/documents/{{$json.communication_id}}",
+                "jsCode": "items[0].json.response_message = `👋 CEO here. I received your message: \"${items[0].json.original_message}\"\\n\\nI'll handle this personally.`;\nitems[0].json.agent_source = 'CEO';\nreturn items;"
+            },
+            "name": "CEO Fallback Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1050,
+                600
+            ]
+        },
+        {
+            "id": "ceo-merge",
+            "parameters": {
+                "mode": "passThrough"
+            },
+            "name": "Merge Responses",
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3,
+            "position": [
+                1250,
+                300
+            ]
+        },
+        {
+            "id": "ceo-send-whatsapp",
+            "parameters": {
+                "method": "POST",
+                "url": "https://fra.cloud.appwrite.io/v1/functions/6948e3830020bb54a6a8/executions",
                 "sendHeaders": true,
                 "headerParameters": {
                     "parameters": [
                         {
                             "name": "X-Appwrite-Project",
-                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                            "value": "6936df5800371a655e8e"
                         },
                         {
                             "name": "X-Appwrite-Key",
-                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                            "value": "standard_b65b18940e0f3bcf8ec0d3f6113e98c227ba525d695bf60cd83462c9b8258ccac60dbff36f5bc100ce6ee7b66a397f898892183145f303067dad2b137155c11026a67225111071f3527c417a21eb626ef95f6a4ef9aac11db4fd9c9d90b77380237533f7f9fcbab17924754357f81874e0deb307b61f55ac642aeef7dae2f3da"
                         },
                         {
                             "name": "Content-Type",
@@ -223,10 +312,49 @@
                 },
                 "sendBody": true,
                 "specifyBody": "json",
-                "jsonBody": "{\n  \"data\": {\n    \"status\": \"processed\"\n  }\n}"
+                "jsonBody": "={{ JSON.stringify({ body: JSON.stringify({ direction: 'outbound', message: $json.response_message, agent_source: $json.agent_source, to_phone: $json.from_phone }) }) }}",
+                "options": {}
             },
+            "name": "Send WhatsApp Response",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
-                900,
+                1450,
+                300
+            ]
+        },
+        {
+            "id": "ceo-update-comms",
+            "parameters": {
+                "method": "PATCH",
+                "url": "=https://fra.cloud.appwrite.io/v1/databases/693703ef001133c62d78/collections/Communications/documents/{{ $json.communication_id }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "6936df5800371a655e8e"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "standard_b65b18940e0f3bcf8ec0d3f6113e98c227ba525d695bf60cd83462c9b8258ccac60dbff36f5bc100ce6ee7b66a397f898892183145f303067dad2b137155c11026a67225111071f3527c417a21eb626ef95f6a4ef9aac11db4fd9c9d90b77380237533f7f9fcbab17924754357f81874e0deb307b61f55ac642aeef7dae2f3da"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "{ \"data\": { \"status\": \"responded\" } }",
+                "options": {}
+            },
+            "name": "Update Communications Status",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1650,
                 300
             ]
         }
@@ -236,14 +364,36 @@
             "main": [
                 [
                     {
-                        "node": "Strategy Engine (Gemini)",
+                        "node": "Save Context",
                         "type": "main",
                         "index": 0
                     }
                 ]
             ]
         },
-        "Strategy Engine (Gemini)": {
+        "Save Context": {
+            "main": [
+                [
+                    {
+                        "node": "CEO Intent Classifier",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO Intent Classifier": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Classification",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Classification": {
             "main": [
                 [
                     {
@@ -258,7 +408,7 @@
             "To_CFO": [
                 [
                     {
-                        "node": "CFO Agent (Delegate)",
+                        "node": "CFO Quick Response",
                         "type": "main",
                         "index": 0
                     }
@@ -267,7 +417,7 @@
             "To_CTO": [
                 [
                     {
-                        "node": "CTO Agent (Delegate)",
+                        "node": "CTO Quick Response",
                         "type": "main",
                         "index": 0
                     }
@@ -276,7 +426,7 @@
             "To_CMO": [
                 [
                     {
-                        "node": "CMO Agent (Delegate)",
+                        "node": "CMO Quick Response",
                         "type": "main",
                         "index": 0
                     }
@@ -285,7 +435,7 @@
             "To_CIO": [
                 [
                     {
-                        "node": "CIO Agent (Delegate)",
+                        "node": "CIO Quick Response",
                         "type": "main",
                         "index": 0
                     }
@@ -294,12 +444,123 @@
             "To_CimpO": [
                 [
                     {
-                        "node": "CimpO Agent (Delegate)",
+                        "node": "CimpO Quick Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ],
+            "Fallback": [
+                [
+                    {
+                        "node": "CEO Fallback Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CFO Quick Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CTO Quick Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CMO Quick Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CIO Quick Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CimpO Quick Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CEO Fallback Response": {
+            "main": [
+                [
+                    {
+                        "node": "Merge Responses",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Merge Responses": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Send WhatsApp Response": {
+            "main": [
+                [
+                    {
+                        "node": "Update Communications Status",
                         "type": "main",
                         "index": 0
                     }
                 ]
             ]
         }
-    }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "tags": [
+        {
+            "name": "L1"
+        },
+        {
+            "name": "c-suite"
+        },
+        {
+            "name": "ceo"
+        }
+    ]
 }

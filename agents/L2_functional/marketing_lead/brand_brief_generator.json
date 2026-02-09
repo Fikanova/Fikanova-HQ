@@ -66,19 +66,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CMO Marketing Lead Agent for Fikanova. Generate a comprehensive Brand Brief based on the lead's social media presence.\n\n## Lead Information:\n- Name: {{ $json.contact_name }}\n- Email: {{ $json.contact_email }}\n- Service Interest: {{ $json.service_interest }}\n\n## Social Profiles to Analyze:\n- LinkedIn: {{ $json.linkedin_url || 'Not provided' }}\n- X/Twitter: {{ $json.x_url || 'Not provided' }}\n- Instagram: {{ $json.instagram_url || 'Not provided' }}\n\n## Your Task:\nAnalyze the provided social profiles (where available) and generate a Brand Brief that includes:\n\n1. **Brand Voice Assessment** - Tone, style, personality based on their social presence\n2. **Content Themes** - Key topics they focus on\n3. **Audience Analysis** - Who they seem to target\n4. **Platform Strategy** - How they use each platform\n5. **Optimization Opportunities** - Quick wins we can offer\n6. **Recommended Services** - Which Fikanova services would benefit them most\n\n## Output Format (JSON):\n```json\n{\n  \"brand_voice\": {\n    \"tone\": \"professional|casual|playful|authoritative\",\n    \"personality_traits\": [\"list\", \"of\", \"traits\"],\n    \"sample_phrases\": [\"example\", \"phrases\"]\n  },\n  \"content_themes\": [\"theme1\", \"theme2\", \"theme3\"],\n  \"target_audience\": {\n    \"demographics\": \"description\",\n    \"interests\": [\"interest1\", \"interest2\"],\n    \"pain_points\": [\"pain1\", \"pain2\"]\n  },\n  \"platform_analysis\": {\n    \"linkedin\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"x\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"instagram\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" }\n  },\n  \"quick_wins\": [\"opportunity1\", \"opportunity2\"],\n  \"recommended_services\": [\"service1\", \"service2\"],\n  \"executive_summary\": \"2-3 sentence summary of brand positioning and opportunities\"\n}\n```\n\nRespond with valid JSON only.",
-                "options": {
-                    "temperature": 0.4
-                }
+                "prompt": "You are the CMO Marketing Lead Agent for Fikanova. Generate a comprehensive Brand Brief based on the lead's social media presence.\n\n## Lead Information:\n- Name: {{ $json.contact_name }}\n- Email: {{ $json.contact_email }}\n- Service Interest: {{ $json.service_interest }}\n\n## Social Profiles to Analyze:\n- LinkedIn: {{ $json.linkedin_url || 'Not provided' }}\n- X/Twitter: {{ $json.x_url || 'Not provided' }}\n- Instagram: {{ $json.instagram_url || 'Not provided' }}\n\n## Your Task:\nAnalyze the provided social profiles (where available) and generate a Brand Brief that includes:\n\n1. **Brand Voice Assessment** - Tone, style, personality based on their social presence\n2. **Content Themes** - Key topics they focus on\n3. **Audience Analysis** - Who they seem to target\n4. **Platform Strategy** - How they use each platform\n5. **Optimization Opportunities** - Quick wins we can offer\n6. **Recommended Services** - Which Fikanova services would benefit them most\n\n## Output Format (JSON):\n```json\n{\n  \"brand_voice\": {\n    \"tone\": \"professional|casual|playful|authoritative\",\n    \"personality_traits\": [\"list\", \"of\", \"traits\"],\n    \"sample_phrases\": [\"example\", \"phrases\"]\n  },\n  \"content_themes\": [\"theme1\", \"theme2\", \"theme3\"],\n  \"target_audience\": {\n    \"demographics\": \"description\",\n    \"interests\": [\"interest1\", \"interest2\"],\n    \"pain_points\": [\"pain1\", \"pain2\"]\n  },\n  \"platform_analysis\": {\n    \"linkedin\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"x\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" },\n    \"instagram\": { \"status\": \"active|inactive|not_provided\", \"notes\": \"\" }\n  },\n  \"quick_wins\": [\"opportunity1\", \"opportunity2\"],\n  \"recommended_services\": [\"service1\", \"service2\"],\n  \"executive_summary\": \"2-3 sentence summary of brand positioning and opportunities\"\n}\n```\n\nRespond with valid JSON only."
             },
             "id": "cmo-brand-brief",
             "name": "CMO_Generate_Brand_Brief",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 750,
                 250
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.4
+                }
+            },
+            "id": "cmo-brand-brief-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                750,
+                450
             ],
             "credentials": {
                 "googleGeminiApi": {

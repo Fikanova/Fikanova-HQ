@@ -19,19 +19,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CMO of Fikanova. Analyze this marketing/content request and decide the next action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. content_create - New blog post, article, or social content\n2. content_edit - Refine existing content for brand voice\n3. newsletter_send - Send to The Termite Stack subscribers\n4. social_post - Post to LinkedIn/X\n5. youtube_upload - Upload video content\n6. campaign_launch - HubSpot marketing campaign\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"marketing_lead\" | \"editor\",\n  \"priority\": \"high\" | \"medium\" | \"low\",\n  \"brief\": \"What needs to be done\"\n}",
-                "options": {
-                    "temperature": 0.3
-                }
+                "prompt": "You are the CMO of Fikanova. Analyze this marketing/content request and decide the next action.\n\n## Request:\n{{ $json.message || $json.body?.message || JSON.stringify($json) }}\n\n## Available Actions:\n1. content_create - New blog post, article, or social content\n2. content_edit - Refine existing content for brand voice\n3. newsletter_send - Send to The Termite Stack subscribers\n4. social_post - Post to LinkedIn/X\n5. youtube_upload - Upload video content\n6. campaign_launch - HubSpot marketing campaign\n\n## Response Format (JSON):\n{\n  \"action\": \"action_name\",\n  \"delegate_to\": \"marketing_lead\" | \"editor\",\n  \"priority\": \"high\" | \"medium\" | \"low\",\n  \"brief\": \"What needs to be done\"\n}"
             },
             "id": "cmo-classify",
             "name": "CMO_Intent_Classifier",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
+            "id": "cmo-gemini-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

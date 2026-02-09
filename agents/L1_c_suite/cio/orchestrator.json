@@ -19,19 +19,31 @@
         },
         {
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CIO of Fikanova. Analyze this knowledge/data request.\n\nRequest: {{ $json.message || JSON.stringify($json) }}\n\nActions: article_create, article_search, log_query, knowledge_index, prd_generate, documentation_update\n\nTools: Appwrite DB (articles, agent_logs), skill_prd_generator\n\nRespond JSON: { \"action\": \"...\", \"delegate_to\": \"librarian\", \"collection\": \"articles\" | \"agent_logs\", \"description\": \"...\" }",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the CIO of Fikanova. Analyze this knowledge/data request.\n\nRequest: {{ $json.message || JSON.stringify($json) }}\n\nActions: article_create, article_search, log_query, knowledge_index, prd_generate, documentation_update\n\nTools: Appwrite DB (articles, agent_logs), skill_prd_generator\n\nRespond JSON: { \"action\": \"...\", \"delegate_to\": \"librarian\", \"collection\": \"articles\" | \"agent_logs\", \"description\": \"...\" }"
             },
             "id": "cio-classify",
             "name": "CIO_Intent_Classifier",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "typeVersion": 1,
             "position": [
                 300,
                 300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
+            "id": "cio-gemini-model",
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                500
             ],
             "credentials": {
                 "googleGeminiApi": {

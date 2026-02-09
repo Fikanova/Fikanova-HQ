@@ -126,45 +126,73 @@
         },
         {
             "name": "Compliance Checker",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
             "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CimpO (Chief Impact Officer) Compliance Checker at Fikanova. Review this compliance matter:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Data protection compliance (GDPR/Kenya DPA)\n- Financial regulations\n- Content guidelines\n- Brand safety\n- Ethical AI usage\n\nProvide a compliance assessment with recommendations.",
-                "options": {
-                    "temperature": 0.2
-                }
+                "prompt": "You are the CimpO (Chief Impact Officer) Compliance Checker at Fikanova. Review this compliance matter:\n\n{{ $json.message || JSON.stringify($json) }}\n\nCheck for:\n- Data protection compliance (GDPR/Kenya DPA)\n- Financial regulations\n- Content guidelines\n- Brand safety\n- Ethical AI usage\n\nProvide a compliance assessment with recommendations."
             },
             "position": [
                 500,
                 400
             ],
+            "typeVersion": 1,
+            "id": "cimpo-compliance-chain"
+        },
+        {
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.2
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
-                }
-            }
-        },
-        {
-            "name": "Governance Report Generator",
-            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-            "parameters": {
-                "model": "models/gemini-2.0-flash",
-                "prompt": "You are the CimpO Governance Report Generator at Fikanova. Generate a governance/impact report:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Agent activity summary\n- Compliance status\n- Risk assessment\n- ESG metrics\n- Recommendations\n\nFormat as a professional executive summary.",
-                "options": {
-                    "temperature": 0.3
                 }
             },
             "position": [
                 500,
                 550
             ],
+            "typeVersion": 1,
+            "id": "cimpo-compliance-model"
+        },
+        {
+            "name": "Governance Report Generator",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "parameters": {
+                "prompt": "You are the CimpO Report Generator. Create a governance report based on:\n\n{{ $json.message || JSON.stringify($json) }}\n\nInclude:\n- Executive Summary\n- Key Metrics (ESG, Compliance)\n- Risks & Mitigations\n- Recommendations\n\nFormat as Markdown."
+            },
+            "position": [
+                500,
+                550
+            ],
+            "typeVersion": 1,
+            "id": "cimpo-report-chain"
+        },
+        {
+            "name": "Google Gemini Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.3
+                }
+            },
             "credentials": {
                 "googleGeminiApi": {
                     "id": "gemini-creds",
                     "name": "Google Gemini API"
                 }
-            }
+            },
+            "position": [
+                500,
+                700
+            ],
+            "typeVersion": 1,
+            "id": "cimpo-report-model"
         },
         {
             "name": "Log Governance Action",

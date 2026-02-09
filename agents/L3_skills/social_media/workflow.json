@@ -1,0 +1,166 @@
+{
+    "name": "L3 - Skill: Social Media",
+    "description": "Generates platform-specific social media content (X, LinkedIn, Instagram)",
+    "nodes": [
+        {
+            "parameters": {
+                "inputSource": "passthrough"
+            },
+            "name": "Social Input",
+            "type": "n8n-nodes-base.executeWorkflowTrigger",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "id": "social-input"
+        },
+        {
+            "parameters": {
+                "model": "models/gemini-2.0-flash",
+                "options": {
+                    "temperature": 0.7
+                }
+            },
+            "name": "Social Content LLM",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ],
+            "id": "social-llm"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "You are Fikanova's social media manager. Generate content for the specified platform.\n\nTopic: {{$json.topic}}\nPlatform: {{$json.platform || 'twitter'}}\n\n## Platform Guidelines:\n\n**X/Twitter:**\n- Max 280 chars\n- Edgy, punchy, use emojis sparingly\n- End with question or CTA\n- Use relevant hashtags (max 3)\n\n**LinkedIn:**\n- Professional but not boring\n- Personal anecdotes work\n- 1-3 paragraphs\n- End with engagement question\n\n**Instagram:**\n- Visual-first thinking\n- Recommend image concept\n- Hashtags at end (5-10)\n- Engaging caption\n\nGenerate content matching Fikanova's brand: edgy, confident, Kenyan-first.\n\nRespond with JSON:\n```json\n{\n  \"platform\": \"platform_name\",\n  \"content\": \"the post content\",\n  \"hashtags\": [\"hashtag1\", \"hashtag2\"],\n  \"image_suggestion\": \"description of image to use\",\n  \"best_time\": \"suggested posting time\",\n  \"engagement_hook\": \"why this will engage\"\n}\n```"
+            },
+            "name": "Social Prompt",
+            "type": "@n8n/n8n-nodes-langchain.chainLlm",
+            "typeVersion": 1.4,
+            "position": [
+                300,
+                300
+            ],
+            "id": "social-prompt",
+            "inputs": [
+                {
+                    "node": "Social Content LLM",
+                    "type": "ai_language_model",
+                    "index": 0
+                }
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const response = items[0].json.text || items[0].json.response || '{}';\ntry {\n  items[0].json.social_content = JSON.parse(response.replace(/```json\\n?|```/g, '').trim());\n} catch (e) {\n  items[0].json.social_content = {\n    platform: items[0].json.platform || 'twitter',\n    content: 'Could not generate content',\n    hashtags: [],\n    image_suggestion: '',\n    best_time: 'Morning',\n    engagement_hook: ''\n  };\n}\nreturn items;"
+            },
+            "name": "Parse Social",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                500,
+                300
+            ],
+            "id": "social-parse"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{ $env.APPWRITE_ENDPOINT }}/databases/{{ $env.APPWRITE_DATABASE_ID }}/collections/Content_Drafts/documents",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "X-Appwrite-Project",
+                            "value": "={{ $env.APPWRITE_PROJECT_ID }}"
+                        },
+                        {
+                            "name": "X-Appwrite-Key",
+                            "value": "={{ $env.APPWRITE_API_KEY }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"documentId\": \"unique()\",\n  \"data\": {\n    \"content_type\": \"{{ $json.social_content.platform }}_post\",\n    \"title\": \"{{ $json.topic || 'Social Post' }}\",\n    \"ai_draft\": \"{{ $json.social_content.content }}\",\n    \"status\": \"draft\",\n    \"agent_source\": \"CMO Agent\",\n    \"created_at\": \"{{ new Date().toISOString() }}\",\n    \"updated_at\": \"{{ new Date().toISOString() }}\"\n  }\n}",
+                "options": {}
+            },
+            "name": "Save Draft",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "social-save"
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    success: true,\n    ...items[0].json.social_content,\n    requires_approval: true,\n    message: `${items[0].json.social_content?.platform} post drafted for review`\n  }\n}];"
+            },
+            "name": "Social Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                900,
+                300
+            ],
+            "id": "social-response"
+        }
+    ],
+    "connections": {
+        "Social Input": {
+            "main": [
+                [
+                    {
+                        "node": "Social Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Social Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Social",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Social": {
+            "main": [
+                [
+                    {
+                        "node": "Save Draft",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Save Draft": {
+            "main": [
+                [
+                    {
+                        "node": "Social Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    }
+}
