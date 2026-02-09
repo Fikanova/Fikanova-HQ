@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Business Profile">
+    <div class="gamma-container">
+        <iframe 
+            src="https://gamma.app/embed/qy60tt4a3jkq0pp" 
+            style="width: 100%; height: 100vh; border: none;" 
+            allow="fullscreen" 
+            title="CORPORATE PROFILE">
+        </iframe>
+    </div>
+</Layout>
+
+<style>
+    .gamma-container {
+        width: 100%;
+        height: 100vh; /* Full viewport height */
+        background-color: #000; /* Match brand background */
+        overflow: hidden;
+    }
+    
+    /* Hide header/footer if desired for full immersion, or keep them. 
+       This simple setup keeps header/footer from Layout unless modified. 
+       To make it purely the iframe, we might want to hide nav. 
+       Let's keep nav for consistency but make iframe dominant. */
+</style>
